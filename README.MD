@@ -143,23 +143,23 @@ Included below are some sample scripts, for both Unix/Linux and Windows, for sta
 ## Windows
 
 ### setGrinderEnv.cmd
-```set GRINDERPATH=_(full path to grinder installation directory)_
-set GRINDERPROPERTIES=_(full path to grinder.properties)_\grinder.properties
+```set GRINDERPATH=(full path to grinder installation directory)
+set GRINDERPROPERTIES=(full path to grinder.properties)\grinder.properties
 set CLASSPATH=%GRINDERPATH%\lib\grinder.jar;%CLASSPATH%
-set JAVA_HOME=_(full path to java installation directory)_
+set JAVA_HOME=(full path to java installation directory)
 PATH=%JAVA_HOME%\bin;%PATH%
 ```
 ### startAgent.cmd
-```call _(path to setGrinderEnv.cmd)_\setGrinderEnv.cmd
+```call (path to setGrinderEnv.cmd)\setGrinderEnv.cmd
 echo %CLASSPATH%
 java -classpath %CLASSPATH% net.grinder.Grinder %GRINDERPROPERTIES%
 ```
 ### startConsole.cmd
-```call _(path to setGrinderEnv.cmd)_\setGrinderEnv.cmd
+```call (path to setGrinderEnv.cmd)\setGrinderEnv.cmd
 java -classpath %CLASSPATH% net.grinder.Console
 ```
 ### startProxy.cmd
-```call _(path to setGrinderEnv.cmd)_\setGrinderEnv.cmd
+```call (path to setGrinderEnv.cmd)\setGrinderEnv.cmd
 java -classpath %CLASSPATH% net.grinder.TCPProxy -console -http > grinder.py
 ```
 
@@ -167,26 +167,27 @@ java -classpath %CLASSPATH% net.grinder.TCPProxy -console -http > grinder.py
 
 ### setGrinderEnv.sh 
 ```#!/usr/bin/ksh
-GRINDERPATH=_(full path to grinder installation directory)_
-GRINDERPROPERTIES=_(full path to grinder.properties)_/grinder.properties
+GRINDERPATH=(full path to grinder installation directory)
+GRINDERPROPERTIES=(full path to grinder.properties)/grinder.properties
 CLASSPATH=$GRINDERPATH/lib/grinder.jar:$CLASSPATH
-JAVA_HOME=_(full path to java installation directory)_
+JAVA_HOME=(full path to java installation directory)
 PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH PATH GRINDERPROPERTIES
 ```
 ### startAgent.sh 
 ```#!/usr/bin/ksh
-. _(path to setGrinderEnv.sh)_/setGrinderEnv.sh
+. (path to setGrinderEnv.sh)/setGrinderEnv.sh
 java -classpath $CLASSPATH net.grinder.Grinder $GRINDERPROPERTIES
 ```
 ### startConsole.sh 
 ```
 #!/usr/bin/ksh
-. _(path to setGrinderEnv.sh)_/setGrinderEnv.sh java -classpath $CLASSPATH net.grinder.Console
+. (path to setGrinderEnv.sh)/setGrinderEnv.sh 
+java -classpath $CLASSPATH net.grinder.Console
 ```
 ### startProxy.sh 
 ```
 #!/usr/bin/ksh
-. _(path to setGrinderEnv.sh)_/setGrinderEnv.sh
+. (path to setGrinderEnv.sh)/setGrinderEnv.sh
 java -classpath $CLASSPATH net.grinder.TCPProxy -console -http > grinder.py
 ```
