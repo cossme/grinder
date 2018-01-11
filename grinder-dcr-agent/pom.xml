@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>grinder-dcr-agent</artifactId>
+  <packaging>jar</packaging>
+  <name>${project.artifactId}</name>
+  <url>http://grinder.sourceforge.net</url>
+  <description>A Java agent that exposes the byte code instrumentation API.</description>
+
+  <parent>
+    <groupId>net.sf.grinder</groupId>
+    <artifactId>grinder-parent</artifactId>
+    <version>3.12-SNAPSHOT</version>
+  </parent>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <!--  See http://jira.codehaus.org/browse/MJAR-69 -->
+            <!--  <index>true</index> -->
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+            <manifestEntries>
+              <Premain-Class>net.grinder.util.weave.agent.ExposeInstrumentation</Premain-Class>
+              <Can-Redefine-Classes>true</Can-Redefine-Classes>
+              <Can-Retransform-Classes>true</Can-Retransform-Classes>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <reportPlugins>
+            <plugin>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>checkstyle</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+              <configuration>
+                <configLocation>${project.parent.basedir}/etc/checkstyle.xml</configLocation>
+                <propertyExpansion>config_loc=${project.parent.basedir}/etc/</propertyExpansion>
+              </configuration>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+          </reportPlugins>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

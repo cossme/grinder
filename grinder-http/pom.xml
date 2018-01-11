@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>grinder-http</artifactId>
+  <packaging>jar</packaging>
+  <name>${project.artifactId}</name>
+  <url>http://grinder.sourceforge.net</url>
+  <description>The Grinder HTTP plugin.</description>
+
+  <parent>
+    <groupId>net.sf.grinder</groupId>
+    <artifactId>grinder-parent</artifactId>
+    <version>3.12-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>grinder-core</artifactId>
+      <version>3.12-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>grinder-httpclient</artifactId>
+      <version>3.12-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>grinder-xmlbeans</artifactId>
+      <version>3.12-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>grinder-dcr-agent</artifactId>
+      <version>3.12-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>grinder-test-support</artifactId>
+      <version>3.12-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>grinder-core</artifactId>
+      <type>test-jar</type>
+      <version>3.12-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+        </configuration>
+      </plugin>
+
+      <!-- Sigh, because of MDEP-259 we have to always have 'install'
+      as a goal for this to work when running from the parent project,
+      even if we don't care. E.g. "mvn install site", not "mvn site".
+      -->
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dcr-agent</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>grinder-dcr-agent</artifactId>
+                  <type>jar</type>
+                  <overWrite>true</overWrite>
+                  <destFileName>grinder-dcr-agent.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-javaagent:${project.build.directory}/grinder-dcr-agent.jar
+            -XX:MaxPermSize=256m</argLine>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <reportPlugins>
+            <plugin>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>checkstyle</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+              <configuration>
+                <configLocation>${project.parent.basedir}/etc/checkstyle.xml</configLocation>
+                <propertyExpansion>config_loc=${project.parent.basedir}/etc/</propertyExpansion>
+              </configuration>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>findbugs-maven-plugin</artifactId>
+
+              <configuration>
+                <effort>Max</effort>
+                <threshold>Medium</threshold>
+                <excludeFilterFile>${project.parent.basedir}/etc/findbugs-exclude.xml</excludeFilterFile>
+              </configuration>
+            </plugin>
+          </reportPlugins>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

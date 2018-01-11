@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+<title>The Classic Console User Interface</title>
+</header>
+<body>
+
+    <note>Eventually we expect to retire the classic user interface in
+    favour of the <a href="site:console/webui">web console</a>.</note>
+
+  <section id="starting">
+    <title>Starting the console</title>
+
+    <p>You can start the console on one of the test machines as follows.</p>
+<source class="sh">
+java net.grinder.Console
+</source>
+
+    <p>After a short delay, the main console window will appear.</p>
+
+    <figure src="../images/console-screenshot-g3.png" width="778" height="551" alt="The Console"/>
+  </section>
+
+  <section id="process-controls">
+    <title>Process controls</title>
+
+    <p>The <em>Start processes</em>, <em>Reset processes</em>, and <em>Stop
+    processes</em> menu items send signals to Grinder processes that are
+    listening. (See the <a
+    href="site:properties">properties</a>
+    <code>grinder.useConsole</code>, <code>grinder.consoleHost</code>
+    and <code>consolePort</code>.) <em>Start processes</em> and
+    <em>Reset processes</em> are also tool bar buttons. </p>
+
+    <figure src="../images/console-start-and-reset.png" width="258" height="97" alt="Start Processes and Reset Processes toolbar buttons"/>
+
+    <p>These controls will be disabled if no agents are connected to the console.
+    You can check whether any agents are connected on the
+    <a href="#Processes+tab">Processes tab</a>.</p>
+
+    <p>Worker processes that are controlled by the console can be in one of
+    three states:</p>
+
+    <ol>
+      <li>Initiated (waiting for a console signal)</li>
+
+      <li>Running (performing tests, reporting to console)</li>
+
+      <li>Finished (waiting for a console signal)</li>
+    </ol>
+
+    <p>The <em>Start processes</em> control signals to worker
+    processes that they should move into the running state. Processes
+    that are already running will ignore this signal. Processes that are in
+    the finished state exit; the agent process will then reread the
+    properties file, and launch new worker processes in the running
+    state.</p>
+
+    <p>The <em>Reset processes</em> control signals all the worker
+    processes to exit. The agent process will then reread the
+    properties file and launch new worker processes.</p>
+
+    <p>The <em>Stop processes</em> control signals all processes,
+    including the agent processes, to exit. This is infrequently used, you
+    usually want to use <em>Reset processes</em> instead.</p>
+
+    <note>Each time the worker processes run, they generate a new
+    set of logs. Logs from previous runs are "archived" by renaming
+    them. The number of logs that are kept from previous runs can be
+    controlled with <code> grinder.numberOfOldLogs</code>.</note>
+
+  </section>
+
+  <section>
+    <title>Sample controls</title>
+
+    <p>The sample controls determine how the console captures reports
+    from the worker processes. It is important to understand that
+    these only control the console behaviour. For example, they do not
+    adjust the frequency at which the worker processes send reports
+    (see <a
+    href="site:properties"><code>grinder.reportToConsole.interval</code></a>
+    for that). Additionally, the sample controls do not interact in
+    any way with the process controls.</p>
+
+    <figure src="../images/console-sample-controls.png" width="407" height="193" alt="Sample controls"/>
+
+    <p>The slider controls the period at which the console will take a
+    <em>sample</em>. This involves adding up all the reports received
+    over that sample interval and calculating the TPS as (number of
+    tests that occurred)/(interval length). It is also the period at
+    which the console graphs and statistics are updated.</p>
+
+    <p>By default, the console starts updating the display and calculating
+    totals from the first non-zero sample period. A non-zero sample
+    period is one in which an update from a worker process was
+    received. You can adjust how many non-zero sample periods the console
+    ignores before starting capture with the
+    <em>ignore samples</em> text field.</p>
+
+    <p>The third control allows you to adjust how many samples the
+    console will collect before stopping capture.</p>
+
+    <p>You can also manually start and stop the sampling with the
+    <em>Capture statistics</em>/<em>Stop capture</em> control. Use the
+    <em>Save statistics</em> control to save the current set of
+    statistics to a file.</p>
+  </section>
+
+  <section>
+    <title>The Graphs and Results tabs</title>
+
+    <p>On the console there are two tabs which display information about The Grinder and its tests. These are detailed below:</p>
+
+    <section>
+      <title>Graphs</title>
+
+      <p>Each graph displays the 25 most recent Tests Per Second (TPS)
+      values for a particular test. A new value is added every console
+      sample period. The y-axis is scaled so that the full height
+      represents the peak TPS value received for the test since the
+      display was last reset.</p>
+
+      <p>The colours are based on the relative response time. Long
+      response times are more red, short response times are more yellow.
+      This acts as an eye-catcher, allowing expensive tests to be easily
+      spotted.</p>
+
+    </section>
+
+    <section>
+
+      <title>Results</title>
+
+      <p>The Results tab shows the results from The Grinder instrumentation.</p>
+
+      <table>
+
+        <tr>
+          <td><strong>Test</strong></td>
+
+          <td>The test number as specified in the test script, eg. tests[14000] will display as Test 14000.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Description</strong></td>
+
+          <td>The test description as specified in the test script.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Successful Tests</strong></td>
+
+          <td>The total number of iterations of the test that were successfully executed by The Grinder during the test run.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Errors</strong></td>
+
+          <td>The total number of iterations of the test that failed to be fully executed by The Grinder during the test run.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Mean Time</strong></td>
+
+          <td>The mean time taken to execute the test and receive the full response from the target server/application, in milliseconds.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Mean Time Standard Deviation</strong></td>
+
+          <td>The mean standard deviation of the time taken to execute the test and receive the full response from the target
+          server/application, in milliseconds.</td>
+        </tr>
+
+        <tr>
+          <td><strong>TPS</strong></td>
+
+          <td>Transactions per second. The average number of iterations of the test that successfully ran in a one second interval.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Peak TPS</strong></td>
+
+          <td>Peak Transactions per second. The maximum number of iterations of the test that successfully ran in a one second interval.</td>
+        </tr>
+
+      </table>
+
+      <p>There is additional instrumentation provided by the HTTPPlugin.</p>
+
+      <table>
+
+        <tr>
+          <td><strong>Mean Response Length</strong></td>
+
+          <td>The mean size of HTTP response from the target server/application in response to the executed test, in bytes.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Response Bytes per Second</strong></td>
+
+          <td>The mean number of bytes per second received from the target server/application, in bytes per second. This gives an indication of the amount of
+          bandwidth being consumed by the test. This does not take into account the amount of traffic being sent to the target server/application.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Response Errors</strong></td>
+
+          <td>The total number of HTTP Response Error Codes (eg, 404, 500 etc) received during the test run.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Mean Time to Resolve Host</strong></td>
+
+          <td>The mean time taken to resolve the ip address of the target server from the Fully Qualified
+          Domain Name, via hosts file or DNS, in milliseconds. This is the time relative to the start of the test iteration.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Mean Time to Establish Connection</strong></td>
+
+          <td>The mean time taken to establish a tcp connection to the target server/application, in milliseconds.
+           This is the time relative to the start of the test iteration.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Mean Time to First Byte</strong></td>
+
+          <td>The mean time taken to receive the first byte of response from the target server/application, in milliseconds.
+           This is the time relative to the start of the test iteration.</td>
+        </tr>
+
+      </table>
+    </section>
+
+    </section>
+
+    <section>
+
+      <title>Processes tab</title>
+
+      <p>This tab displays information about the Agents, their worker processes and associated threads.</p>
+
+      <table>
+
+        <tr>
+          <td><strong>Process</strong></td>
+
+          <td>The name of the process. A parent process will take the hostname of the box on which it is running
+          Its child processes take the name of the parent process and add a suffix of "-x" where x is an integer,
+          eg. myserver-0.</td>
+        </tr>
+
+        <tr>
+          <td><strong>Type</strong></td>
+
+          <td>The type of process, eg. Agent or Worker.</td>
+        </tr>
+
+        <tr>
+          <td><strong>State</strong></td>
+
+          <td>Information about the state of the process, eg. "Connected" for an agent process and "Running" and
+           "Finished" for a Worker process.</td>
+        </tr>
+      </table>
+
+    </section>
+
+    <section>
+
+      <title>Script tab</title>
+
+      <p>This tab contains the console support for script editing and distribution.
+         The distribution controls are also accessible through the <strong>Distribute</strong> menu.</p>
+
+      <note>Script editing and distribution is optional. You don't have to use it, but then you must
+         copy property files and scripts to each machine that runs an agent, or use a shared drive.</note>
+
+      <p>To use the script distribution, follow these steps:</p>
+
+      <ol>
+       <li><a href="#setdirectory">Set the directory for the script distribution</a></li>
+       <li><a href="#createscript">Create a script and a property file</a></li>
+       <li><a href="#selectproperties">Select the properties file to use</a></li>
+       <li><a href="#distributefiles">Distribute the changed files to the agents</a></li>
+       <li><a href="#startworkers">Start the Worker processes</a></li>
+      </ol>
+
+      <section id="setdirectory">
+       <title>Set the directory for the script distribution</title>
+
+       <p>The file tree on the left hand side of Script tab is shows the a view
+       of local files on the console machine. Use
+       the <strong>Distribute/Set directory...</strong> menu option or the tool
+       bar button to set the distribution directory to the place
+       where you want to store your scripts. All of the files below the directory will be
+       distributed to the worker processes, so don't set it to <em>/home</em> or <em>C:\</em>.
+       </p>
+
+       <p>If you are using The Grinder for the first time, you might like to set
+       the distribution directory to the <code>examples</code> directory in
+       The Grinder installation.</p>
+      </section>
+
+      <section id="createscript">
+       <title>Create a script and a property file</title>
+
+       <p>You can use the console to create, view, and edit script files in the
+       distribution directory. The editor is rudimentary, but good enough for
+       basic editing.</p>
+
+       <p>If your script relies on other files (including Jython modules), copy
+       them below the distribution directory.</p>
+
+       <p>You can also edit files in the distribution directory with a text editor of your choice.
+       For convenience, you can define an external editor in the console options
+       (<strong>File/Options.../Script Editor</strong>), and launch it by right-clicking
+       on a file in the file tree and selecting <strong>Open with external editor</strong>.</p>
+
+       <p>Once you have your script ready, create a
+       <a href="site:properties">properties</a> file.
+       The file name extension should be <code>properties</code>, and unless you have many
+       different properties files in the directory, the file is usually called
+       <code>grinder.properties</code>. If your script is not called <code>grinder.py</code>,
+       add a <code>grinder.script</code> property to your properties file:</p>
+       <source class="text">grinder.script = myscript.py</source>
+
+       <p>
+       The properties sent from the console are combined with any set
+       in a <code>grinder.properties</code> file in the agent's working directory
+       or <a href="site:properties/commandline">set
+       on the agent command line</a>. If a property is specified in several
+       places, the order of precedence is</p>
+       <ul>
+       <li>Properties sent by the console<em>[most important]</em></li>
+       <li>Properties set on the agent command line</li>
+       <li>Properties in the agent's local <code>grinder.properties</code> file <em>[least important]</em></li>
+       </ul>
+
+       <note>If your agents are running remotely to the
+       console, you will need to set the <code>grinder.consoleHost</code> property
+       (and <code>grinder.consolePort</code> if the console isn't using the
+       default port) in the agent's command line or local
+       <code>grinder.properties</code> so it can make the initial connection
+       to the console.
+       </note>
+      </section>
+
+      <section id="selectproperties">
+       <title>Select the properties file to use</title>
+
+       <p>Right-click on the properties file and chose <code>Select properties</code>.</p>
+
+         <figure src="../images/console-select-properties.png" width="644" height="239" alt="Select properties"/>
+
+       <p>The properties file and the script to which it refers will be indicated with a star.</p>
+      </section>
+
+
+      <section id="distributefiles">
+       <title>Distribute the changed files to the agents</title>
+
+       <p>Select the <strong>Distribute/Distribute files</strong> menu item, or click on the toolbar button.</p>
+
+       <figure src="../images/console-distribute-files.png" width="220" height="41" alt="Distribute files toolbar button"/>
+
+       <p>Each agent maintains its own local cache of the files below the distribution
+       directory. When you select <strong>Distribute files</strong>,  any files that have changed
+       will be sent to the agents. The distribution controls will only be enabled if one or more agents is
+       connected to the console, and one or more files has been edited.</p>
+      </section>
+
+      <section id="startworkers">
+       <title>Start the Worker processes</title>
+
+       <p>Select <strong>Start processes</strong> as <a href="#process-controls">described above</a>.</p>
+      </section>
+  </section>
+
+
+  <section>
+    <title>Internationalisation help wanted</title>
+
+    <p>If you are bilingual you might fancy <a
+    href="site:contributing/translating">translating the console</a>
+    into a language of your choice.</p>
+  </section>
+
+</body>
+</document>
+

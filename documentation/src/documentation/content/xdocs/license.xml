@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>The Grinder License</title>
+</header>
+
+<body>
+  <p>The Grinder is free software. It also repackages other free
+  software. This section explains what you can and cannot do with The
+  Grinder and the software included with it.</p>
+
+  <section>
+    <title>The Grinder</title>
+
+    <p>Copyright (c) 2000 Paco G&#xf3;mez
+    <br/>Copyright (c) 2000-2013 Philip Aston<br/>All rights reserved.</p>
+
+    <p>Additional contributions have been made by individuals listed
+    in the AUTHORS file supplied with this distribution. Each
+    individual's claim to copyright is asserted in the files to which
+    they contributed.</p>
+
+    <p>Redistribution and use in source and binary forms, with or
+    without modification, are permitted provided that the following
+    conditions are met:</p>
+
+    <ul>
+      <li>Redistributions of source code must retain the above
+      copyright notice, this list of conditions and the following
+      disclaimer.</li>
+
+      <li>Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.</li>
+
+      <li>Neither the names of the copyright holders nor the names of
+      the contributors may be used to endorse or promote products
+      derived from this software without specific prior written
+      permission.</li>
+    </ul>
+
+    <p><strong>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+    CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+    INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+    OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+    PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+    PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+    TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+    THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+    SUCH DAMAGE.</strong></p>
+  </section>
+
+  <section>
+    <title>Third Party Licenses</title>
+
+    <p>The Grinder includes Ronald Tschal&#xE4;r's <a
+    href="ext:innovation/httpclient">HTTPClient</a> library.  The
+    HTTPClient library is distributed under the <a
+    href="http://www.opensource.org/licenses/lgpl-2.1.php">GNU Lesser
+    Public License 2.1</a>. Under the term 6 of the GNU Lesser Public
+    License, The Grinder is a "work that uses the Library".</p>
+
+    <p>The Grinder includes the software <a
+    href="ext:jython">Jython</a>, created by Jim Hugunin, Barry Warsaw
+    and the Jython team. This is distributed under the terms of the <a
+    href="http://www.jython.org/license.html">Jython and JPython
+    software licenses</a>.</p>
+
+    <p>The Grinder includes the <a href="ext:jedit-syntax">jEdit
+    Syntax</a> highlighting package. This is distributed according to
+    the jEdit Syntax copyright and usage statement.</p>
+
+<source class="text">
+The jEdit 2.2.1 syntax highlighting package contains code that is
+Copyright 1998-1999 Slava Pestov, Artur Biesiadowski, Clancy Malcolm,
+Jonathan Revusky, Juha Lindfors and Mike Dillon.
+
+You may use and modify this package for any purpose. Redistribution is
+permitted, in both source and binary form, provided that this notice
+remains intact in all source distributions of this package.
+
+-- Slava Pestov
+25 September 2000
+&lt;sp@gjt.org&gt;
+</source>
+
+    <p>The Grinder includes <a href="ext:xmlbeans">Apache
+    XMLBeans</a>, under the terms of the Apache License Version
+    2.0.</p>
+
+<source class="text">
+=========================================================================
+==  NOTICE file corresponding to section 4(d) of the Apache License,   ==
+==  Version 2.0, in this case for the Apache XmlBeans distribution.    ==
+=========================================================================
+
+This product includes software developed by The Apache Software
+Foundation (http://www.apache.org/).
+
+Portions of this software were originally based on the following:
+ - software copyright (c) 2000-2003, BEA Systems,
+   &lt;http://www.bea.com/&gt;.
+
+Aside from contributions to the Apache XMLBeans project, this software
+also includes:
+
+ - one or more source files from the Apache Xerces-J and Apache Axis
+   products, Copyright (c) 1999-2003 Apache Software Foundation
+
+ - W3C XML Schema documents Copyright 2001-2003 (c) World Wide Web
+   Consortium (Massachusetts Institute of Technology, European
+   Research Consortium for Informatics and Mathematics, Keio
+   University)
+
+ - Piccolo XML Parser for Java from http://piccolo.sourceforge.net/,
+   Copyright 2002 Yuval Oren under the terms of the Apache Software
+   License 2.0
+
+ - JSR-173 Streaming API for XML from
+   http://sourceforge.net/projects/xmlpullparser/,
+   Copyright 2005 BEA under the terms of the Apache Software
+   License 2.0
+</source>
+
+    <p>The Grinder includes <a href="ext:picocontainer">
+    PicoContainer</a>.  This is distributed under the terms of the
+    PicoContainer license.</p>
+
+<source class="text">
+Copyright (c) 2003-2005, PicoContainer Organization
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+  Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+  Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+  Neither the name of the PicoContainer Organization nor the names of its
+  contributors may be used to endorse or promote products derived from this
+  software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+</source>
+
+    <p>The Grinder includes <a href="ext:picocontainer">ASM</a>.  This
+    is distributed under the terms of the <a
+    href="http://asm.ow2.org/license.html">ASM license</a>.</p>
+
+    <p>The Grinder includes components from the extra166y package.
+       This package is in the public domain.
+       See <a href="ext:jsr166">
+       http://g.oswego.edu/dl/concurrency-interest/</a>.</p>
+
+    <p>The Grinder includes <a href="http://www.slf4j.org/">SLF4J</a>,
+    under the terms of the <a
+    href="http://www.slf4j.org/license.html">SLF4J license</a>.</p>
+
+    <p>The Grinder includes <a
+    href="https://github.com/mmcgrana/ring/">Ring</a>, under the
+    terms of the <a
+    href="https://github.com/mmcgrana/ring/blob/master/LICENSE">Ring
+    license</a>.</p>
+
+    <p>The Grinder includes <a
+    href="https://github.com/dakrone/cheshire/">Cheshire</a> under
+    the terms of the <a
+    href="https://raw.github.com/dakrone/cheshire/master/LICENSE">Chshire
+    license</a>.</p>
+
+    <p>The Grinder includes <a
+    href="https://github.com/mmcgrana/clj-stacktrace/">clj-stacktrace</a>
+    under the terms of the <a
+    href="https://raw.github.com/mmcgrana/clj-stacktrace/master/LICENSE">
+    clj-stacktrace license</a>.</p>
+
+    <p>The Grinder includes <a href="http://jquery.com/">JQuery</a>,
+    under the terms of the <a
+    href="https://raw.github.com/jquery/jquery/master/MIT-LICENSE.txt">JQuery
+    license</a>.</p>
+
+    <p>The Grinder includes <a href="http://d3js.org/">D3</a> under
+    the terms of the <a
+    href="https://raw.github.com/mbostock/d3/master/LICENSE">D3
+    license</a>.</p>
+
+  <section>
+    <title>Components licensed under the Eclipse Public License, Version 1.0</title>
+
+    <p>The Grinder includes the following components under the terms
+    of the <a
+    href="http://www.opensource.org/licenses/lgpl-2.1.php">Eclipse
+    Public License, Version 1.0</a>.
+    </p>
+
+    <p><a href="http://logback.qos.ch/">Logback/</a>)</p>
+
+    <p><a href="http://clojure.org/">Clojure</a></p>
+
+    <p><a href="https://github.com/clojure/core.memoize/">
+    core.cache</a></p>
+
+    <p><a href="https://github.com/clojure/core.incubator/">
+    core.incubator</a></p>
+
+    <p><a href="https://github.com/clojure/core.memoize/">
+    core.memoize</a></p>
+
+    <p><a href="https://github.com/weavejester/compojure/">
+    Compojure</a></p>
+
+    <p><a href="https://github.com/weavejester/clout/">Clout</a></p>
+
+    <p><a href="https://github.com/weavejester/hiccup/">Hiccup</a></p>
+
+    <p><a href="https://github.com/ngrunwald/ring-middleware-format/">
+    ring-middleware-format</a></p>
+
+    <p><a href="https://github.com/clojure/tools.logging/">
+    tools.logging</a></p>
+
+    <p><a href="https://github.com/ptaoussanis/tower/">Tower</a></p>
+
+    <p><a href="https://github.com/ptaoussanis/timbre/">Timbre</a></p>
+
+    <p><a href="https://github.com/clojure/tools.macro/">
+    clj-tools-macro</a></p>
+
+    <p><a href="https://github.com/lancepantz/clj-yaml/">
+    clj-yaml</a></p>
+
+  </section>
+
+  <section>
+    <title>Components licensed under the Apache License, Version 2.0</title>
+
+    <p>The Grinder includes the following components under the terms
+    of the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">
+    Apache License Version 2.0.</a>.</p>
+
+    <p><a href="http://wiki.fasterxml.com/JacksonHome/">
+    Jackson</a></p>
+
+    <p><a href="http://http-kit.org/">HTTP Kit</a></p>
+
+    <p><a href="http://commons.apache.org/proper/commons-codec/">
+    Commons Codec</a></p>
+
+    <p><a href="http://code.google.com/p/snakeyaml/">SnakeYaml</a></p>
+
+    <p><a href="http://square.github.io/cubism/">Cubism.js</a></p>
+
+    
+  </section>
+  </section>
+</body>
+</document>
+

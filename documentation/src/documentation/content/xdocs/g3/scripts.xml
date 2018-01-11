@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Scripts</title>
+</header>
+<body>
+
+  <p>This section describes The Grinder 3 scripting API. If you've
+  used The Grinder 2 for HTTP testing and you're not a programmer, you
+  might be a bit daunted. Don't worry, its just as easy to record and
+  replay HTTP scripts with The&nbsp;Grinder&nbsp;3.</p>
+
+  <section>
+    <title>Jython and Python</title>
+
+    <p>The default scripting engine is Jython - the Java
+    implementation of Python. Python is powerful, popular and easy on
+    the eye. If you've not seen any Python before, take a look at the
+    <a href="site:script-gallery">script gallery</a> and Richard
+    Perks' <a href="site:tutorial">tutorial</a> to get a taste of what
+    its like. There are plenty of resources on the web, here are a few
+    of them to get you started:</p>
+
+    <ul>
+      <li><a href="ext:jython">The Jython home page</a></li>
+      <li><a href="ext:python">The Python language web site</a></li>
+      <li><a href="ext:pythonpitfalls">Ten Python pitfalls</a></li>
+    </ul>
+
+    <p>I recommend the <a href="ext:amazon/jython-essentials">Jython
+    Essentials</a> book; you can read the <a
+    href="ext:oreilly/jython-essentials-c1">introductory chapter</a>
+    for free.</p>
+
+    <section>
+      <title>Alternative languages</title>
+
+      <p>The Grinder 3.6 and later support test scripts written in <a
+      href="site:clojure">Clojure</a>.</p>
+
+      <p>Ryan Gardner has written an add-on <a
+      href="ext:grinder-groovy">script engine for Groovy</a>.</p>
+    </section>
+  </section>
+
+  <section id="jython-scripts">
+    <title>Jython scripting</title>
+
+    <section>
+      <title>Script structure</title>
+
+      <p>Jython scripts must conform to a few conventions in order to work
+      with The Grinder framework. I'll lay the rules out in fairly dry
+      terms before proceeding with an example. Don't worry if this
+      makes no sense to you at first, the examples are much easier to
+      comprehend.</p>
+
+      <ol>
+        <li>
+          <strong>Scripts must define a class called
+          <code>TestRunner</code></strong>
+
+          <p>When a worker process starts up it runs the test script
+          once. The test script must define a class called
+          <code>TestRunner</code>. The Grinder engine then creates an
+          instance of <code>TestRunner</code> for each worker thread.
+          A thread's TestRunner instance can be used to store
+          information specific to that thread.</p>
+
+          <note>Although recommended, strictly <code>TestRunner</code>
+          doesn't need to be a class. See the <a
+          href="site:script-gallery/helloworldfunctions">Hello World
+          with Functions</a> example.</note>
+        </li>
+
+        <li>
+          <strong>The <code>TestRunner</code> instance must be
+          callable</strong>
+
+          <p>A Python object is callable if it defines a
+          <code>__call__</code> method. Each worker thread performs a
+          number of <em>runs</em> of the test script, as configured by
+          the property <code>grinder.runs</code>. For each run, the
+          worker thread calls its <code>TestRunner</code>; thus the
+          <code>__call__</code> method can be thought of as the
+          definition of a run.</p>
+        </li>
+
+        <li>
+          <strong>The test script can access services through the
+          <code>grinder</code> object</strong>
+
+          <p>The engine makes an object called <code>grinder</code>
+          available for the script to import. It can also be imported
+          by any modules that the script calls. This is an instance of
+          the <a
+          href="site:api/ScriptContext">Grinder.ScriptContext</a>
+          class and provides access to context information (such as
+          the worker thread ID) and services (such as logging and
+          statistics).</p>
+        </li>
+
+        <li>
+          <strong>The script file name must end in <code>.py</code></strong>
+
+          <p>The file name suffix is used to identify Jython
+          scripts.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <title>Canonical test script structure</title>
+
+      <p>This is an example of a script that conforms to the rules
+      above. It doesn't do very much - every run will log <em>Hello
+      World</em> to the worker process log.</p>
+
+<source class="jython">
+from net.grinder.script.Grinder import grinder
+
+# An instance of this class is created for every thread.
+class TestRunner:
+    # This method is called for every run.
+    def __call__(self):
+        # Per thread scripting goes here.
+        grinder.logger.info("Hello World")
+</source>
+    </section>
+  <section>
+      <title>Automatically generating scripts</title>
+    <p>If you are creating a script for a website or web application, you can use the <a href="site:g3/tcpproxy/HTTPPluginTCPProxyFilter">TCPProxy</a> to generate an HTTPPlugin script
+      suitable for use with The Grinder.</p>
+  </section>
+  </section>
+
+  <section id="tests">
+    <title>Tests</title>
+
+    <p>Although our simple test script can be used with The Grinder
+    framework and can easily be started in many times in many worker
+    processes on many machines, it doesn't report any statistics. For
+    this we need to create some tests. A <a
+    href="site:api/Test">Test</a> has a unique test number and
+    description. If you are using the <a
+    href="site:console">console</a>, it will update automatically to
+    display new <code>Test</code>s as they are created.</p>
+
+    <p>Let's add a <code>Test</code> to our script.</p>
+
+<source class="jython">
+from net.grinder.script import Test
+from net.grinder.script.Grinder import grinder
+
+# Create a Test with a test number and a description.
+test1 = Test(1, "Log method")
+
+class TestRunner:
+    def __call__(self):
+        grinder.logger.info("Hello World")
+</source>
+
+    <p>Here we have created a single <code>Test</code> with the test
+    number <em>1</em> and the description <em>Log method</em>. Note
+    how we import the <code>grinder</code> object and the
+    <code>Test</code> class in a similar manner to
+    Java.</p>
+
+    <p>Now the console knows about our <code>Test</code>, but we're
+    still not using it to record anything. Let's record how long our
+    <code>grinder.logger.info</code> method takes to execute.
+    <code>Test.record</code> adds the appropriate instrumentation code
+    to the byte code of method. The time taken and the number of calls
+    will be recorded and reported to the console.</p>
+
+<source class="jython">
+from net.grinder.script import Test
+from net.grinder.script.Grinder import grinder
+
+test1 = Test(1, "Log method")
+
+# Instrument the info() method with our Test.
+test1.record(grinder.logger.info)
+
+class TestRunner:
+    def __call__(self):
+        grinder.logger.info("Hello World")
+</source>
+
+    <p>This is a complete test script that works within The Grinder
+    framework and reports results to the console.</p>
+
+    <p>You're not restricted to instrument method calls. In fact, it's
+    more common to instrument objects. Here's an example using The Grinder's
+    <a href="site:g3/plugins/http-plugin">HTTP plug-in</a>.</p>
+
+<source class="jython">
+# A simple example using the HTTP plugin that shows the retrieval of a
+# single page via HTTP.
+
+from net.grinder.script import Test
+from net.grinder.script.Grinder import grinder
+from net.grinder.plugin.http import HTTPRequest
+
+test1 = Test(1, "Request resource")
+request1 = HTTPRequest()
+test1.record(request1)
+
+class TestRunner:
+    def __call__(self):
+        result = request1.GET("http://localhost:7001/")
+</source>
+
+  </section>
+
+  <section>
+    <title>The Grinder script API</title>
+
+    <p>With what you've seen already you have the full power of Jython
+    at your finger tips. You can use practically <em>any</em> Java or
+    Python code in your test scripts.</p>
+
+    <p>The Grinder script API can be used to access services from The
+    Grinder. The <a href="site:api/index">Javadoc</a> contains full
+    information on all the packages, classes and interfaces that make
+    up the core API, as well as additional packages added by the
+    shipped plug-ins. This section provides overview information on
+    various areas of the API. See also the <a
+    href="site:g3/plugins/http-plugin">HTTP plugin
+    documentation</a>.</p>
+
+    <dl>
+      <dt><strong>The <a
+      href="site:api/script-package">net.grinder.script</a>
+      package</strong></dt>
+
+      <dd>
+        <p>An instance of <a
+        href="site:api/ScriptContext">Grinder.ScriptContext</a> called
+        <code>grinder</code> is automatically available to all
+        scripts. This object provides access to context information
+        and acts a starting point for accessing other services. The
+        instance can be explicitly imported from other Python modules
+        as <code>net.grinder.script.Grinder.grinder</code>.</p>
+
+        <p>We have described the use of the <a
+        href="site:api/Test">Test</a> class <a
+        href="#tests">above</a>.</p>
+
+        <p>The <a href="site:api/Statistics">Statistics</a> interface
+        allows scripts to query and modify <a
+        href="site:g3/statistics">statistics</a>, provide custom
+        statistics, and register additional views of standard and
+        custom statistics.</p>
+
+      </dd>
+
+      <dt><strong>The <a
+      href="site:api/common-package">net.grinder.common</a>
+      package</strong></dt>
+
+      <dd>
+        <p>This package contains common interfaces and utility classes
+        that are used throughout The Grinder and that are also useful
+        to scripts.</p>
+      </dd>
+
+    </dl>
+  </section>
+
+  <section id="cwd">
+    <title>Working directory</title>
+
+    <p>When the script has been distributed using the console, the
+    working directory (CWD) of the worker process will be the local
+    agent's cache of the distributed files. This allows the script to
+    conveniently refer to other distributed files using relative
+    paths.</p>
+
+    <p>Otherwise, the working directory of the worker process will be
+    that of the agent process that started it.</p>
+
+    <section>
+      <title>Distributing Java code</title>
+
+      <p>You can add Java <code>jar</code> or <code>.class</code>
+      files to your console distribution directory and use the file
+      distribution mechanism to push the code to the agent's cache.
+      Use relative paths and the <code>grinder.jvm.classpath</code>
+      property to add the files to the worker process
+      <code>CLASSPATH</code>.
+      </p>
+
+      <p>For example, you might distribute the following files</p>
+      <source class="text">     
+grinder.properties
+myscript.py
+lib/myfile.jar
+      </source>
+
+      <p>where <code>grinder.properties</code> contains:</p>
+      <source class="text">
+grinder.script=myscript.py
+grinder.jvm.classpath=lib/myfile.jar
+      </source>
+    </section>
+  </section>
+
+</body>
+</document>

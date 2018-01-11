@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+  <header>
+    <title>Core properties</title>
+  </header>
+  <body>
+    <p>The Grinder is controlled by setting properties in the
+    <code>grinder.properties</code> file. Here's a minimal
+    <code>grinder.properties</code> file that uses the
+    <a href="site:http-plugin">HttpPlugin</a>:</p>
+
+<source class="text">
+grinder.plugin=net.grinder.plugin.http.HttpPlugin
+grinder.test0.parameter.url=http://localhost:80/index.html
+</source>
+
+    <p>If you start The Grinder using this properties file it will
+    communicate with the console using default addresses, use one
+    worker process, one thread, and runs one cycle which contains once
+    test. This is not too much use, so read on...</p>
+
+    <section>
+      <title>Table of core properties</title>
+
+      <p>This table lists the core properties understood by The
+      Grinder engine. Refer to plugin specific documentation for
+      additional properties understood by the plugin you are
+      using.</p>
+
+      <table>
+	<tr>
+	  <td><code>grinder.processes</code></td>
+
+	  <td>The number of worker processes to start. Default 1.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.threads</code></td>
+
+	  <td>The number of aworker threads that each worker process
+	  spawns. Default 1.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.cycles</code></td>
+
+	  <td>The number of cycles of the test script each thread
+	  performs. 0 means "run forever". Default 1.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.jvm</code></td>
+
+	  <td>Use an alternate JVM for worker processes. Defaults to
+	  <code>java</code> so you do not need to specify this if your
+	  <code>PATH</code> is sensible.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.jvm.classpath</code></td>
+
+	  <td>Use to adjust the classpath used for the worker process
+	  JVMs. Anything specified here will be prepended to the
+	  classpath used to start the Grinder processes.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.jvm.arguments</code></td>
+
+	  <td>Additional arguments to worker process JVM's.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.logDirectory</code></td>
+
+	  <td>Directory to write log files to. Created if it doesn't
+	  already exist.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.appendLog</code></td>
+
+	  <td>Append to, rather than overwrite, existing log files.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.hostID</code></td>
+
+	  <td>Override the "host" string used in log filenames and
+	  logs. Defaults to the host name.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.receiveConsoleSignals</code></td>
+
+	  <td>Set to <code>true</code> to respond to console signals.
+	  Default <code>true</code>.</td>
+	</tr>
+	
+	<tr>
+	  <td><code>grinder.reportToConsole</code></td>
+
+	  <td>Set to <code>true</code> to send statistics to the
+	  console. Default <code>true</code>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.consoleAddress</code></td>
+
+	  <td>The IP address or hostname to use for communication from
+	  the Grinder processes to the console. Default is all the
+	  network interfaces of the local machine.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.consolePort</code></td>
+
+	  <td>The IP port to use for communication from the Grinder
+	  processes to the console. Default is <code>6372</code>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.grinderAddress</code></td>
+
+	  <td>The multicast address to use for communication from the
+	  console to the agent and worker processes. See <a
+	  href="site:gfaq/g2faq/multicast">What do I need to do to set up
+	  multicast?</a>. Default <code>228.1.1.1</code>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.grinderPort</code></td>
+
+	  <td>The multicast port to use for communication from the
+	  console to the agent and worker processes. Default
+	  <code>1234</code>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.reportToConsole.interval</code></td>
+
+	  <td>The period at which each process sends updates to the
+	  console. This also controls the frequency at which the data
+	  files are flushed. Default 500 ms.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.thread.initialSleepTime</code></td>
+
+	  <td> The maximum time in milliseconds that each thread waits
+	  before starting. Unlike the other sleep times, this is
+	  varied according to a flat random distribution. The actual
+	  sleep time will be a random value between 0 and the
+	  specified value. Affected by
+	  <code>grinder.thread.sleepTimeFactor</code>, but not
+	  <code>grinder.thread.sleepTimeVariation</code>. Default 0
+	  ms.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.thread.sleepTime</code></td>
+
+	  <td>The time in milliseconds to wait between individual
+	  tests. Affected by both
+	  <code>grinder.thread.sleepTimeFactor</code>, and
+	  <code>grinder.thread.sleepTimeVariation</code>. Default 0
+	  ms.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.thread.sleepTimeFactor</code></td>
+
+	  <td> Apply a factor to all the sleep times you've specified.
+	  Setting this to <code>0.1</code> would run the script ten
+	  times as fast. Default <code>1</code>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.thread.sleepTimeVariation</code></td>
+
+	  <td>The Grinder varies the specified sleep times according
+	  to a Normal distribution. This property specifies a
+	  fractional range within which nearly all (99.75%) of the
+	  times will lie. E.g., if the sleep time is specified as 1000
+	  and the sleepTimeVariation is set to <code>0.1</code>, then
+	  99.75% of the actual sleep times will be between 900 and
+	  1100 milliseconds. Default <code>0.2</code>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.plugin</code></td>
+
+	  <td>The plugin class to use. Currently each script uses a
+	  single plugin.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.plugin.parameter</code></td>
+
+	  <td>Prefix for properties interpreted by the plugin. See the
+	  the <a href="site:http-plugin">HTTP plugin documentation</a>
+	  for examples.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.test0</code></td>
+
+	  <td>Prefix for test 0 properties. Test 1 properties have a
+	  prefix of <code>grinder.test1</code>, and so on. The tests
+	  are run in numerical order.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.test0.description</code></td>
+
+	  <td>Information string used in the log files and the
+	  console.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.test0.sleepTime</code></td>
+
+	  <td>Override <code>grinder.thread.sleepTime</code> for a
+	  specific test.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.test0.parameter</code></td>
+
+	  <td>Prefix for test specific properties interpreted by the
+	  plugin. See the the <a href="site:http-plugin">HTTP plugin
+	  documentation</a> for examples.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.logProcessStreams</code></td>
+
+	  <td>Set to <code>false</code> to disable the logging of
+	  output and error steams for worker processes. You might want
+	  to use this to reduce the overhead of running a client
+	  thread. Default <code>true</code>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.recordTime</code></td>
+
+	  <td>Set to <code>false</code> to disable reporting of <a
+	  href="site:timing">timing information</a>; other statistics
+	  are still reported. Default <code>true</code>.</td>
+	</tr>
+      </table>
+    </section>
+  </body>
+</document>

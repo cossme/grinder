@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Clojure</title>
+</header>
+<body>
+
+  <p>The Grinder 3.6 and later optionally support <a
+  href="ext:clojure">Clojure</a> as an alternative language for test
+  scripts.</p>
+
+  <section>
+    <title>How to use Clojure</title>
+
+    <p>Install Clojure and add the path to the installation's <code>clojure-x.x.x.jar</code>
+    file to the start of the <code>CLASSPATH</code> you use for The Grinder agent processes.
+    </p>
+  </section>
+
+  <section>
+    <title>Clojure scripting</title>
+
+    <section>
+      <title>Script structure</title>
+
+      <p>Clojure scripts must conform to a few conventions in order to work
+      with The Grinder framework.</p>
+
+      <ol>
+        <li>
+          <strong>Scripts must return a function that creates test runner functions</strong>
+
+          <p>When a worker process starts, it runs the test script
+          once. The test script should return a factory function that
+          creates and returns a <em>test runner function</em>.</p>
+
+	  <p>Each worker thread calls the factory function to create a
+	  test runner function. Worker threads perform a number of
+	  <em>runs</em> of the test script, as configured by the
+	  property <code>grinder.runs</code>. For each run, the worker
+	  thread calls its test runner function; thus the test
+	  runner function can be thought of as the definition of a
+	  run.</p>
+        </li>
+
+        <li>
+          <strong>The test script can access services through the
+          <code>grinder</code> object</strong>
+
+          <p>The engine makes an object called <code>grinder</code>
+          available for the script to import. It can also be imported
+          by any modules that the script calls. This is an instance of
+          the <a
+          href="site:api/ScriptContext">Grinder.ScriptContext</a>
+          class and provides access to context information (such as
+          the worker thread ID) and services (such as logging and
+          statistics).</p>
+        </li>
+
+        <li>
+          <strong>The script file name must end in <code>.clj</code></strong>
+
+          <p>The file name suffix is used to identify Clojure
+          scripts.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <title>Canonical test script structure</title>
+
+      <p>This is an example of a script that conforms to the rules
+      above. It doesn't do very much - every run will log <em>Hello
+      World</em> to the output log.</p>
+
+<source class="clojure">
+;; helloworld.clj
+(let [grinder net.grinder.script.Grinder/grinder]
+
+  ;; The script returns a factory function, called once by each worker
+  ;; thread.
+  (fn []
+
+    ;; The factory function returns test runner function.
+    (fn []	
+      (do
+        (.. grinder (getLogger) (info "Hello World"))))))
+</source>
+    </section>
+
+    <section>
+      <title>Recording an HTTP script</title>
+
+      <p>You can use the TCPProxy to <a
+      href="site:tcpproxy/clojure">record a Clojure script</a> from a
+      browser session.</p>
+    </section>
+
+  </section>
+
+</body>
+</document>

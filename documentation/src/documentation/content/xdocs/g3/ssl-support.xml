@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>SSL Support</title>
+</header>
+
+<body>
+
+  <p>The Grinder 3 supports the use of SSL by scripts.
+  The Grinder 3 implements SSL using the Java Secure Socket
+  Extension (JSSE) included in the Java run time. When used with
+  the HTTP Plug-in, this is as simple as using <code>https</code>
+  instead of <code>http</code> in URIs. Scripts can obtain a suitable
+  <code>SSLContext</code> and hence a <code>SSLSocketFactory</code>
+  for non-HTTP use cases, and can control the allocation of SSL
+  sessions to worker threads.</p>
+
+  <section>
+    <title>Before we begin</title>
+
+    <section>
+      <title>Performance</title>
+
+      <p>Simulating multiple SSL sessions on a single test machine may
+      or may not be realistic. A typical browser running on a desktop
+      PC has the benefit of a powerful CPU to run the SSL
+      cryptography. Be careful that your results aren't constrained
+      due to inadequate test client CPU power.</p>
+    </section>
+
+    <section>
+      <title>The Grinder's SSL implementation is not secure</title>
+
+      <p>To reduce the client side performance overhead, The Grinder
+      deliberately accelerates SSL initialisation by using a random
+      number generator that is seeded with a fixed number. Further, no
+      validation of server certificates is performed. Neither of these
+      hinder SSL communication, but they do make it less secure.</p>
+
+      <warning> No guarantee is made as to the cryptographic strength
+      of any SSL communication using The Grinder.</warning>
+
+      <p>This acceleration affects initialisation time only and should
+      not affect timing information obtained using The Grinder.</p>
+    </section>
+  </section>
+
+  <section>
+    <title>Controlling when new SSL sessions are created</title>
+
+    <p>By default The Grinder creates a new SSL session for each run
+    carried out by each worker thread. This is in line with the usual
+    convention of simulating a user session with a worker thread
+    executing the part of the script defined by
+    <code>TestRunner.__call__()</code>.</p>
+
+    <p>Alternatively, scripts may wish to have an SSL session per
+    worker thread, i.e. for each thread to reuse SSL sessions on
+    subsequent executions of <code>TestRunner.__call__()</code>. This
+    can be done with the
+    <code>SSLControl.setShareContextBetweenRuns()</code> method:</p>
+
+<source class="jython">
+from net.grinder.script.Grinder import grinder
+grinder.SSLControl.shareContextBetweenRuns = 1
+</source>
+
+    <p>This will cause each worker thread to reuse SSL sessions
+    between runs. SSL sessions will still not be shared between worker
+    threads. Calling <code>setShareContextBetweenRuns()</code> affects
+    all of the worker threads.</p>
+  </section>
+
+  <section>
+    <title>Using client certificates</title>
+
+    <p>If a server requests or requires a client certificate, The
+    Grinder must have some way of providing one - this involves
+    specifying a key store.</p>
+
+<source class="jython">
+from net.grinder.script.Grinder import grinder
+
+class TestRunner:
+    def __call__(self):
+        grinder.SSLControl.setKeyStoreFile("mykeystore.jks", "passphrase")
+</source>
+
+    <p>It is only valid to use <code>setKeyStoreFile</code> from a
+    worker thread, and it only affects that worker thread.</p>
+
+    <p>There is also a method called <code>setKeyStore</code> which
+    takes a <code>java.io.InputStream</code> which may be useful if
+    your key store doesn't live on the local file system. Both methods
+    have an overloaded version that allows the key store type to be
+    specified, otherwise the default type is used (normally
+    <code>jks</code>).</p>
+
+    <p>Whenever <code>setKeyStoreFile</code>,
+    <code>setKeyStore</code>, or <code>setKeyManagers</code> (see
+    below) is called, the current SSL session for the thread is
+    discarded. Consequently, you usually want to call these methods at
+    the beginning of your <code>__call__()</code> method or from the
+    <code>TestRunner.__init__()</code> constructor. Setting the
+    thread's key store in <code>TestRunner.__init__()</code> is
+    especially recommended if you calling
+    <code>setShareContextBetweenRuns(true)</code> to share SSL
+    sessions between runs.</p>
+  </section>
+
+  <section>
+    <title>FAQ</title>
+
+    <p>The astute reader who is familiar with key stores may have a
+    few questions. Here's a mini FAQ:</p>
+
+    <ol>
+      <li>
+        <p><em>If I have several suitable certificates in my key
+        store, how does The Grinder chose between them?</em></p>
+
+        <p>The Grinder relies on the JVM's default
+        <code>KeyManager</code> implementations. This picks a
+        certificate from the store based on SSL negotiation with the
+        server. If there are several suitable certificates, the only
+        way to control which is used is to <a
+        href="#own-key-manager">provide your own
+        <code>KeyManager</code></a>.</p>
+      </li>
+
+      <li>
+        <p><em><code>setKeyStoreFile</code> has a parameter for the
+        key store password. What about the pass phrase that protects
+        the private key in the key store?</em></p>
+
+        <p>The pass phrases for keys must be the same as the key store
+        password. This is a restriction of the default
+        <code>KeyManager</code>s. If you don't like this, you can <a
+        href="#own-key-manager">provide your own
+        <code>KeyManager</code></a>.</p>
+      </li>
+
+      <li>
+        <p><em>Shouldn't I need to specify a set of certificates for
+        trusted Certificate Authorities?</em></p>
+
+        <p>No. The Grinder does not validate certificates received from
+        the server, so does not need a set of CA certificates.</p>
+      </li>
+
+      <li>
+        <p><em>Can I use the properties
+        <code>javax.net.ssl.keyStore</code>,
+        <code>javax.net.ssl.keyStoreType</code>, and
+        <code>javax.net.ssl.keyStorePassword</code> to specify a
+        global keystore?</em>
+  </p>
+
+  <p>No. The Grinder does not use these properties, primarily
+        because the JSSE does not provide a way to access its default
+        SSLContext.</p>
+       </li>
+    </ol>
+  </section>
+
+  <section id="own-key-manager">
+    <title>Picking a certificate from a key store [Advanced]</title>
+
+    <p>Here's an example script that provides its own
+    <code>X509KeyManager</code> implementation which controls which
+    client certificate to use. The example is hard coded to always use
+    the certificate with the alias <code>myalias</code>.</p>
+
+<source class="jython">
+from com.sun.net.ssl import KeyManagerFactory,X509KeyManager
+from java.io import FileInputStream
+from java.security import KeyStore
+from jarray import array
+
+class MyManager(X509KeyManager):
+    def __init__(self, keyStoreFile, keyStorePassword):
+        keyStore = KeyStore.getInstance("jks")
+        keyStore.load(FileInputStream(keyStoreFile), keyStorePassword)
+
+        keyManagerFactory = \
+         KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+        keyManagerFactory.init(keyStore, keyStorePassword)
+
+        # Assume we have one key manager.
+        self._delegate = keyManagerFactory.keyManagers[0]
+
+    def __getattr__(self, a):
+        """Some Python magic to pass on all invocations of methods we
+        don't define on to our delegate."""
+
+        if self.__dict__.has_key(a): return self.__dict__[a]
+        else: return getattr(self._delegate, a)
+
+    def chooseClientAlias(self, keyTypes, issuers):
+        return "myalias"
+
+myManager = MyManager("keystore.jks", "password")
+myManagerArray = array((myManager,), X509KeyManager)
+
+class TestRunner:
+    def __call__(self):
+        grinder.SSLControl.setKeyManagers(myManagerArray)
+        # ...
+</source>
+
+  </section>
+
+  <section>
+    <title>Debugging</title>
+
+    <p>When debugging SSL interactions, you may find it useful to set
+    the following in <code>grinder.properties</code>.</p>
+
+<source class="sh">
+grinder.jvm.arguments=-Djavax.net.debug=ssl
+# or -Djavax.net.debug=all
+</source>
+
+  </section>
+
+</body>
+</document>

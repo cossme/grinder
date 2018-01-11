@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding='ISO-8859-1'?>
+<!--
+
+"How to build the Grinder Documentation" by Philip Aston.
+
+What do I need?
+===============
+
+Jakarta Ant 1.6.2
+J2SE 1.4.1 or later
+Apache Forrest 0.9
+Jimi installed as per the Forrest FAQ
+(http://forrest.apache.org/docs_0_70/faq.html#pdf_images).
+
+(You might not need these exact versions).
+
+
+What do I do?
+=============
+
+Do the following:
+
+  1. Acquire and install Ant. Set/export ANT_HOME, JAVA_HOME and PATH
+     as described in the Ant user guide.
+
+  2. Acquire and install Apache Forrest. Update
+     etc/localpaths.properties to reflect your Forrest installation.
+
+  3. Type ant (or ant.bat on Windows platforms)
+
+Say
+   ant -projecthelp
+
+for details of other targets.
+-->
+
+<project
+  name="The Grinder Documentation"
+  default="all"
+  basedir="."
+  xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <property name="Name" value="The Grinder Documentation"/>
+  <property name="name" value="grinder-documentation"/>
+
+  <!-- source of all evil -->
+  <property name="src.dir" value="src"/>
+  <property name="grinder.dir" value="../grinder"/>
+  <property name="grinder-core.dir" value="../grinder-core"/>
+  <property name="grinder-http.dir" value="../grinder-http"/>
+  <property name="grinder-httpclient.dir" value="../grinder-httpclient"/>
+  <property name="etc.dir" value="etc"/>
+  <property name="generated.dir" value="generated"/>
+  <property name="generated-script-javadoc.dir" value="${generated.dir}/script-javadoc"/>
+
+  <!-- local settings -->
+  <property file="${etc.dir}/localpaths.properties"/>
+
+  <!-- output -->
+  <property name="release.dir" value="releases"/>
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="doc.dir" value="docs"/>
+  <property name="script-javadoc.dir" value="${doc.dir}/g3/script-javadoc"/>
+  <property name="build.log" value="${build.dir}/build.log"/>
+
+  <property name="mvn-site.dir" location="${doc.dir}/mvn-site"/>
+
+  <!-- =================================================================== -->
+  <!-- Initialization target                                               -->
+  <!-- =================================================================== -->
+  <target name="init">
+    <tstamp/>
+
+    <mkdir dir="${build.dir}"/>
+    <record name="${build.log}" loglevel="verbose" append="false"/>
+
+    <echo message="** Building ${Name} on ${TODAY} **"/>
+
+    <path id="jython.classpath">
+      <pathelement path="${jython.home}/jython.jar"/>
+    </path>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Rules to create the documentation                               -->
+  <!-- =================================================================== -->
+
+  <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+           uri="antlib:org.apache.maven.artifact.ant"
+           classpath="${maven-ant-tasks.jar}" />
+
+  <target name="mvn-site">
+    <artifact:mvn pom="../pom.xml" mavenHome="${mvn.home}" fork="true">
+      <arg value="clean"/>
+      <arg value="install"/>
+      <arg value="site"/>
+      <arg value="site:stage"/>
+      <arg value="-DstagingDirectory=${mvn-site.dir}"/>
+    </artifact:mvn>
+  </target>
+
+  <target name="project-xml"
+          depends="init"
+          description="Generates the project XML files for a documentation build.">
+
+    <property name="xml-output.dir"
+              value="${generated.dir}/project-xml"/>
+
+    <mkdir dir="${xml-output.dir}"/>
+
+    <delete>
+      <fileset dir="${xml-output.dir}"/>
+    </delete>
+
+    <java classname="org.python.util.jython" logError="true"
+      output="${xml-output.dir}/changes.xml">
+
+      <sysproperty key="python.home" path="${jython.home}"/>
+      <classpath refid="jython.classpath"/>
+
+      <arg path="${etc.dir}/changes2xml.py"/>
+      <arg value="${grinder.dir}/CHANGES"/>
+    </java>
+
+    <java classname="org.python.util.jython" logError="true"
+      output="${xml-output.dir}/todo.xml">
+
+      <sysproperty key="python.home" path="${jython.home}"/>
+      <classpath refid="jython.classpath"/>
+
+      <arg path="${etc.dir}/outline2xml.py"/>
+      <arg value="${grinder.dir}/TODO"/>
+    </java>
+
+    <java classname="org.python.util.jython" logError="true"
+      output="${xml-output.dir}/scripts.xml">
+
+      <sysproperty key="python.home" path="${jython.home}"/>
+      <classpath refid="jython.classpath"/>
+
+      <arg path="${etc.dir}/scripts2XML.py"/>
+      <arg value="${grinder.dir}/examples/helloworld.py"/>
+      <arg value="${grinder.dir}/examples/http.py"/>
+      <arg value="${grinder.dir}/examples/scenario.py"/>
+      <arg value="${grinder.dir}/examples/fba.py"/>
+      <arg value="${grinder.dir}/examples/digestauthentication.py"/>
+      <arg value="${grinder.dir}/examples/cookies.py"/>
+      <arg value="${grinder.dir}/examples/form.py"/>
+      <arg value="${grinder.dir}/examples/ejb.py"/>
+      <arg value="${grinder.dir}/examples/jdbc.py"/>
+      <arg value="${grinder.dir}/examples/amazon.py"/>
+      <arg value="${grinder.dir}/examples/jaxrpc.py"/>
+      <arg value="${grinder.dir}/examples/xml-rpc.py"/>
+      <arg value="${grinder.dir}/examples/helloworldfunctions.py"/>
+      <arg value="${grinder.dir}/examples/scriptlifecycle.py"/>
+      <arg value="${grinder.dir}/examples/statistics.py"/>
+      <arg value="${grinder.dir}/examples/jmssender.py"/>
+      <arg value="${grinder.dir}/examples/jmsreceiver.py"/>
+      <arg value="${grinder.dir}/examples/httpunit.py"/>
+      <arg value="${grinder.dir}/examples/email.py"/>
+      <arg value="${grinder.dir}/examples/sequence.py"/>
+      <arg value="${grinder.dir}/examples/parallel.py"/>
+      <arg value="${grinder.dir}/examples/threadrampup.py"/>
+      <arg value="${grinder.dir}/examples/helloworld.clj"/>
+    </java>
+  </target>
+
+  <target name="script-javadoc" depends="init"
+          description="Generates the script javadoc for a documentation build.">
+
+    <property name="script-javadoc-src.dir"
+        value="${build.dir}/script-javadoc-src"/>
+
+    <!-- Sigh, I'm tired of convincing the javadoc task to do the right thing
+         so instead let's create a copy of the source it should process.
+         This is faster too. -->
+    <copy todir="${script-javadoc-src.dir}">
+      <fileset dir="${grinder-core.dir}/src/main/java">
+        <include name="net/grinder/common/*.java"/>
+        <exclude name="net/grinder/common/Closer.java"/>
+        <exclude name="net/grinder/common/SkeletonThreadLifeCycleListener.java"/>
+        <exclude name="net/grinder/common/ThreadLifeCycleListener.java"/>
+        <exclude name="net/grinder/common/UncheckedGrinderException.java"/>
+        <exclude name="net/grinder/common/UncheckedInterruptedException.java"/>
+        <include name="net/grinder/script/*.java"/>
+        <exclude name="net/grinder/script/InternalScriptContext.java"/>
+        <exclude name="net/grinder/script/TestRegistry.java"/>
+        <include name="**/*.html"/>
+      </fileset>
+
+      <fileset dir="${grinder-http.dir}/src/main/java">
+        <include name="net/grinder/plugin/http/*.java"/>
+        <exclude name="net/grinder/plugin/http/HTTPPlugin.java"/>
+        <exclude name="net/grinder/plugin/http/HTTPPluginThreadState.java"/>
+        <exclude name="net/grinder/plugin/http/HTTPPluginTCPProxy*.java"/>
+        <include name="**/*.html"/>
+      </fileset>
+
+      <fileset dir="${grinder-httpclient.dir}/src/main/java">
+        <include name="HTTPClient/*.java"/>
+        <exclude name="HTTPClient/HttpURLConnection.java"/>
+        <include name="**/*.html"/>
+      </fileset>
+    </copy>
+
+    <mkdir dir="${generated-script-javadoc.dir}"/>
+
+    <delete>
+      <fileset dir="${generated-script-javadoc.dir}"/>
+    </delete>
+
+    <javadoc destdir="${generated-script-javadoc.dir}"
+             packagenames="net.grinder.*,HTTPClient.*"
+             author="true"
+             version="false"
+             use="false"
+             noindex="false"
+             windowtitle="${Name}"
+             doctitle="${Name}"
+             protected="true"
+             overview="${script-javadoc-src.dir}/net/grinder/script/overview.html"
+             source="1.5"
+             sourcepath="${script-javadoc-src.dir}">
+        <group title="The Grinder Scripting API"
+               packages="net.grinder.common,net.grinder.script,net.grinder.statistics"/>
+        <group title="HTTP Plug-in"
+               packages="net.grinder.plugin.http,HTTPClient"/>
+    </javadoc>
+  </target>
+
+  <target name="forrest" depends="init" 
+          description="Generates the documentation.">
+
+    <delete quiet="true">
+      <fileset dir="${script-javadoc.dir}"/>
+    </delete>
+
+    <copy todir="${script-javadoc.dir}">
+      <fileset dir="${generated-script-javadoc.dir}"/>
+    </copy>
+
+    <!-- Quick hack for now. -->
+    <exec executable="${forrest.home}/bin/forrest">
+     <env key="FORREST_HOME" path="${forrest.home}"/>
+    </exec>
+  </target>
+
+  <target name="all" depends="clean,mvn-site,project-xml,script-javadoc,forrest"/>
+
+  <!-- =================================================================== -->
+  <!-- Clean targets                                                       -->
+  <!-- =================================================================== -->
+
+  <!-- Doesn't depend on init, or it will undo directories created there -->
+  <target name="clean" description="Removes build files.">
+    <delete dir="${build.dir}"/>
+    <delete dir="${doc.dir}"/>
+    <delete dir="${generated.dir}"/>
+    <delete>
+      <fileset dir="." includes="**/*~" defaultexcludes="false"/>
+    </delete>
+  </target>
+
+</project>
+
+<!-- End of file -->

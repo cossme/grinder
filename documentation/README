@@ -1,0 +1,26 @@
+This is the documentation source for The Grinder. It can be used to
+build The Grinder documentation, as shipped in The Grinder's binary
+distribution and published at http://grinder.sourceforge.net.
+
+For license and copyright information, please refer to the file LICENSE
+in the source tree, available from the SourceForge SVN repository.
+
+  https://grinder.svn.sourceforge.net/svnroot/grinder/trunk/source/
+
+The Grinder is a pure Java load-testing framework that is freely
+available under a BSD style open-source license. It was originally
+developed for the book Professional Java 2 Enterprise Edition with BEA
+WebLogic Server by Paco G�mez and Peter Zadrozny. Philip Aston took
+ownership of the code and reworked it to create The Grinder 2. Philip
+continues to enhance and maintain The Grinder.
+
+This documentation source is publicly available through the
+SourceForge SVN repository.
+
+  https://grinder.svn.sourceforge.net/svnroot/grinder/trunk/documentation
+
+If you wish to contribute to the documentation, you need to be
+registered as a developer. Please request this via the grinder-use
+mailing list: https://sourceforge.net/mail/?group_id=18598
+
+

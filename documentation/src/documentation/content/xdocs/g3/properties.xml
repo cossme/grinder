@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+  <header>
+    <title>The Grinder 3 Properties File</title>
+  </header>
+  <body>
+      <p>The Grinder worker and agent processes are controlled by
+    setting properties in the <code>grinder.properties</code>
+    file.</p>
+
+    <p>All properties have default values. If you start The Grinder
+    agent process without a <code>grinder.properties</code> file it
+    will communicate with the console using default addresses, use one
+    worker process, one thread, and make one run through the test
+    script found in the file <code>grinder.py</code>. This is not much
+    use, so read on...</p>
+
+    <section>
+      <title>Table of properties</title>
+
+      <p>This table lists the properties understood by The Grinder
+      engine.</p>
+
+      <table>
+        <tr>
+          <th>Property</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+
+        <tr>
+          <td>
+            <code>grinder.processes</code>
+          </td>
+
+          <td>The number of worker processes the agent should start.</td>
+
+          <td>1</td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>grinder.threads</code>
+          </td>
+
+          <td>The number of worker threads that each worker process
+          spawns.</td>
+
+          <td>1</td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>grinder.runs</code>
+          </td>
+
+          <td>The number of runs of the test script each thread
+          performs. 0 means "run forever", and should be used when you
+          are using the console to control your test runs.</td>
+
+          <td>1</td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>grinder.processIncrement</code>
+          </td>
+
+          <td>If set, the agent will <em>ramp up</em> the number of
+          worker processes, starting the number specified every
+          <code>grinder.processesIncrementInterval</code> milliseconds. The
+          upper limit is set by <code>grinder.processes</code>.
+          </td>
+
+          <td>Start all worker processes together.</td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.processIncrementInterval</code>
+          </td>
+
+          <td>Used in conjunction with
+          <code>grinder.processIncrement</code>, this property sets
+          the interval in milliseconds at which the agent starts new
+          worker processes.</td>
+
+          <td>60000 ms</td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.initialProcesses</code>
+          </td>
+
+          <td>Used in conjunction with
+          <code>grinder.processIncrement</code>, this property sets
+          the initial number of worker processes to start.</td>
+
+          <td>The value of <code>grinder.processIncrement</code>.</td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>grinder.duration</code>
+          </td>
+
+          <td>The maximum length of time in milliseconds that each
+          worker process should run for. <code>grinder.duration</code>
+          can be specified in conjunction with
+          <code>grinder.runs</code>, in which case the worker
+          processes will terminate if either the duration time or the
+          number of runs is exceeded.</td>
+
+          <td>Run forever.</td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>grinder.script</code>
+          </td>
+
+          <td>The file name of the Jython <a
+          href="site:scripts-intro">script</a> to run.</td>
+
+          <td>grinder.py</td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>grinder.jvm</code>
+          </td>
+
+          <td>Use an alternate JVM for worker processes. Defaults to
+          <code>java</code> so you do not need to specify this if your
+          <code>PATH</code> is sensible.</td>
+
+          <td>java</td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.jvm.classpath</code>
+          </td>
+
+          <td>Use to adjust the classpath used for the worker process
+          JVMs. Anything specified here will be prepended to the
+          classpath used to start the Grinder processes. <p>Relative
+          paths are evaluated based on the worker process <a
+          href="site:scripts-intro/cwd">working directory</a>.
+          Scripts distributed using the console can refer to libraries
+          in the distribution directory by using relative
+          paths in this property.</p></td>
+
+          <td></td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.jvm.arguments</code>
+          </td>
+
+          <td>Additional arguments to worker process JVMs.</td>
+
+          <td></td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.logDirectory</code>
+          </td>
+
+          <td>Directory to write log files to. Created if it doesn't
+          already exist.</td>
+
+          <td>The local directory.</td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.hostID</code>
+          </td>
+
+          <td>Override the "host" string used in log filenames and logs.</td>
+
+          <td>The host name.</td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.consoleHost</code>
+          </td>
+
+          <td>The IP address or host name that the agent and worker processes
+          use to contact the console.</td>
+
+          <td>All the network interfaces of the local machine.</td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.consolePort</code>
+          </td>
+
+          <td>The IP port that the agent and
+          worker processes use to contact the console.</td>
+
+          <td>6372</td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.useConsole</code>
+          </td>
+
+          <td>Set to <code>false</code> to set the agent and worker
+          processes not to use the console.</td>
+
+          <td>true</td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.reportToConsole.interval</code>
+          </td>
+
+          <td>For advanced use only. The period at which each process
+          sends updates to the console.</td>
+
+          <td>500 ms</td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.initialSleepTime</code>
+          </td>
+
+          <td>The maximum time in milliseconds that each thread waits
+          before starting. Unlike the sleep times specified in
+          scripts, this is varied according to a flat random
+          distribution. The actual sleep time will be a random value
+          between 0 and the specified value. Affected by
+          <code>grinder.sleepTimeFactor</code>, but not
+          <code>grinder.sleepTimeVariation</code>.</td>
+
+          <td>0 ms</td>
+  </tr>
+
+        <tr>
+          <td>
+            <code>grinder.sleepTimeFactor</code>
+          </td>
+
+          <td> Apply a factor to all the sleep times you've specified,
+          either through a property of in a script. Setting this to
+          <code>0.1</code> would run the script ten times as fast.</td>
+
+          <td>1</td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>grinder.sleepTimeVariation</code>
+          </td>
+
+          <td>The Grinder varies the sleep times specified in scripts
+          according to a Normal distribution. This property specifies
+          a fractional range within which nearly all (99.75%) of the
+          times will lie. E.g., if the sleep time is specified as 1000
+          and the sleepTimeVariation is set to <code>0.1</code>, then
+          99.75% of the actual sleep times will be between 900 and
+          1100 milliseconds.</td>
+
+          <td>0.2</td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>grinder.reportTimesToConsole</code>
+          </td>
+
+          <td>Set to <code>false</code> to disable reporting of <a
+          href="site:faq/timing">timing information</a> to the
+          console; other statistics are still reported.</td>
+
+          <td>true</td>
+    </tr>
+
+        <tr>
+          <td>
+            <code>grinder.debug.singleprocess</code>
+          </td>
+
+          <td>If set to <code>true</code>, the agent process spawns engines in
+          threads rather than processes, using special class loaders to isolate
+          the engines. This allows the engine to be easily run in a debugger.
+          This is primarily a tool for debugging The Grinder engine, but it
+          might also be useful to advanced users.
+          <a href="site:grinderstone">GrinderStone</a> uses this property to
+          allow interactive debugging.
+
+          <p>If you want instrumentation to work, you must specify
+          <code>-javaagent:path/grinder-dcr-agent-version.jar</code>
+          on the command line. Here, <em>path</em> is the full path to
+          the agent jar file that can be found in the <code>lib</code>
+          directory, and <em>version</em> depends on the version of
+          The Grinder.
+          </p>
+          </td>
+
+          <td>false</td>
+    </tr>
+
+        <tr>
+          <td>
+            <code>grinder.debug.singleprocess.sharedclasses</code>
+          </td>
+
+          <td>For advanced use only. Specifies a comma separated list of
+          names of classes that should be shared between the worker engines when
+          <code>grinder.debug.singleprocess</code> is <code>true</code>.
+          Class names can end with a <code>*</code> wildcard. See
+          <a href="site:sourceforge/bugs/shared-classes">bug 134</a> for more details.
+          </td>
+
+          <td></td>
+    </tr>
+
+      </table>
+    </section>
+
+    <section>
+      <title>Specifying properties on the command line</title>
+
+      <p>You can also specify these properties as Java system
+      properties in the agent command line. For example, on UNIX
+      systems the following command line can be used to generate log
+      directories based on the current date.</p>
+
+<source class="sh">
+java -Dgrinder.logDirectory="log/$(date +%y%m%d)" net.grinder.Grinder
+</source>
+
+      <p>Property values set as Java system properties override values set in the
+      <code>grinder.properties</code> file. Only properties with names that
+      start "<code>grinder.</code>" are considered.
+      </p>
+    </section>
+  </body>
+</document>

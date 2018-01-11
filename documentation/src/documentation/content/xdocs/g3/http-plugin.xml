@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>The HTTP Plug-in</title>
+</header>
+
+<body>
+
+  <section>
+  <title>What's it for?</title>
+  <p>The HTTPPlugin is a mature plug-in for testing HTTP services.
+  It has a number of utilities useful for HTTP scripts as well as a
+  tool, the  <a href="site:g3/tcpproxy/HTTPPluginTCPProxyFilter">TCPProxy</a>,
+  which allows HTTP scripts to be automatically recorded. Recorded scripts
+  are often customised, for example to simulate multiple users. This requires
+  you to know a little about writing  <a
+  href="site:g3/scripts/scripts-intro">scripts</a>.
+  </p>
+
+  <p>The HTTPPlugin is built into The Grinder and is automatically initialised
+  whenever a script imports one
+  of its classes. For example:</p>
+  <source class="jython">
+from net.grinder.plugin.http import HTTPRequest
+</source>
+
+  <p>The key class provided by the plug-in is
+  <a href="site:api/HTTPRequest">HTTPRequest</a>.
+  The best way to see how to use this class is to record a script with the
+  TCPProxy.</p>
+
+  <p>The plug-in wires itself into The Grinder script life cycle. It maintains a cache
+  of connections and cookies for each worker thread which it resets at the beginning of each run.
+  Each run performed by a worker thread simulates a browser session carried out by a user.
+  Resetting a thread's cookies at the beginning of a run will cause server
+  applications that use cookie-based tracking to create a new session.</p>
+
+  <p>If your
+  server application uses some other mechanism for session tracking
+  (e.g. URL rewriting or hidden
+  parameters), the script will have to capture and resend the appropriate token.
+  The TCPProxy goes to some lengths to identify and record these tokens.
+  </p>
+
+  <p>If an <code>HTTPRequest</code> is instrumented with a
+  <code>Test</code>, the plug-in contributes additional statistics,
+  including the HTTP status code, the response body length, and
+  additional connection timing information.  These statistics appear
+  in the console and are recorded to the process data log.  If several
+  <code>HTTPRequests</code> are instrumented within the same
+  <code>Test</code> (e.g. they are called within an instrumented
+  function), the status code of the last response is recorded.</p>
+  </section>
+
+
+  <section>
+  <title>Controlling the HTTPPlugin</title>
+  <p>The behaviour of the plug-in can be controlled from within scripts run by
+  The Grinder through the use of the <a href="site:api/HTTPPluginControl">
+  HTTPPluginControl</a> facade.</p>
+
+  <section>
+  <title>Levels of Control</title>
+  <p>There are three levels of control of the behaviour of the HTTPPlugin that
+  the HTTPPluginControl facade gives you access to:</p>
+  <ol>
+  <li><strong>Default Connection Behaviour</strong>
+    <ul>
+      <li><p>Method: <code>getConnectionDefaults</code></p></li>
+      <li><p>Returns a <code>HTTPPluginConnection</code> that can be used to set
+      the default behaviour of new connections.</p></li>
+    </ul>
+  </li>
+  <li><strong>Thread Connection Behaviour</strong>
+    <ul>
+      <li><p>Method: <code>getThreadConnection</code></p></li>
+      <li><p>Returns a <code>HTTPPluginConnection</code> for a particular URL.</p></li>
+      <li><p>The resulting <code>HTTPPluginConnection</code> is valid for the current thread
+      and the current run. It can be used to set specific authentication details,
+      default headers, cookies, proxy servers, and so on for the current thread/run
+      on a per-URL basis.</p></li>
+      <li><p>This method will throw a <code>GrinderException</code> if not called from a worker thread.</p></li>
+    </ul>
+  </li>
+  <li><strong>Thread HTTPClient Context Object Behaviour</strong>
+    <ul>
+      <li><p>Method: <code>getThreadHTTPClientContext</code></p></li>
+      <li><p>Returns the HTTPClient context object for the calling worker thread. This is useful when
+      calling HTTPClient methods directly, e.g. <code>CookieModule.listAllCookies(Object)</code>.</p></li>
+      <li><p>This method will throw a <code>GrinderException</code> if not called from a worker thread.</p></li>
+    </ul>
+  </li>
+  </ol>
+  </section>
+
+  <section>
+  <title>Importing the HTTPPluginControl</title>
+  <p>Place the following line at the top of your grinder script along with
+  your other import statements</p>
+<source class="jython">
+from net.grinder.plugin.http import HTTPPluginControl
+</source>
+  </section>
+
+  <section>
+    <title>Setting HTTPClient Authorization Module</title>
+    <p>The HTTPClient Authorization module is no longer enabled by default
+    because it prevents raw authentication headers being sent through.
+    The module also slows things down as HTTPClient must parse responses
+    for challenges.</p>
+    <p>Users who still wish to use the HTTPClient
+    Authorization module can enable it using:</p>
+<source class="jython">
+control = HTTPPluginControl.getConnectionDefaults()
+control.setUseAuthorizationModule(1)
+</source>
+
+     <p>The authentication details can be set using the <a
+     href="site:api/AuthorizationInfo">AuthorizationInfo</a>
+     API. HTTPClient maintains authentication information separately
+     in each context, so the API must be called by each worker thread.
+     See the <a href="site:script-gallery/digestauthentication">
+     Digest Authentication sample</a> in the script gallery, as well
+     as the example in the next section.</p>
+
+
+  </section>
+
+  <section>
+    <title>Setting an HTTP proxy</title>
+
+    <p>Should you need to specify an HTTP proxy to route requests through
+    the following code can be used to specify the default proxy.</p>
+
+<source class="jython">
+control = HTTPPluginControl.getConnectionDefaults()
+control.setProxyServer("localhost", 8001)
+</source>
+
+    <p>HTTP proxies can also be specified at the thread connection level. This
+    is useful to set proxies on a per URL basis.</p>
+
+<source class="jython">
+proxyURL1 = HTTPPluginControl.getThreadConnection("http://<em>url1</em>")
+proxyURL2 = HTTPPluginControl.getThreadConnection("http://<em>url2</em>")
+proxyURL1.setProxyServer("localhost", 8001)
+proxyURL2.setProxyServer("localhost", 8002)
+</source>
+
+    <p>If the HTTP proxy requires authentication, enable the HTTPClient Authorization Module, as described in the previous section. Having so, each worker thread can set up the appropriate authentication details using the <a href="site:api/AuthorizationInfo">AuthorizationInfo</a> API. For example:</p>
+
+<source class="jython">
+from net.grinder.plugin.http import HTTPRequest, HTTPPluginControl
+from HTTPClient import AuthorizationInfo
+
+defaults = HTTPPluginControl.getConnectionDefaults()
+defaults.useAuthorizationModule = 1
+defaults.setProxyServer("localhost", 3128)
+
+class TestRunner:
+  def __init__(self):
+    AuthorizationInfo.addBasicAuthorization("localhost",
+                                            8001,
+                                            "My Proxy Realm",
+                                            "joeuser",
+                                            "pazzword",
+                                            HTTPPluginControl.getThreadHTTPClientContext())
+
+  def __call__(self):
+    # ...
+</source>
+
+  </section>
+
+  <section>
+    <title>Setting HTTP Headers</title>
+    <p>The HTTPlugin allows you to set the HTTP Headers sent with requests.
+    The method takes the settings as header-name/value pairs</p>
+<source class="jython">
+control = HTTPPluginControl.getConnectionDefaults()
+control.setDefaultHeaders(NVPair("<em>(header-name)</em>", "<em>(value)</em>"),))
+</source>
+    <p>Typical headers you might want to set here are <code>Accept</code> and its <code>Accept-*</code>
+    relatives, <code>Connection</code>, <code>From</code>, <code>User-Agent</code>, etc.</p>
+  <p> For example to disable persistent connections:</p>
+<source class="jython">
+control = HTTPPluginControl.getConnectionDefaults()
+control.setDefaultHeaders(NVPair("Connection", "close"),))
+</source>
+   </section>
+
+  <section>
+    <title>Setting Encoding</title>
+    <p>Encoding for Content or for Transfer can be switched on and off using boolean flags</p>
+<source class="jython">
+control = HTTPPluginControl.getConnectionDefaults()
+control.setUseContentEncoding(0)
+control.setUseTransferEncoding(1)
+</source>
+  </section>
+
+  <section>
+    <title>Setting Redirect Behaviour</title>
+    <p>Setting the HTTPPlugin behaviour with regards to following redirects can
+    be switched on and off using boolean flags</p>
+<source class="jython">
+control = HTTPPluginControl.getConnectionDefaults()
+control.setFollowRedirects(0)
+</source>
+  </section>
+
+  <section>
+    <title>Setting Local Address</title>
+    <p>Should you be conducting your tests on a server with multiple network interfaces
+    you can set the local IP address used by the HTTPPlugin for outbound connections.</p>
+<source class="jython">
+control = HTTPPluginControl.getConnectionDefaults()
+control.setLocalAddress("<em>(local IP Address)</em>")
+</source>
+  </section>
+
+  <section>
+    <title>Setting Timeout Value</title>
+    <p>The timeout value for used for creating connections and reading responses can be
+    controlled via the HTTPPlugin. The time is specified in milliseconds.</p>
+    <p>The following example sets a default timeout value of 30 seconds for all connections.</p>
+<source class="jython">
+control = HTTPPluginControl.getConnectionDefaults()
+control.setTimeout(30000)
+</source>
+  </section>
+
+  <section>
+    <title>Setting Cookie Behaviour</title>
+    <p>Setting the HTTPPlugin behaviour with regards to whether cookies are used or not can
+    be switched on and off using boolean flags</p>
+<source class="jython">
+control = HTTPPluginControl.getConnectionDefaults()
+control.setUseCookies(0)
+</source>
+  </section>
+
+  <section>
+    <title>Automatic decompression of gzipped responses</title>
+
+    <p>For load testing, its often not practical to uncompress the response.
+It's simply too expensive in CPU terms to do all that decompression in the
+client worker process. This doesn't mean you can't test a server that compresses
+its responses, just that you can't parse the responses in the script.</p>
+
+   <p>On the other hand, there are times you may want to do this. The Grinder
+supports decompression which it inherits from the
+<code>HTTPClient</code> library, you just need to enable it. If your server
+encrypts the content and sets a <code>Content-Encoding</code> header that starts
+with one of { <code>gzip</code>, <code>deflate</code>, <code>compress</code>,
+<code>identity</code> }, you can automatically decrypt the responses by adding
+the following lines to the beginning of your script:</p>
+
+<source class="jython">
+from net.grinder.plugin.http import HTTPPluginControl
+connectionDefaults = HTTPPluginControl.getConnectionDefaults()
+connectionDefaults.useContentEncoding = 1
+</source>
+
+  <p>Similarly, if your server sets a <code>Transfer-Encoding</code> header
+that starts with one of { <code>gzip</code>, <code>deflate</code>,
+<code>compress</code>, <code>chunked</code>, <code>identity</code> }, you can
+enable the HTTPClient Transfer Encoding Module with
+<code>connectionDefaults.useTransferEncoding&nbsp;=&nbsp;1</code>.</p>
+
+  <p>There is no support for automatically decrypting things based on their
+<code>Content-Type</code> (as opposed to <code>Content-Encoding</code>,
+<code>Transfer-Encoding</code>). Your browser doesn't do this, so neither should
+The Grinder. If you really want to do this, you can use Java or Jython
+decompression libraries from your script.</p>
+  </section>
+
+  <section>
+	 <title>Streaming requests and response</title>
+
+	 <p>The <a href="site:api/HTTPRequest">HTTPRequest</a>
+	 class has support for sending request data from a stream. This allows an
+	 arbitrarily large amount of data to be sent without requiring a corresponding
+	 amount of memory. To do this, use these versions of the
+    <a href="site:api/HTTPRequest/POSTStream">POST</a>,
+    <a href="site:api/HTTPRequest/PUTStream">PUT</a>,
+    <a href="site:api/HTTPRequest/OPTIONSStream">OPTIONS</a>,
+    methods.
+   </p>
+
+   <p><code>HTTPRequest</code> allows the response body to be handled as a
+   stream. Refer to the Javadoc for the
+   <a href="site:api/HTTPRequest/setReadResponseBody">
+   setReadResponseBody</a> method for more details.</p>
+
+  </section>
+
+
+  </section>
+
+  <section>
+    <title>Using HTTPUtilities</title>
+
+    <p>The HTTPPlugin provides an <code>HTTPUtilties</code> class:</p>
+
+<source class="jython">net.grinder.plugin.http.HTTPUtilities</source>
+  <p>This class has several methods which are useful for HTTP scripts.</p>
+
+  <section>
+     <title>Setting Basic Authorization</title>
+     <p>The HTTPUtilities class can create an NVPair for an HTTP Basic Authorization header using the following method:</p>
+<source class="jython">
+httpUtilities = HTTPPluginControl.getHTTPUtilities()
+httpUtilities.basicAuthorizationHeader('<em>username</em>', '<em>password</em>')
+</source>
+
+     <p>Include the header with each HTTPRequest that requires the authentication.</p>
+
+<source class="jython">
+request101.GET('/', (),
+      ( httpUtilities.basicAuthorizationHeader('prelive', 'g3tout'), ))
+</source>
+
+  </section>
+  <section>
+     <title>Getting the Last Response</title>
+    <p>The HTTPUtilities class can return the response for the last request made by the calling worker thread using the following method:</p>
+<source class="jython">
+httpUtilities = HTTPPluginControl.getHTTPUtilities()
+httpUtilities.getLastResponse()
+</source>
+    <p>This returns the response, or <code>null</code> if the calling thread has not made any requests.</p>
+    <p>This must be called from a worker thread, if not it throws a GrinderException.</p>
+  </section>
+  <section>
+     <title>Getting a Token Value from a Location URI</title>
+    <p>The HTTPUtilities class can return the value for a path parameter or query string name-value token with
+        the given <code>tokenName</code> in a Location header from the last response. If there are multiple matches, the first value is returned.
+    This utility can be invoked using the following method:</p>
+<source class="jython">
+httpUtilities = HTTPPluginControl.getHTTPUtilities()
+httpUtilities.valueFromLocationURI(<em>tokenName</em>)
+</source>
+    <p> If there is no match, an empty string is returned rather than
+        <code>null</code>. This makes scripts more robust (as they don't need to
+        check the value before using it), but they lose the ability to distinguish
+        between a missing token and an empty value.</p>
+    <p>This must be called from a worker thread, if not it throws a GrinderException.</p>
+  </section>
+  <section>
+     <title>Getting a Token Value from a URI in the Body of the Response </title>
+    <p>The HTTPUtilities class can return the value for a path parameter or query string name-value token with
+        the given <code>tokenName</code> in a URI in the body of the last
+        response. If there are multiple matches, the first value is returned.
+    This utility can be invoked using the following method:</p>
+<source class="jython">
+httpUtilities = HTTPPluginControl.getHTTPUtilities()
+httpUtilities.valueFromBodyURI(<em>tokenName</em>)
+</source>
+    <p>This returns the first value if one is found, or <code>null</code>.</p>
+    <p>This must be called from a worker thread, if not it throws a GrinderException.</p>
+  </section>
+  </section>
+
+
+</body>
+</document>

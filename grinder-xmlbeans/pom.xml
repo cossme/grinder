@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>grinder-xmlbeans</artifactId>
+  <packaging>jar</packaging>
+  <name>${project.artifactId}</name>
+  <url>http://grinder.sourceforge.net</url>
+  <description>Generate the XMLBeans used by the TCPProxy.</description>
+
+  <parent>
+    <groupId>net.sf.grinder</groupId>
+    <artifactId>grinder-parent</artifactId>
+    <version>3.12-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>javax.xml</groupId>
+      <artifactId>jsr173</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.xmlbeans</groupId>
+      <artifactId>xmlbeans</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xmlbeans-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id />
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>xmlbeans</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>xmlbeans-maven-plugin</artifactId>
+                    <!-- Necessary to prevent m2e NPE. -->
+                    <versionRange>[2.3.3,)</versionRange>
+                    <goals>
+                      <goal>xmlbeans</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute>
+                      <runOnIncremental>false</runOnIncremental>
+                    </execute>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+</project>

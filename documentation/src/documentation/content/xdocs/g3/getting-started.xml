@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Getting started</title>
+</header>
+
+<body>
+  <note>This section takes a top down approach to The Grinder. If you
+  are happy figuring things out for yourself and want to get your
+  hands dirty, you might like to read <a href="#howtostart">How do I
+  start The Grinder?</a> and then jump to the <a
+  href="site:script-gallery">Script Gallery</a>.</note>
+
+  <section>
+    <title>The Grinder processes</title>
+
+    <p>The Grinder is a framework for running test scripts across a
+    number of machines. The framework is comprised of three types of
+    <em>process</em> (or program):
+    <em><a href="site:processes/workers">worker processes</a></em>,
+    <em><a href="site:processes/agents">agent processes</a></em>,
+    and the <em> <a href="site:console/overview">console</a></em>.
+    The responsibilities of each of the process types are:</p>
+
+    <ul>
+      <li>
+        <strong>Worker processes</strong>
+        <ul>
+          <li>Interprets test scripts and performs the tests.<br/> Each worker process can run many tests in parallel using a
+          number of <em>worker threads</em>.</li>
+        </ul>
+      </li>
+
+      <li>
+        <strong>Agent processes</strong>
+        <ul>
+          <li>Long running process that starts and stops worker processes as required.</li>
+          <li>Maintains a local cache of test scripts distributed from the console.</li>
+        </ul>
+      </li>
+
+      <li>
+        <strong>The Console</strong>
+        <ul>
+          <li>Coordinates the other processes.</li>
+          <li>Hosts several types of user and machine interface.</li>
+          <li>Collates and displays statistics.</li>
+          <li>Provides script editing and distribution.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <p>As The Grinder is written in Java, each of these processes is a
+    Java Virtual Machine (JVM).</p>
+
+    <figure src="../images/processes.png" width="600" height="507"
+    alt="The Grinder processes"/>
+
+    <p>For heavy duty testing, you start an agent process on each of
+    several load injector machines. The worker processes they launch can be
+    controlled and monitored using the console. There is little reason
+    to run more than one agent on each load injector, but you can if
+    you wish.</p>
+  </section>
+
+  <section>
+    <title>Tests and test scripts</title>
+
+    <p>A <em>test</em> is a unit of work against which statistics are
+    recorded. Tests are uniquely defined by
+    a <em>test number</em> and also have a <em>description</em>.
+    Users specify which tests to run using a <a
+    href="site:scripts-intro">test script</a>.
+    If you wish your scripts can report many different actions (e.g.
+    different web page requests) against the same test, The Grinder
+    will aggregate the results.</p>
+
+    <p>The script is executed many times in a typical testing
+    scenario. Each worker process has a number of worker threads, and
+    each worker thread calls the script a number of times. A single
+    execution of a test script is called a <em>run</em>.</p>
+
+    <p>You can write scripts for use with the Grinder by hand. There are a
+    number of examples of how to do this in the
+    <a href="site:script-gallery">Script Gallery</a>. See the
+    <a href="site:scripts/scripts-intro">Scripts</a> section for more details
+    on how to create scripts.</p>
+
+    <p>If you are creating a script to test a web site or web application, you
+    can use the
+    <a href="site:g3/tcpproxy/HTTPPluginTCPProxyFilter">
+    TCPProxy</a> to record a browser session as a script.</p>
+  </section>
+
+  <section>
+    <title>Network communication</title>
+
+    <p>Each worker process sets up a network connection to the
+    console to report statistics. Each agent process sets up a
+    connection to the console to receive commands, which it passes on
+    to its worker processes. The console listens for both types of
+    connection on a particular address and port. By default, the
+    console listens on port <code>6372</code> on all local network
+    interfaces of the machine running the console.</p>
+
+    <p>If an agent process fails to connect to the console, or the
+    <code>grinder.useConsole</code> property is <code>false</code>,
+    the agent will continue independently without the console and
+    automatically will start its worker processes. The worker
+    processes will run to completion and not report to the
+    console. This can be useful when you want to quickly try out a test
+    script without bothering to start the console. </p>
+
+    <note>To change the console addresses, set the
+    <code>grinder.consoleHost</code> and
+    <code>grinder.consolePort</code> properties in the <a
+    href="site:properties"><code>grinder.properties</code></a>
+    file before starting The Grinder agents. The values should match those specified
+    in the console options dialog.</note>
+  </section>
+
+  <section>
+    <title>Output</title>
+
+    <p>Each worker process writes logging information to a file called
+    <code>host-n.log</code>, where <code> host</code> is the machine
+    host name and <code>n</code> is the worker process number.</p>
+
+    <p>Data about individual test invocations is written into a file called
+    <code>host-n-data.log</code> that can be imported into a
+    spreadsheet tool such as Microsoft Excel<sup>TM</sup> for further
+    analysis. The data file is the only place where information about
+    individual tests is recorded; the console displays only aggregate
+    information.</p>
+
+    <p>The final statistics summary (in the log file of each process)
+    looks something like this:</p>
+
+<source class="text">
+Final statistics for this process:
+
+              Successful
+              Tests         Errors        Mean Test    Test Time
+                                          Time (ms)    Standard
+                                                       Deviation
+                                                       (ms)
+
+Test 0        25            0             255.52       22.52
+Test 1        25            0             213.40       25.15
+Test 2        25            0             156.80       20.81         "Image"
+Test 3        25            0             90.48        14.41
+Test 4        25            0             228.68       23.97         "Login page"
+Test 5        25            0             86.12        12.53         "Security check"
+Test 6        25            0             216.20       8.89
+Test 7        25            0             73.20        12.83
+Test 8        25            0             141.92       18.36
+Test 9        25            0             104.68       19.86         "Logout page"
+
+Totals        250           0             156.70       23.32
+</source>
+
+    <p>The console has a dynamic display of similar information
+    collected from all the worker processes. Plug-ins and advanced test
+    scripts can provide additional statistics; for example, the HTTP plug-in
+    adds a statistic for the content length of the response body.</p>
+
+    <p>Each test has one of two possible outcomes:</p>
+
+    <ol>
+      <li>Success. The number of <em>Successful Tests</em> for that
+      test is incremented The time taken to perform the test is added
+      to the <em>Total</em>.</li>
+
+      <li>Error. The execution of a test raised an exception. The
+      number of <em>Errors</em> for the test is incremented. The time taken
+      is discarded.</li>
+    </ol>
+
+    <p>The <em>Total</em>, <em>Mean</em>, and <em>Standard Deviation</em>
+    figures are calculated based only on successful tests.</p>
+  </section>
+
+  <section id="howtostart">
+    <title>How do I start The Grinder?</title>
+
+    <p>It's easy:</p>
+
+    <ol>
+      <li>Create a <a
+      href="site:properties"><code>grinder.properties</code></a> file.
+      This file specifies general control information (how the worker
+      processes should contact the console, how many worker processes
+      to use, ..), as well as the name of the test script that will
+      be used to run the tests.<p/></li>
+
+      <li>Set your <code>CLASSPATH</code> to include the
+      <code>grinder.jar</code> file which can be found in the
+      <code>lib</code> directory.<p/></li>
+
+      <li>Start the <a href="site:console">console</a> on one of the test machines:
+<source class="sh">
+java net.grinder.Console
+</source></li>
+
+      <li>For each test machine, do steps 1. and 2. and start an agent
+      process:
+<source class="sh">
+java net.grinder.Grinder
+</source>
+        <p>The agent will look for the <code>grinder.properties</code>
+        file in the local directory. The test script is usually
+        stored alongside the properties file. If you like, you can
+        specify an explicit properties file as the first argument. For
+        example:</p>
+
+<source class="sh">
+java net.grinder.Grinder myproperties
+</source>
+      </li>
+    </ol>
+
+    <p>The console does not read the <code>grinder.properties</code>
+    file. It has its own options dialog (choose the
+    <em>File/Options</em> menu option) which you should use to set the
+    communication addresses and ports to match those in the
+    <code>grinder.properties</code> files. The console <a
+    href="site:console/ui/process-controls">process controls</a> can
+    be used to trigger The Grinder test scenario. Each agent process
+    then creates child worker processes to do the work.</p>
+
+    <note>
+    When you know a little more about the console, you can use it to
+    <a href="site:console/ui/script-tab">edit and distribute
+    properties files and scripts</a> instead of copying them to each
+    agent machine.
+    </note>
+
+    <p>As the worker processes execute, they dynamically inform the
+    console of the tests in the test script. If you start the console
+    after the agent process, you should press the <em>Reset
+    processes</em> button. This will cause the existing worker
+    processes to exit and the agent process to start fresh worker
+    processes which will update the console with the new test
+    information.</p>
+
+    <p>Included below are some sample scripts, for both Unix/Linux and
+    Windows, for starting grinder agents, the console, and the
+    <a href="site:tcpproxy">TCPProxy</a> for recording HTTP scripts.</p>
+
+    <p><strong>Windows</strong></p>
+    <ul>
+     <li>setGrinderEnv.cmd
+<source class="cmd">
+set GRINDERPATH=<em>(full path to grinder installation directory)</em>
+set GRINDERPROPERTIES=<em>(full path to grinder.properties)</em>\grinder.properties
+set CLASSPATH=%GRINDERPATH%\lib\grinder.jar;%CLASSPATH%
+set JAVA_HOME=<em>(full path to java installation directory)</em>
+PATH=%JAVA_HOME%\bin;%PATH%
+</source>
+     </li>
+     <li>startAgent.cmd
+<source class="cmd">
+call <em>(path to setGrinderEnv.cmd)</em>\setGrinderEnv.cmd
+echo %CLASSPATH%
+java -classpath %CLASSPATH% net.grinder.Grinder %GRINDERPROPERTIES%
+</source>
+     </li>
+     <li>startConsole.cmd
+<source class="cmd">
+call <em>(path to setGrinderEnv.cmd)</em>\setGrinderEnv.cmd
+java -classpath %CLASSPATH% net.grinder.Console
+</source>
+     </li>
+     <li>startProxy.cmd
+<source class="cmd">
+call <em>(path to setGrinderEnv.cmd)</em>\setGrinderEnv.cmd
+java -classpath %CLASSPATH% net.grinder.TCPProxy -console -http > grinder.py
+</source>
+     </li>
+    </ul>
+
+    <p><strong>Unix</strong></p>
+     <ul>
+      <li>setGrinderEnv.sh
+<source class="sh">
+#!/usr/bin/ksh
+GRINDERPATH=<em>(full path to grinder installation directory)</em>
+GRINDERPROPERTIES=<em>(full path to grinder.properties)</em>/grinder.properties
+CLASSPATH=$GRINDERPATH/lib/grinder.jar:$CLASSPATH
+JAVA_HOME=<em>(full path to java installation directory)</em>
+PATH=$JAVA_HOME/bin:$PATH
+export CLASSPATH PATH GRINDERPROPERTIES
+</source>
+      </li>
+      <li>startAgent.sh
+<source class="sh">
+#!/usr/bin/ksh
+. <em>(path to setGrinderEnv.sh)</em>/setGrinderEnv.sh
+java -classpath $CLASSPATH net.grinder.Grinder $GRINDERPROPERTIES
+</source>
+      </li>
+      <li>startConsole.sh
+<source class="sh">
+#!/usr/bin/ksh
+. <em>(path to setGrinderEnv.sh)</em>/setGrinderEnv.sh
+java -classpath $CLASSPATH net.grinder.Console
+</source>
+      </li>
+      <li>startProxy.sh
+<source class="sh">
+#!/usr/bin/ksh
+. <em>(path to setGrinderEnv.sh)</em>/setGrinderEnv.sh
+java -classpath $CLASSPATH net.grinder.TCPProxy -console -http > grinder.py
+</source>
+      </li>
+     </ul>
+  </section>
+
+</body>
+</document>

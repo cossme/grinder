@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>net.sf.grinder</groupId>
+  <artifactId>grinder-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>3.12-SNAPSHOT</version>
+  <name>${project.artifactId}</name>
+  <url>http://grinder.sourceforge.net</url>
+  <description>Parent Maven project for The Grinder load testing framework.</description>
+  <inceptionYear>2000</inceptionYear>
+
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
+  <developers>
+    <developer>
+      <name>Philip Aston</name>
+      <timezone>0</timezone>
+      <email>philipa at mail.com</email>
+    </developer>
+    <developer>
+      <name>Calum Fitzgerald</name>
+      <email>calum.fitzgerald at environment-agency.gov.uk</email>
+    </developer>
+    <developer>
+      <name>Venelin Mitov</name>
+      <email>vmitov at gmail.com</email>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>Paco Gomez</name>
+    </contributor>
+    <contributor>
+      <name>Phil Dawes</name>
+    </contributor>
+    <contributor>
+      <name>Paddy Spencer</name>
+      <email>paddy.spencer at physics.org</email>
+    </contributor>
+    <contributor>
+      <name>Richard Wallace</name>
+      <email>richard.wallace at bea.com</email>
+    </contributor>
+    <contributor>
+      <name>Stuart Tily</name>
+      <email>tily at sylo.org</email>
+    </contributor>
+    <contributor>
+      <name>Phillip Burgess</name>
+      <email>phillip_burgess at mail.com</email>
+    </contributor>
+    <contributor>
+      <name>Christian Nedregard</name>
+      <email>christian at laycan.com</email>
+    </contributor>
+    <contributor>
+      <name>Mikael Suokas</name>
+      <email>cms at suokas.org</email>
+    </contributor>
+    <contributor>
+      <name>David Freels</name>
+      <email>david.freels at peregrine.com</email>
+    </contributor>
+    <contributor>
+      <name>Kalle Burbeck</name>
+      <email>kalle.burbeck at idainfront.se</email>
+    </contributor>
+    <contributor>
+      <name>Dirk Feufel</name>
+      <email>Dirk.Feufel at abaXX.de</email>
+    </contributor>
+    <contributor>
+      <name>Kjetil JD</name>
+      <email>kjetiljd at usa.net</email>
+    </contributor>
+    <contributor>
+      <name>Todd Wasson</name>
+      <email>twasson at nks.net</email>
+    </contributor>
+    <contributor>
+      <name>Jose Antonio Zapata Rey</name>
+      <email>joseantonio.zapatarey at hp.com</email>
+    </contributor>
+    <contributor>
+      <name>Richard Perks</name>
+      <email>rperks at bea.com</email>
+    </contributor>
+    <contributor>
+      <name>Manuel Silva</name>
+      <email>manuel.silva at bea.com</email>
+    </contributor>
+    <contributor>
+      <name>Bill Schnellinger</name>
+      <email>bill at schnellinger.com</email>
+    </contributor>
+    <contributor>
+      <name>Bertrand Ave</name>
+      <email>avebertrand at yahoo.fr</email>
+    </contributor>
+    <contributor>
+      <name>Huibert Alblas</name>
+      <email>Huibert.Alblas at mgh.metro-ag.de</email>
+    </contributor>
+    <contributor>
+      <name>Kalyanaraman Venkatasubramaniy</name>
+      <email>venkatk1973 at yahoo.com
+      </email>
+    </contributor>
+    <contributor>
+      <name>John Stanford White</name>
+      <email>jswhite at ieee.org</email>
+    </contributor>
+    <contributor>
+      <name>Slavik Gnatenko</name>
+      <email>miracle9 at newmail.ru</email>
+    </contributor>
+    <contributor>
+      <name>Marc Born</name>
+      <email>marc.born at xtramind.com</email>
+    </contributor>
+    <contributor>
+      <name>Andreas Schmidt</name>
+      <email>andreas.schmidt at docstrange.de</email>
+    </contributor>
+    <contributor>
+      <name>Sebastiýn Fontana</name>
+      <email>sebastian.fontana at motorola.com</email>
+    </contributor>
+    <contributor>
+      <name>KArol Muszynski</name>
+      <email>karol.muszynski at hp.com</email>
+    </contributor>
+    <contributor>
+      <name>Meo Bogliolo</name>
+      <email>boglio07 at bogliolobartolomeo.191.it</email>
+    </contributor>
+    <contributor>
+      <name>Konstantin Ignatyev</name>
+      <email>kgignatyev at yahoo.com</email>
+    </contributor>
+    <contributor>
+      <name>Martin Wagner</name>
+      <email>martin.wagner at tngtech.com</email>
+    </contributor>
+    <contributor>
+      <name>Hugh Chen</name>
+      <email>hugh.jf.chen at gmail.com</email>
+    </contributor>
+    <contributor>
+      <name>Matthias Dillier</name>
+      <email>xmds at gmx.net</email>
+    </contributor>
+    <contributor>
+      <name>Pawel Lacinski</name>
+      <email>lacinski at gmail.com</email>
+    </contributor>
+    <contributor>
+      <name>Tagnon Soko</name>
+      <email>tagnon.soko at neoxia.com</email>
+    </contributor>
+    <contributor>
+      <name>Marc Van Giel</name>
+      <email>marc.vangiel at xplore.be</email>
+    </contributor>
+    <contributor>
+      <name>Walter Tuvell</name>
+      <email>Tuvell_Walter at emc.com</email>
+    </contributor>
+    <contributor>
+      <name>Antonio Manuel Muñiz Martín</name>
+      <email>http://amunizmartin.wordpress.com</email>
+    </contributor>
+    <contributor>
+      <name>Hitoshi Amano</name>
+      <email>seijro at gmail.com</email>
+    </contributor>
+    <contributor>
+      <name>Bryce Howard</name>
+      <email>bryce.howard at allstardirectories.com</email>
+    </contributor>
+    <contributor>
+      <name>Gary Mulder</name>
+      <email>gary.mulder at openbet.com</email>
+    </contributor>
+    <contributor>
+      <name>Anders Storsveen</name>
+      <email>storsveen at comoyo.com</email>
+    </contributor>
+    <contributor>
+      <name>Bill Smith</name>
+      <email>billsmithaustin at yahoo.com</email>
+    </contributor>
+    <contributor>
+      <name>Marc Holden</name>
+      <email>mholden123 at gmail.com</email>
+    </contributor>
+    <contributor>
+      <name> Yoni Yalovitsky</name>
+      <email>yoni at fewbytes.com</email>
+    </contributor>
+  </contributors>
+
+  <issueManagement>
+    <system>SourceForge Tracker</system>
+    <url>http://sourceforge.net/p/grinder/_list/tickets</url>
+  </issueManagement>
+
+  <mailingLists>
+    <mailingList>
+      <name>The Grinder Announcement List</name>
+      <subscribe>https://lists.sourceforge.net/mailman/listinfo/grinder-announce</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/mailman/listinfo/grinder-announce</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=grinder-announce</archive>
+    </mailingList>
+    <mailingList>
+      <name>The Grinder Use List</name>
+      <subscribe>https://lists.sourceforge.net/mailman/listinfo/grinder-use</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/mailman/listinfo/grinder-use</unsubscribe>
+      <post>grinder-use@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=grinder-use</archive>
+      <otherArchives>
+        <otherArchive>http://blog.gmane.org/gmane.comp.java.grinder.user</otherArchive>
+      </otherArchives>
+    </mailingList>
+    <mailingList>
+      <name>The Grinder Development List [Discussion related to the development of The Grinder itself]</name>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/grinder-development</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/listinfo/grinder-development</unsubscribe>
+      <post>grinder-development@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=grinder-development</archive>
+    </mailingList>
+  </mailingLists>
+
+  <licenses>
+    <license>
+      <name>The Grinder License (modified BSD)</name>
+      <url>http://grinder.sourceforge.net/license.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <!-- Required so site:stage works. -->
+  <distributionManagement>
+    <site>
+      <id>blah</id>
+      <url>file:///tmp/bah</url>
+    </site>
+  </distributionManagement>
+
+  <scm>
+    <url>http://sourceforge.net/p/grinder/code/ci/master/tree/</url>
+    <connection>scm:git:http://git.code.sf.net/p/grinder/code grinder-code</connection>
+    <!-- Specify developerConnection to override the one inherited
+         from the sonatype POM. -->
+    <developerConnection>scm:git:ssh://yourname@git.code.sf.net/p/grinder/code grinder-code</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <target.dir>target</target.dir>
+  </properties>
+
+  <dependencies>
+    <!-- Sigh - needed for surefire-report. -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- TODO - upgrade to ASM 4
+           (Even 3.3.1 requires code changes)
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm</artifactId>
+        <version>4.1</version>
+      </dependency>
+      -->
+      <dependency>
+        <groupId>asm</groupId>
+        <artifactId>asm</artifactId>
+        <version>3.2</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.xml</groupId>
+        <artifactId>jsr173</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>net.sf.jedit-syntax</groupId>
+        <artifactId>jedit-syntax</artifactId>
+        <version>2.2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.clojure</groupId>
+        <artifactId>clojure</artifactId>
+        <version>1.5.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.jsr166-mirror</groupId>
+        <artifactId>extra166y</artifactId>
+        <version>1.7.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.picocontainer</groupId>
+        <artifactId>picocontainer</artifactId>
+        <version>2.14.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.python</groupId>
+        <artifactId>jython-standalone</artifactId>
+        <version>2.5.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.5</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.0.13</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.janino</groupId>
+        <artifactId>janino</artifactId>
+        <version>2.5.16</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xmlbeans</groupId>
+        <artifactId>xmlbeans</artifactId>
+        <version>2.5.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
+        <version>1.9.5</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <outputDirectory>${basedir}/${target.dir}/classes</outputDirectory>
+    <testOutputDirectory>${basedir}/${target.dir}/test-classes</testOutputDirectory>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <tagNameFormat>release_@{project.version}</tagNameFormat>
+          <localCheckout>true</localCheckout>
+          <!-- Speculative workaround for issue with MRELEASE-271 like
+               symptoms. -->
+          <preparationGoals>clean install</preparationGoals>
+        </configuration>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.3</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>2.9.1</version>
+          <configuration>
+            <configLocation>${project.parent.basedir}/etc/checkstyle.xml</configLocation>
+            <propertyExpansion>config_loc=${project.parent.basedir}/etc/</propertyExpansion>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.5.1</version>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+            <optimize>true</optimize>
+            <showDeprecation>true</showDeprecation>
+            <showWarnings>true</showWarnings>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.7</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>2.5.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <configuration>
+            <keyname>philipa@mail.com</keyname>
+          </configuration>
+          <version>1.4</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.4</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.4</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.9</version>
+          <configuration>
+            <fixTags>author,since,param,return,throws,link</fixTags>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>2.3</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>2.5.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.3.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>2.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.2</version>
+          <configuration>
+            <reportPlugins>
+              <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <configuration>
+                  <linkOnly>true</linkOnly>
+                </configuration>
+                <reports>
+                  <report>index</report>
+                  <report>summary</report>
+                  <report>modules</report>
+                  <report>mailing-list</report>
+                  <report>issue-tracking</report>
+                  <report>license</report>
+                  <report>project-team</report>
+
+                  <!-- <report>cim</report> -->
+                   <report>dependencies</report>
+                  <!-- <report>dependency-convergence</report> -->
+                   <report>dependency-management</report>
+                  <!-- <report>distribution-management</report> -->
+                  <!-- <report>plugin-management</report> -->
+                  <report>scm</report>
+                  <report>dependency-info</report>
+                </reports>
+              </plugin>
+
+              <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+              </plugin>
+              <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+              </plugin>
+            </reportPlugins>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.12.4</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>2.12.4</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.portals.jetspeed-2</groupId>
+          <artifactId>jetspeed-unpack-maven-plugin</artifactId>
+          <version>2.2.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>xmlbeans-maven-plugin</artifactId>
+          <version>2.3.3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>copy</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute>
+                      <runOnIncremental>false</runOnIncremental>
+                    </execute>
+                  </action>
+                </pluginExecution>
+                <!-- https://bugs.eclipse.org/bugs/show_bug.cgi?id=384629 -->
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>enforce</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.theoryinpractise</groupId>
+          <artifactId>clojure-maven-plugin</artifactId>
+          <version>1.3.15</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <modules>
+    <module>grinder</module>
+    <module>grinder-console-service</module>
+    <module>grinder-core</module>
+    <module>grinder-dcr-agent</module>
+    <module>grinder-http</module>
+    <module>grinder-httpclient</module>
+    <module>grinder-swing-console</module>
+    <module>grinder-test-support</module>
+    <module>grinder-translation</module>
+    <module>grinder-xmlbeans</module>
+  </modules>
+
+  <!-- http://wiki.eclipse.org/M2E_FAQ#How_to_configure_Maven_project_to_use_separate_output_folders_in_Eclipse -->
+  <profiles>
+    <profile>
+      <id>eclipse-folders</id>
+      <properties>
+        <target.dir>target-eclipse</target.dir>
+      </properties>
+    </profile>
+  </profiles>
+
+</project>

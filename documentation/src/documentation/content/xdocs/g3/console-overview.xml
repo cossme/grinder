@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+    "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+  <header>
+    <title>The Console</title>
+  </header>
+  <body>
+
+      <p>
+        As described in <a
+        href="site:getting-started/processes">Getting Started</a>, the
+        console is a Java process that acts as the coordinator for the
+        other processes; hosts a user interface; collates and displays
+        statistics; and provides script editing and distribution.</p>
+
+        <p>When you run The Grinder, a single console process is
+        started on one of your computers. The agent processes on your
+        load injector machines connect to this console.</p>
+
+        <p>There are several types of user interface, described in
+        more detail over the following pages.</p>
+
+        <ul>
+          <li>The <a href="site:console/ui">Classic Interface</a>, a
+          graphical user interface written using the Java Swing
+          framework</li>
+          <li>The <a href="site:console/service">Console Service</a>,
+          a RESTful API</li>
+          <li>The <a href="site:console/webui">Web Interface</a>, a
+          HTML5 user interface, accessible using a web browser</li>
+        </ul>
+
+  </body>
+</document>

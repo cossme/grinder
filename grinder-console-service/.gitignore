@@ -1,0 +1,13 @@
+/target
+/lib
+/classes
+/checkouts
+/build
+*.jar
+*.class
+.lein-deps-sum
+.lein-failures
+.lein-plugins
+/.*
+!/.gitignore
+*dev*.org

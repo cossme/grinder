@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>External references</title>
+</header>
+
+<body>
+
+<section>
+  <title>Related Software Projects</title>
+
+  <table class="noborder">
+
+    <tr>
+      <td>
+        <a href="https://bitbucket.org/travis_bear/grinder_to_graphite">Grinder to Graphite</a>
+      </td>
+
+      <td></td>
+
+      <td>
+        Grinder to Graphite (g2g) is a tool that analyzes the logs
+        from your Grinder tests, and sends the data into Graphite
+        where it can be visualized in a variety of ways.
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        <a href="https://github.com/DealerDotCom/grinder-groovy">grinder-groovy</a>
+      </td>
+
+      <td></td>
+
+      <td>
+	Alternative script engine for The Grinder: write your test scripts in Groovy.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="ext:grinder-groovy">Grinder maven plugin</a>
+      </td>
+
+      <td></td>
+
+      <td>
+	A Maven Plugin for The Grinder, with Grinder Analyzer
+	integration. The plugin allows you to run The Grinder from a
+	Maven build, and analyse the results.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="ext:ngrinder">nGrinder</a>
+      </td>
+
+      <td></td>
+
+      <td>
+     A web based testing framework built on top of The Grinder. The
+     demo video is particularly slick.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="ext:grinder-webtest">Grinder Webtest</a>
+      </td>
+
+      <td></td>
+
+      <td>
+     This custom module allows execution of Visual Studio <em>webtest</em> files.
+     It supports parameterization, capturing of variables in HTTP responses, and
+     response validation using regular expressions. Test scripts may be logically
+     grouped into test sets, allowing them to share variables and captured values.
+     Test sets can be run sequentially, randomly, in a specific thread, or
+     according to a percentage-based weighting. A correlating test runner is
+     also provided, making it easier for you to find and capture values in your
+      HTTP responses.
+
+     We have successfully used this module to run load tests of more than 300
+     virtual users, with a scenario involving 21 different webtest scripts
+     recorded in Fiddler.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="ext:http-qat">HTTP Quality Assurance Toolkit</a>
+      </td>
+
+      <td></td>
+
+      <td>
+    HTTP functional and non-functional (load and performance)
+    toolkit based on jython/grinder (http://grinder.sf.net)
+    ...includes capabilities to support: SOA services, REST,
+    json/xml encoding, AES and WS security ... and a stub to
+    collect requests.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="ext:grinder-agent-installer">The Grinder Agent Installer</a>
+      </td>
+
+      <td></td>
+
+      <td>
+    The Grinder Agent Installer is useful when you want to
+    execute load tests in a heterogeneous context, and to
+    simulate real users accessing the target application through
+    a firewall, 3G, VPN, direct (router) and from different
+    locales, where you haven't access to all this computers for
+    run the agent.
+
+    <p>It provides an installer any user can install and execute
+    with only click next and provisioning some data in a graphic
+    environment. You only have to wait the connections in the
+    console.</p>
+      </td>
+    </tr>
+
+
+    <tr>
+      <td>
+        <a href="ext:grinder-in-the-cloud">Grinder In The Cloud</a>
+      </td>
+
+      <td></td>
+
+      <td>
+          Grinder in the Cloud leverages the well known Grinder load test
+          framework by putting it in the cloud. It offers an easy to use load
+          test framework with virtually unlimited firepower at a competitive
+          price. This Windows based AMI starts the Grinder console. It starts
+          Grinder agent AMIs to generate the load. The Agents automatically
+          connect to the console. Built by Jörg Kalsbach.
+      </td>
+    </tr>
+
+
+    <tr>
+      <td>
+        <a href="ext:grinder-hudson">Grinder Plugin for Hudson</a>
+      </td>
+
+      <td></td>
+
+      <td>
+          This plug-in reads output result files from performance tests run
+          with The Grinder, and will generate reports showing test results
+          for every build and trend reports showing performance results across
+          builds.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="ext:ground-report">Ground Report</a>
+      </td>
+
+      <td></td>
+
+      <td>
+          The Ground Report is a collection of reporting utilities specific to
+          The Grinder test tool.
+
+          The tools consist of a reporting database and graphing &amp; report
+          utilities based upon jyplot, jFreechart and DocBook written in Jython.
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="ext:grinder-analyzer">Grinder Analyzer</a>
+      </td>
+
+      <td></td>
+
+      <td>
+          Grinder Analyzer is a tool that parses log data from The Grinder and
+          generates client-side performance graphs. These graphs include
+          response time, transactions per second, and network bandwidth used.
+          Like The Grinder itself, Grinder Analyzer uses Jython, and the
+          excellent JFreechart graphing library.
+
+        <figure src="images/grinder-analyzer.png" alt="Grinder Analyzer"
+              width="328" height="230" />
+
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="ext:webflange">webFlange</a>
+      </td>
+
+      <td></td>
+
+      <td>
+        webFlange is a continuous load testing web application written
+        in Java. It leverages The Grinder for running tests, automatically
+        creates reports and allows the creation of charts from the test
+        results.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a href="site:grinderstone">GrinderStone</a>
+      </td>
+
+      <td></td>
+
+      <td>
+        GrinderStone is an Eclipse plug-in for Grinder load testing scripts
+        development (debugger for scripts is included).
+      </td>
+    </tr>
+  </table>
+</section>
+
+<section>
+  <title>Articles</title>
+
+  <table class="noborder">
+
+
+    <tr>
+      <td>
+        <a href="http://agilegrind.blogspot.co.uk/">The Agile Grind</a>
+      </td>
+
+      <td>Gary Mulder's blog on using The Grinder.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://blackanvil.blogspot.com/2011/12/integrating-grinder-performance-data.html">Black Anvil: Visualizing Grinder Data With Other External Metrics</a>
+      </td>
+
+      <td>Using Graphite to visualise the test results.</td>
+    </tr>
+
+
+    <tr>
+      <td>
+        <a href="http://vivin.net/tag/the-grinder/">Rough Book</a>
+      </td>
+
+      <td>A series of in-depth blog entries that introduce The Grinder and
+          present a rich framework for scripts.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://www.performanceengineer.com/blog/introduction-to-the-grinder/">PerformanceEngineer.com: Introduction To The Grinder</a>
+      </td>
+
+      <td>An introductory blog entry showing how to set up The Grinder with <a href="site:grinderstone">GrinderStone</a>.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://www.pcpro.co.uk/features/230550/technology-you-can-bet-on/page3.html">PC Pro article</a>
+      </td>
+
+      <td>"Technology you can bet on" - Paddy Power uses The Grinder.</td>
+    </tr>
+    <tr>
+      <td>
+        <a href="http://www.infoq.com/news/2008/02/the-grinder-3">InfoQ News</a>
+      </td>
+
+      <td>Alexander Olaru interviews Philip Aston for InfoQ.</td>
+    </tr>
+    <tr>
+      <td>
+        <a href="http://tech.puredanger.com/2008/01/25/the-grinder-30-released/">Pure Danger Tech: The Grinder 3.0 Released</a>
+      </td>
+
+      <td>Alex Miller says some very nice things about The Grinder.
+
+       <p class="quote">"...I was really pleasantly surprised by everything
+       that I found. The Grinder has a fairly clean aesthetic that is hard to
+       quantify but makes getting started a pleasant experience. What I found
+       the most enjoyable about it was the use of Jython to script the actual
+       test activity. <br/>
+
+       ...It is trivial to start up the console and your agents, then have very
+       fast modify / run cycles as nothing needs to be restarted. You just
+       modify the test in your editor and hit play on the console. This allows
+       you to very rapidly whip your test into shape.
+       Kind of reminds me of Rails..."</p>
+
+       </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://blackanvil.blogspot.com/2006/06/shootout-load-runner-vs-grinder-vs.html#links">The Black Anvil: Shootout: Load Runner vs The Grinder vs Apache JMeter</a>
+      </td>
+
+      <td>Detailed comparison of The Grinder, JMeter, and Load Runner from Travis Bear.
+
+       <p class="quote">"...I recommended The Grinder as the tool to go forward
+       with. It has a simple, clean UI that clearly shows what is going on
+       without trying to do too much, and offers great power and simplicity
+       with its unique Jython-based scripting approach. Jython allows complex
+       scripts to be developed much more rapidly than in more formal languages
+       like Java, yet it can access any Java library or class easily, allowing
+       us to re-use elements of our existing work."</p>
+
+         <p>Travis has since assisted with the implementation of slow socket support for The Grinder.</p>
+       </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://cdjdn.com/downloads/performancetesting-grinder.pdf">Performance Testing using The Grinder</a>
+      </td>
+
+      <td>A high-level overview of test methodology using The Grinder from Paul Evans/Blue Slate Solutions. Hosted by the Capital District Java Developers Network.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://www.anser-e.com/testing/GrinderAutomationTutorial.html">Grinder Test Automation for the WebLogic Server</a>
+      </td>
+
+      <td>An custom automated test environment for WebLogic built on
+      The Grinder.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a
+        href="http://gashalot.com/writing/blog-grinder.php">Gash:
+        Load Testing Java Applications</a>
+      </td>
+      <td>Replacing JMeter with The Grinder 3
+
+       <p class="quote">"I went from a freshly downloaded tarball to
+       fully functional test environment in about 2.5 hours. That's
+       powerful."</p>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://c2.com/cgi/wiki/wiki?TheGrinder">WikiWikiWeb</a>
+      </td>
+
+      <td>Entry on the Wiki of Wiki's.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://www.abcseo.com/papers/grinder.htm">Stress Testing with The Grinder and Cactus</a>
+      </td>
+
+      <td>Using The Grinder 2's JUnit plug-in with Cactus.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://dev2dev.bea.com/articles/aston.jsp">The Grinder: Load Testing for Everyone</a>
+      </td>
+
+      <td>An introductory article on The Grinder 2 from Phil Aston.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://www.anticlue.net/archives/000395.htm">Anticlue</a>
+      </td>
+
+      <td>Blog entry on The Grinder 3.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://www.oreillynet.com/pub/wlg/6743">Load Testing
+        Web Services with Grinder</a>
+      </td>
+
+      <td>An article on testing Web Services with The Grinder 3.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://www.massivepropeller.com/users/austin/blogs/whatsnew/archive/000043.html">Massive Propeller: The Grinder</a>
+      </td>
+
+      <td>Blog entry on The Grinder 2.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://82.133.140.67/MrWorm/35">Mr Worm's GonePage: The Grinder</a>
+      </td>
+
+      <td>Blog entry on The Grinder.</td>
+    </tr>
+
+    <tr>
+      <td>
+        <a href="http://www.mooreds.com/weblog/archives/000111.html">Dan Moore!: The Grinder</a>
+      </td>
+
+      <td>Blog entry on The Grinder 3.</td>
+    </tr>
+  </table>
+</section>
+
+<section>
+  <title>Commercials</title>
+
+  <p>This section contains links to commercial products and services
+  related to The Grinder. You should not assume any relationship other
+  than those documented below between the listed individuals and
+  companies and The Grinder project.
+
+  If you have a product or service related to The Grinder and would
+  like to add information to this page, please email details to <a
+  href="ext:mail/grinder-use">grinder-use</a>.</p>
+
+  <section id="perfmetrix">
+    <title>Perfmetrix</title>
+
+    <p>Perfmetrix is a global group of highly skilled and experienced
+    system architects and performance experts ready to assist you with
+    a comprehensive range of services to create or improve software
+    applications that meet or exceed your business needs. We have presence
+    in the United States, Europe, the Middle East, Africa and Latin America.
+    </p>
+
+    <p>Perfmetrix is led by Peter Zadrozny, who was the Chief Technologist
+    of BEA Systems for Europe, Middle East and Africa, a role he had since
+    he started the operations of WebLogic in Europe (prior to the BEA
+    acquisition).
+    </p>
+
+    <p>Peter is the author of <a href="site:links/book">J2EE Performance Testing</a>
+    (Expert Press, 2002), coauthor of "Professional J2EE Programming with
+     BEA WebLogic Server" (WroxPress, 2000) and "Beginning EJB 3 Application
+     Development" (Apress 2006). He is the founding editor of the WebLogic
+     Developer's Journal, and a frequent speaker on technology issues around the
+     world. Peter was also part of the team that created The Grinder.
+    </p>
+
+
+    <p>Peter Zadrozny, <a href="ext:perfmetrix">Perfmetrix</a></p>
+
+  </section>
+
+  <section id="anser-e">
+    <title>Anser Enterprise</title>
+
+    <p>One of my consulting services is helping performance analysts
+    to set up company-internal blogs on their performance activities
+    to help them communicate better with their developers and
+    management. As part of my consulting service I can offer usage and
+    customization tips on The Grinder and a separate data
+    visualization tool to show Grinder test results on their company's
+    intranet. Much of this is in the area of test automation and
+    mining test results.</p>
+
+    <p>Here's a <a href="ext:anser-e/run6">link</a> which provides
+    several example web pages on communicating WebLogic 8.1/Grinder
+    testing results. It requires downloading the Java 1.5 plug-in for
+    charting Grinder test results.</p>
+
+    <p>Todd Nichols, <a href="ext:anser-e">Anser Enterprise</a></p>
+  </section>
+
+  <section id="testpros">
+    <title>TestPros</title>
+
+    <p>TestPros provides load testing and performance tuning services
+    using Grinder. We can provide our services in one or a combination
+    of three ways - remotely via our Internet server farm, at our test
+    labs, or at our customer's location.</p>
+
+    <p>For more information:</p>
+    <ul>
+      <li>1-877-783-7855</li>
+      <li><a href="ext:testpros/mail">info@TestPros.com</a></li>
+      <li><a href="ext:testpros">www.TestPros.com</a></li>
+    </ul>
+  </section>
+
+  <section id="swtest-discuss">
+    <title>swtest-discuss</title>
+
+    <p>I run a mailing list for software testers called <a
+    href="ext:swtest-discuss">swtest-discuss</a>. There are a few
+    people there (including me) who are interested in talking about
+    how people do testing for open source projects. I haven't yet
+    found a community of open source testers that cuts across multiple
+    tools/applications.</p>
+
+    <p>If you're interested in sharing your experiences in testing
+    open source software, please consider joining swtest-discuss, at
+    least long enough to see if there's any interest in having an
+    on-going forum on this topic. If you do subscribe, please either
+    send me a private email or introduce yourself to the list so we
+    know you're there.</p>
+
+    <p>Danny R. Faught, <a href="ext:tejasconsulting">Tejas Software
+    Consulting</a></p>
+  </section>
+
+  <section id="book">
+    <title>J2EE Performance Testing</title>
+
+    <p>I'm pleased to announce the availability of <em><a
+    href="ext:j2ee-performance-testing">J2EE Performance Testing with
+    BEA WebLogic Server</a></em> by Peter Zadrozny, Philip Aston and
+    Ted Osborne, originally published by Expert Press and now by
+    APress.</p>
+
+    <figure src="images/book-cover.jpg" alt="The Book"/>
+
+    <p>This book uses The Grinder 2 throughout, and indeed was
+    responsible for driving the development of many of The Grinder's
+    features. The book shows how to performance test complete J2EE
+    applications and how to explore key performance issues surrounding
+    the most popular J2EE APIs. The performance tests are carried out
+    using BEA WebLogic Server&#8482;, but are generally applicable to
+    any J2EE application server.</p>
+
+    <p>Most importantly, the book contains in-depth coverage of The
+    Grinder 2 including a full user guide and case studies showing how
+    to apply The Grinder to real world problems. The testing approach
+    is equally applicable when using The Grinder 3.</p>
+
+    <p>Following several requests, I've made the source code for the
+    book available from <a href="ext:sourceforge/grinder">The Grinder
+    SourceForge page</a>. This source is supplied unsupported and with
+    no warranty.</p>
+
+    <p>Philip Aston</p>
+
+  </section>
+</section>
+</body>
+</document>

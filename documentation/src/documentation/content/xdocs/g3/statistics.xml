@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Statistics</title>
+</header>
+<body>
+
+  <section>
+    <title>Standard statistics</title>
+
+    <p>Details of the statistics provided by The Grinder can be found in
+      the documentation of the <a
+      href="site:api/Statistics">Statistics</a>
+      interface. Scripts can use this interface to:
+    </p>
+
+    <ul>
+     <li>Query whether a test was successful</li>
+     <li>Obtain statistic values, such as the test time of the last test</li>
+     <li>Modify or set a test's statistics before they are sent to the
+        log and the console</li>
+     <li>Report custom statistics</li>
+     <li>Register additional views of standard and custom statistics</li>
+    </ul>
+  </section>
+
+  <section>
+    <title>Distribution of statistics</title>
+
+    <p>All the statistics displayed in the console are aggregates
+    (totals or averages) of a number of tests received in the
+    appropriate period. The reason for this is efficiency. The
+    Grinder would not perform or scale if every data point was
+    transferred back to the console.</p>
+
+    <p>The only place per-test statistics are available is in the
+    process <code>data_*</code> files.</p>
+  </section>
+
+
+  <section>
+    <title>Querying and updating statistics</title>
+
+    <p>A script can query the statistics about the last completed test
+    using <a href="site:api/Statistics/getForLastTest">
+    grinder.statistics.forLastTest</a>. Script code instrumented by a test can access
+    information about the statistics for the test (which may be incomplete) using
+    <a href="site:api/Statistics/getForCurrentTest">
+    grinder.statistics.forCurrentTest</a>. For details of the query
+    and update methods, see
+    <a href="site:api/StatisticsForTest">
+    StatisticsForTest</a>. Refer to the documentation of the <a
+    href="site:api/Statistics">Statistics</a> interface for other
+    details.</p>
+
+    <p>An <a href="site:script-gallery/statistics">example script</a>
+    demonstrating these APIs can be found in the Script Gallery.</p>
+
+  </section>
+
+  <section>
+    <title>Registering new expressions</title>
+
+    <p>Custom statistic expressions can be added to console views and
+    the worker process summary tables (found in the <code>out_*</code>
+    log files) using the <a
+    href="site:api/Statistics/registerSummaryExpression">registerSummaryExpression</a>
+    method.</p>
+
+    <p>Custom expressions can be added to worker process
+    <code>data_*</code> using the <a
+    href="site:api/Statistics/registerDataLogExpression">registerDataLogExpression</a>
+    method.</p>
+
+    <p>Both methods take a <em>displayName</em> and an <em>expression</em> as
+    parameters.</p>
+
+    <p>The <em>displayName</em> is the label used for the expression. For
+    expressions displayed in the console, this string is converted to a key for
+    an internationalised resource bundle look up by prefixing the string with
+    <code>statistic.</code> and replacing any whitespace with underscores; if
+    no value for the key exists, the raw display name string is used.</p>
+
+    <p>Expressions are composed of statistic names (see <a
+    href="site:api/Statistics">Statistics</a>) in a simple post-fix
+    format using the symbols +, -, / and *, which have their usual
+    meanings, in conjunction with simple statistic names or
+    sub-expressions. Precedence is controlled by grouping expressions
+    in parentheses. For example, the error rate is <code>(* (/ errors
+    period) 1000)</code> errors per second. The symbol
+    <code>sqrt</code> can be used to calculate the square root of an
+    expression.</p>
+
+    <p>Sample statistics, such as <code>timedTests</code>, must be introduced
+    with one of <code>sum</code>, <code>count</code>, or <code>variance</code>,
+    depending on the attribute of interest. For example, the statistic
+    <code>expression (/ (sum timedTests) (count timedTests))</code> gives
+    the mean test time in milliseconds.</p>
+
+  </section>
+
+</body>
+</document>

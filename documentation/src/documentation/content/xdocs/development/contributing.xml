@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Contributing</title>
+</header>
+
+<body>
+  <section id="source">
+  <title>The Source</title>
+
+  <p>From September 2011, The Grinder source code and documentation is
+  hosted in a <a href="ext:git">Git</a> repository. You can obtain a
+  copy from <a href="ext:sourceforge/git">Sourceforge</a>.
+  </p>
+
+  <p>Note, the documentation branch (<em>docs</em>) refers to the latest
+  released version of The Grinder, and so can lag the Git
+  <code>HEAD</code>.</p>
+
+  </section>
+
+  <section>
+  <title>What do I need to build The Grinder?</title>
+
+  <p>If you want to build The Grinder from source, you'll need:</p>
+
+  <table class="noborder">
+    <tr>
+      <td><a href="ext:oracle/java/javase">Java Standard Edition 6 ("Java 6") or higher</a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="ext:mvn">Apache Maven 3.0.3</a></td>
+      <td></td>
+    </tr>
+  </table>
+
+  <p>Dependencies on third party libraries are managed by Maven.</p>
+
+  </section>
+
+  <section>
+  <title>What do I need to test and package The Grinder?</title>
+
+  <p>The following optional packages are necessary to run The Grinder unit
+tests.</p>
+
+  <table class="noborder">
+    <tr>
+      <td><a href="ext:jython">Jython 2.1, 2.5.0, 2.5.1, 2.5.2</a></td>
+      <td>to verify The Grinder works with alternative Jython versions</td>
+    </tr>
+  </table>
+
+  </section>
+
+  <section>
+  <title>How to give back</title>
+
+  <p>If you feel you have something worth sharing, please first
+  discuss your ideas on the <a
+  href="ext:mail/grinder-development">grinder-development list</a>. If
+  your ideas develop into code, you can submit patches to this list.
+  Patches should be generated using <code>git format-patch -M -B</code>
+  against either the latest released version of The Grinder 3, or the
+  Git <code>master</code> branch. Patches should also include updates
+  to the relevant documentation sources. Please include a statement in
+  your email that you, and where appropriate your employer, are happy
+  for your work to be distributed under the terms of <a
+  href="site:license">The Grinder license</a>.</p>
+
+  <section>
+  <title>Coding Standards</title>
+
+  <p>Contributions of Java code should be checked with the
+  <a href="ext:findbugs">FindBugs</a> static analysis tool, and pass with no
+  warnings. A FindBugs filter file for The Grinder can be found in the
+  <code>etc</code> directory.</p>
+
+  <p>I actively track code coverage, and expect full JUnit tests for
+  new code. I use <a href="ext:atlassian/clover">Clover</a>; you can get a
+  free Clover license for development of The Grinder.</p>
+
+  <p>I have a strong preference for classes that take all the things
+  they need as parameters to their constructors (like <a
+  href="ext:fowler/constructor-injection">constructor injection</a>),
+  and for contracts to be specified in terms of Java interfaces. This
+  makes unit testing easier, and forces the developer to think
+  about the purpose and contract of each class.</p>
+
+  <p>Please pay attention to the existing coding style of The Grinder.
+  There is a <a href="ext:checkstyle">Checkstyle</a> configuration
+  file for The Grinder in <code>etc</code> which you should use to
+  check the formatting of your code. You can do this using the
+  <code>checkstyle:checkstyle</code> Maven goal. Checkstyle helps to
+  make the code readable, catches quite a few silly errors, and makes
+  applying patches a much nicer experience. Patches that do not pass
+  the Checkstyle rules will be rejected.</p>
+
+  </section>
+
+  </section>
+
+  <section id="documentation">
+    <title>Documentation help wanted</title>
+
+    <p>Documentation can always be improved. Tutorials and examples from
+    users of The Grinder are always welcome. Please mail suggestions,
+    corrections, and improvements to the <a href="ext:mail/grinder-development">
+    grinder-development@lists.sourceforge.net</a> mailing list.</p>
+
+    <p>The Subversion repository for The Grinder documentation is public. Authors who
+    have made valuable contributions can ask for check-in rights via the
+    <a href="ext:mail/grinder-development">grinder-development@lists.sourceforge.net</a>
+    mailing list.</p>
+  </section>
+
+  <section id="translating">
+    <title>Internationalisation help wanted</title>
+
+    <p>If you are bilingual you might fancy translating the console
+    into a language of your choice. Jose Antonio Zapta Rey did just
+    this and produced a Spanish translation.</p>
+
+    <figure src="../images/console-es-g3.png" alt="Console in Spanish"/>
+
+    <p>This translation will be automaically be the default for users
+    with their locale set correctly for the Spanish language. If your
+    locale is set otherwise and you are curious to try this out,
+    specify the Java <code>user.language</code> system property.</p>
+
+<source class="sh">
+java -Duser.language="es" net.grinder.Console
+</source>
+
+    <p>Bertrand Ave produced a translation for French speaking
+    users (<code>user.language="fr"</code>), Huibert Alblas
+    produced a German translation (<code>user.language="de"</code>),
+    and Italian, Polish, Russian, and Chinese translations have since followed.
+    </p>
+
+    <section>
+      <title>How to provide or update a translation</title>
+
+      <p>The translation properties files are stored in
+      <a href="ext:sourceforge/git/console-resources">
+      the source repository</a>. Getting the file directly from the
+      repository will make your translation is as up to date as
+      possible, and avoid duplicating effort.  The definition of all
+      English text used by the console is contained in the
+      <code>Console.properties</code> file. Individual translations
+      are contained in <code>Console_XX.properties</code> where XX is
+      the two letter <a href="ext:iso-639">ISO 639 language
+      code</a>. For example, the Spanish translation is contained in
+      <code>Console_es.properties</code>. If you want to update an
+      existing translation, make a copy of the file. If you want to
+      create a new translation, create a new file.</p>
+
+      <p>Use a text editor to edit your file. Existing translations
+      will guide you as to which properties you need to translate.
+      You should only include properties that have translated text.
+      Don't include properties such as <code>scriptTab.image</code>
+      that refer to images, or properties that refer to logical names
+      such as <code>action.menu</code>.</p>
+
+      <p>To test your file before contributing it, place the file in a
+      directory structure matching
+      <code>translation/net/grinder/console/swingui/resources</code> and add
+      the <code>translation</code> directory to the start of the
+      <code>CLASSPATH</code> that you use to start the console. You
+      may need to set <code>user.language</code> as described
+      above. The Grinder is being actively developed, and you will not be
+      able to test new translation properties added since the last
+      release without building the latest source from the repository.
+      If you can't find the time for this, an untested translation is better
+      than no translation.</p>
+
+      <p>Post your translation to the <a
+      href="ext:mail/grinder-development">grinder-development
+      list</a>, stating the git hash of the revision upon which it was
+      based. Please also include a statement that you are happy for
+      your work to be distributed under the terms of <a
+      href="site:license">The Grinder license</a>.</p>
+    </section>
+  </section>
+
+  <section id="dependees">
+    <title>Writing software that depends on The Grinder</title>
+
+    <p>There are many projects that build upon, or otherwise complement,
+    the features provided by The Grinder. Some of these are referenced from
+    the <a href="site:links">links page</a>.
+    </p>
+
+    <p>On release, The Grinder jar files are deployed to the <a
+    href="ext:sonatype/oss">Sonatype</a> OSS Nexus repository, and
+    will be synchronised to <a href="ext:mvn/central">Maven
+    Central</a> soon afterwards.</p>
+
+  </section>
+</body>
+</document>

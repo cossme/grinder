@@ -1,0 +1,4 @@
+build
+docs
+generated
+.ant-targets-build.xml

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+
+<header>
+    <title>Logging</title>
+</header>
+
+<body>
+
+<section>
+
+<title>Introduction</title>
+
+<p> The Grinder 3.7 replaced a previous custom logging framework with
+<a href="ext:logback">Logback</a>. Scripts now use a standard logging
+API (<a href="ext:slf4j">SLF4J</a>), and Logback can be configured to
+alter the output format, manage archiving of log files, and direct log
+streams to alternative locations.</p>
+
+</section>
+
+<section>
+<title>Changing the Logback configuration</title>
+
+<p>The Grinder uses two Logback configuration files:</p>
+
+<ul>
+
+<li><code>logback.xml</code> - Used by all processes. Logs to the
+terminal (<code>stdout</code>, <code>stderr</code>).</li>
+
+<li><code>logback-worker.xml</code> - Used by worker processes.
+Configures logging to the log file and the data log file.</li>
+
+</ul>
+
+<p>Both configuration files are located in the
+<code>grinder-core.jar</code> file. Refer to the <a
+href="ext:logback/manual">Logback manual</a> for full details of the
+configuration file settings.</p>
+
+<p>Let's change the archive settings for the output log to keep more
+than one archive file. First, extract the configuration file.</p>
+
+<source class="sh">
+cd lib
+jar xf grinder-core-3.7.jar logback-worker.xml
+</source>
+
+<p>Open the <code>logback-worker.xml</code> file in a text editor and
+locate the <code>log-file</code> appender. To keep five archive files,
+simply change the <code>maxIndex</code> setting to<code>5</code> so it
+matches the following:</p>
+
+<source class="xml"><![CDATA[
+
+  <appender name="log-file"
+    class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${PREFIX}.log</file>
+
+    <encoder>
+      <pattern>%d %-5level %logger{0} %marker: %message%n</pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${PREFIX}.log%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+
+    <triggeringPolicy class="net.grinder.util.logback.RollOnStartUp" />
+
+  </appender>
+]]>
+</source>
+
+<p>Save the file under the same name
+(<code>logback-worker.xml</code>). To use the modified configuration,
+add the file's directory to the <code>CLASSPATH</code> used to start
+The Grinder. We extracted the file into the <code>lib</code>
+directory, so we could start the agent process with something like the
+following:
+</p>
+
+<source class="sh">
+cd $GRINDER_HOME
+java -classpath lib:lib/grinder.jar net.grinder.Grinder 
+</source>
+
+</section>
+
+<section>
+<title>Logging data to a database</title>
+
+<p>The <code>logback-worker.xml</code> file configures two Logback
+loggers: <code>worker</code> for the main log file, and
+<code>data</code> for the data log file. Let's change the
+configuration to send test data to a database. To do this, we'll
+configure a new appender and add it to the data logger. Logback's
+database appender supports several databases; here's a suitable
+configuration for an Oracle database.
+</p>
+
+<source class="xml"><![CDATA[
+  <appender name="data-db" class="ch.qos.logback.classic.db.DBAppender">
+    <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+      <driverClass>oracle.jdbc.OracleDriver</driverClass>
+      <url>jdbc:oracle:thin:@localhost:1521:XE</url>
+      <user>grinder</user>
+      <password>grinder</password>
+    </connectionSource>
+  </appender>
+
+  <logger name="data" additivity="false">
+    <appender-ref ref="data-file" />
+    <appender-ref ref="data-db" />
+  </logger>
+]]>
+</source>
+
+<p>To expose any problems with the configuration, we'll also enable
+the Logback debug output by changing the first line of the
+configuration.</p>
+
+<source class="xml"><![CDATA[
+   <configuration debug="true">
+]]>
+</source>
+
+<p>Before we can use the database appender, we need to set up the
+appropriate database tables. To do this, create a suitable database
+account (the configuration above uses an account called
+<em>grinder</em>), download the Logback distribution, and locate and
+execute the appropriate DDL
+(<code>logback-classic/src/main/java/ch/qos/logback/classic/db/dialect/oracle.sql</code>
+for Oracle).</p>
+
+<p>To run the configuration, add the directory containing
+<code>logback-worker.xml</code> to the <code>CLASSPATH</code>, along
+with the appropriate database driver. For example:</p>
+
+<source class="sh">
+java -classpath /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/jdbc/lib/ojdbc14.jar:lib:lib/grinder.jar  net.grinder.Grinder 
+</source>
+
+</section>
+
+<section>
+<title>Writing a custom appender for data logs</title>
+
+<p>If you tried out the database configuration in the previous section
+you may have noted the following drawbacks.</p>
+
+<ul>
+
+<li>It's not particularly fast. Maximum logging throughput is of the
+order of a hundred log events per second, and this severely constrains
+the rate at which a worker process can perform tests.</li>
+
+<li>The log data is written as a string to a single
+<code>formatted_message</code> column. This is not amenable to further
+processing.</li>
+
+</ul>
+
+<p>To address these problems, you will have to write a custom database
+appender, perhaps by modifying the standard Logback-supplied appender.
+If you write such an appender, please consider making it generic and
+contributing it back to The Grinder. The following sections contain
+some implementation ideas.</p>
+
+<section>
+<title>Improving database logging performance</title>
+
+<p>The most beneficial change from a performance perspective would be
+to buffer the log events, and write many events to the database at
+once. JDBC batching would further improve performance. I suspect that
+this change alone would allow tens of thousands of events to be logged
+per second.</p>
+
+<p>The standard appender includes caller data (filename, class,
+method, line) that is expensive to obtain and is of little use for The
+Grinder data log. It also logs exception and property information.
+These features can be removed.</p>
+
+<p>To support the secondary exception and property tables, the
+standard appender needs to obtain the primary key of the newly logged
+event. Unfortunately this uses an appender level lock (unnecessarily,
+it could have synchronised on the database connection instead), and
+becomes a bottleneck when many worker threads are using the appender.
+Since the exception and property tables are unnecessary, this
+complexity can also be removed.</p>
+
+</section>
+
+<section>
+<title>Customising data log output</title>
+
+<p>The Grinder data logger generates <code>ILoggingEvent</code>s with
+the formatted string set to a comma-separated string (formatted as in
+the standard data log). It also supplies an instance of
+<code>net.grinder.engine.process.DataLogArguments</code> as the first
+and only argument. This can be accessed using
+<code>ILoggingEvent.getArgumentArray()[0]</code>.</p>
+
+<p>The <code>DataLogArguments</code> object provides all the
+information you might need about a particular data log event,
+including the thread and run numbers, the <code>Test</code>, and the
+raw statistics. Refer to the
+<code>net.grinder.engine.processs.ThreadDataLogger</code> source code
+for an example of how to extract the appropriate statistics values
+from the raw statistics. </p>
+
+</section>
+
+
+
+</section>
+</body>
+</document>

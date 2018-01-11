@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+  <header>
+    <title>The JUnit Plug-in</title>
+  </header>
+<body>
+
+    <section>
+      <title>What's it for?</title>
+
+      <p>Why would you want to do use the JUnit plug-in? Three
+      possible reasons spring to mind:</p>
+
+      <ul>
+	<li>
+	  <p>To write a simple test case around arbitrary Java code,
+	  rather than creating a new plug-in. This is the recommended
+	  way to replace the functionality of the old
+	  <code>TraderEJBPlugin</code> that was shipped with early
+	  versions of The Grinder. (As an added bonus you end up with
+	  some JUnit test cases which you can use to impresses your
+	  boss.</p>
+	</li>
+
+	<li>
+	  <p>To thrash the heck out of your code in an attempt to
+	  discover race conditions (bugs).</p>
+	</li>
+
+	<li>
+	  <p>To investigate the statistical effects of subatomic
+	  particles passing through your hardware.</p>
+	</li>
+      </ul>
+
+      <p>Looking for race conditions requires that each instance of
+      the JUnit tests should run against a common fixture - how to
+      achieve in general this is left as an exercise. Please send any
+      useful patterns to <a
+      href="site:mail/grinder-use">grinder-use</a>. Additionally,
+      because The Grinder currently runs each test cycle in the same
+      order, most race conditions will be hidden. Perhaps a better
+      approach would be to ditch The Grinder 2 and the JUnit plugin
+      and instead use <a href="site:g3">The Grinder 3</a> to run
+      scripts that exercise the test cases appropriately.</p>
+    </section>
+
+    <section>
+      <title>JUnit plug-in class</title>
+
+      <p>To use the <a href="ext:junit/">JUnit</a> plug-in,
+      specify:</p>
+
+<source class="sh">
+grinder.plugin=net.grinder.plugin.junit.JUnitPlugin
+</source>
+      </section>
+
+    <section>
+      <title>JUnit plug-in properties</title>
+
+      <p>This table lists the JUnit plug-in properties that you can
+      set in <code>grinder.properties</code> in addition to the <a
+      href="site:properties">core properties</a>.</p>
+
+      <table>
+	<tr>
+	  <td><code>grinder.plugin.parameter.testSuite</code></td>
+
+	  <td>
+	    <p>The fully qualified name of the JUnit test suite
+	    class.</p>
+
+	    <p>The class can be anything you can normally pass to a
+	    JUnit <code>TestRunner</code>. A quick summary: it can
+	    either have a method, <code>public static
+	    junit.framework.Test suite()</code> which returns the
+	    <code>TestSuite</code> <em>or</em> it can define a number
+	    of tests methods which will be discovered through
+	    introspection - the method names must begin with
+	    <code>test</code>. (Confusingly, it matters not whether
+	    the class directly implements
+	    <code>junit.framework.TestSuite</code>; this is a JUnit
+	    thing, so take any complaints there).</p>
+	  </td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.plugin.parameter.logStackTraces</code></td>
+
+	  <td>Set to <code>true</code> to produce stack traces for
+	  failures and errors in the error log. The default is
+	  <code>false</code>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>grinder.plugin.parameter.initialTestNumber</code></td>
+
+	  <td>The test number used for the first test, subsequent
+	  tests are numbered sequentially. This property is useful if
+	  you want to use several worker processes to run different
+	  test suites against the same console.The default is
+	  <code>0</code>.</td>
+	</tr>
+      </table>
+
+      <p>The tests to run are automatically sucked out of the test
+      suite class - you shouldn't specify them individually in
+      grinder.properties. However, you can tweak with individual
+      tests' sleep time as normal. For example, if you want to wait a
+      second before the 6th test in the test suite, you should say</p>
+
+<source class="text">
+grinder.test5.sleepTime=1000
+</source>
+
+      <p>JUnit has the concept of <em>failures</em> (which occur due
+      to assertions failing) and <em>errors</em> (which occur when
+      tests throw exceptions). The Grinder <em>errors</em> count for a
+      test is incremented by one if the test causes either a failure
+      or an error.</p>
+    </section>
+  </body>
+</document>
+

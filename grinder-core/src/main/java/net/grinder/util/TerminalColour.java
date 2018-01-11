@@ -1,0 +1,155 @@
+// Copyright (C) 2000 - 2011 Philip Aston
+// All rights reserved.
+//
+// This file is part of The Grinder software distribution. Refer to
+// the file LICENSE which is part of The Grinder distribution for
+// licensing details. The Grinder distribution is available on the
+// Internet at http://grinder.sourceforge.net/
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+// OF THE POSSIBILITY OF SUCH DAMAGE.
+
+package net.grinder.util;
+
+/**
+ * Creates ANSI colour control strings.
+ *
+ * @author Philip Aston
+ */
+public enum TerminalColour {
+
+  /**
+   * Constant control string for colour.
+   */
+  BLACK("30"),
+
+  /**
+   * Constant control string for colour.
+   */
+  RED("31"),
+
+  /**
+   * Constant control string for colour.
+   */
+  GREEN("32"),
+
+  /**
+   * Constant control string for colour.
+   */
+  YELLOW("33"),
+
+  /**
+   * Constant control string for colour.
+   */
+  BLUE("34"),
+
+  /**
+   * Constant control string for colour.
+   */
+  MAGENTA("35"),
+
+  /**
+   * Constant control string for colour.
+   */
+  CYAN("36"),
+
+  /**
+   * Constant control string for colour.
+   */
+  WHITE("37"),
+
+  /**
+   * Constant control string for colour.
+   */
+  BLACK_BACKGROUND("40"),
+
+  /**
+   * Constant control string for colour.
+   */
+  RED_BACKGROUND("41"),
+
+  /**
+   * Constant control string for colour.
+   */
+  GREEN_BACKGROUND("42"),
+
+  /**
+   * Constant control string for colour.
+   */
+  YELLOW_BACKGROUND("43"),
+
+  /**
+   * Constant control string for colour.
+   */
+  BLUE_BACKGROUND("44"),
+
+  /**
+   * Constant control string for colour.
+   */
+  MAGENTA_BACKGROUND("45"),
+
+  /**
+   * Constant control string for colour.
+   */
+  CYAN_BACKGROUND("46"),
+
+  /**
+   * Constant control string for colour.
+   */
+  WHITE_BACKGROUND("47"),
+
+  /**
+   * Constant control string for colour.
+   */
+  NONE();
+
+  private final String m_preString;
+  private final String m_postString;
+
+  private TerminalColour(String body) {
+    m_preString = controlString(body);
+
+    // Quoting from Thomas E. Dickey's vttest: "Some terminals will reset
+    // colors with SGR-0; I've added the 39, 49 codes for those that are ISO
+    // compliant. (The black/white codes are for emulators written by people
+    // who don't bother reading standards)."
+    m_postString = controlString("0;40;37;39;49");
+  }
+
+  private TerminalColour() {
+    m_preString = "";
+    m_postString = "";
+  }
+
+  private static String controlString(String body) {
+    return (char)0033 + "[" + body + 'm';
+  }
+
+  /**
+   * Control string which enables colour.
+   *
+   * @return The control string.
+   */
+  public String pre() {
+    return m_preString;
+  }
+
+  /**
+   * Control string which resets colour.
+   *
+   * @return The control string.
+   */
+  public String post() {
+    return m_postString;
+  }
+}

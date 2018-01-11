@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Jython</title>
+</header>
+<body>
+
+
+  <section>
+    <title>Scripts</title>
+
+    <p>The core requirements for Jython scripts can be found in the <a
+    href="site:scripts-intro/jython-scripts/">introduction</a>. </p>
+
+    <section>
+      <title>Importing modules</title>
+
+      <p>Scripts can use code packaged in Jython <a
+      href="site:python/modules>modules"> modules</a>. The Grinder
+      adds both the directory containing the script and the <a
+      href="site:scripts-intro/cwd">working directory</a> of the worker
+      process (which may be the same) to the Python path, allowing
+      modules to be imported from these locations.</p>
+
+      <p>If you want to load modules from other locations, you should
+      adjust the Python path. One way to do this is to set the <a
+      href="site:jython/environment">JYTHONPATH</a> environment
+      variable.</p>
+
+    </section>
+
+  </section>
+
+  <section id="jython-installation">
+    <title>The Jython distribution and installation</title>
+
+    <p>The Grinder 3.11 includes Jython 2.5.3 and the Jython
+    implementation of the standard Python library.</p>
+
+
+    <section id="jython-cachedir">
+    <title>Setting the Jython cache directory</title>
+
+    <p>A Jython bug prevents the correct calculation of a default
+    cache directory. If you don't have a Jython cache directory, wild
+    card imports of Java packages (e.g.  <code> from java.util import
+    *</code>) may not work, The Grinder will take a little longer to
+    start, and ugly error messages will be displayed:
+    </p>
+
+    <source class="text">
+28/09/08 17:57:11 (agent): worker paston01-0 started
+*sys-package-mgr*: can't create package cache dir, '/home/performance/lib/jython.jar/cachedir/packages'
+    </source>
+
+    <p>You can specify the cache directory either by setting the
+    <code>python.home</code> as described below (in which case the
+    directory will that specified in the Python registry), or by
+    setting the Java property <code>python.cachedir</code> in your <a
+    href="site:properties">properties</a> file:
+    </p>
+
+    <source class="sh">
+grinder.jvm.arguments = -Dpython.cachedir=/tmp/mycache
+    </source>
+
+    <p>or on the command line:</p>
+
+    <source class="sh">
+java -Dgrinder.jvm.arguments = -Dpython.cachedir=/tmp/mycache net.grinder.Grinder
+    </source>
+
+    <p>You can only set <code>grinder.jvm.arguments</code> once, so
+    if you want to set both the cache directory and <code>python.home</code>
+    either use the registry, or do this:</p>
+
+    <source class="sh">
+grinder.jvm.arguments = -Dpython.home=/opt/jython/jython2.5.3 -Dpython.cachedir=/tmp/mycache
+    </source>
+
+    </section>
+
+    <section id="alternative-jython-versions">
+      <title>Using an alternative Jython version.</title>
+
+      <p>If you want use a different version of Jython, you should
+      place it at the start of the classpath used to start the agent
+      process.</p>
+
+      <p>The Grinder is tested for compatibility with the many versions of Jython:
+      <ul>
+        <li>Jython 2.2.1</li>
+        <li>Jython 2.5.0</li>
+        <li>Jython 2.5.1</li>
+        <li>Jython 2.5.2</li>
+        <li>Jython 2.5.3</li>
+        <li>Jython 2.5.4rc1</li>
+        <li>Jython 2.7b1</li>
+      </ul>
+
+      Other versions may work, but versions earlier than 2.2.1 are no
+      longer supported. Please report problems experienced with Jython
+      2.2.1 or later, including versions not in the above list, to the
+      <a href="site:mail/grinder-use">grinder-use</a> mailing
+      list.</p>
+
+      <p>If you don't use its standalone option, the Jython installer
+      will create a new directory containing the Jython jar file, the
+      library modules, examples, and documentation. To use the
+      standard library modules, you need to tell The Grinder the
+      location of this directory. You can do this either by adding the
+      following to your <a href="site:properties">properties</a>
+      file:</p>
+
+      <source class="sh">
+grinder.jvm.arguments = -Dpython.home=/opt/jython/jython2.5.3
+      </source>
+
+      <p>or on the agent command line:</p>
+
+      <source class="sh">
+java -Dgrinder.jvm.arguments=-Dpython.home=/opt/jython/jython2.5.3 net.grinder.Grinder
+      </source>
+
+      <p>In both cases, change <code>/opt/jython/jython2.5.3</code> to
+      the directory in which you installed Jython. You must install
+      Jython on all of the agent machines. If the version of Jython is
+      different to that included with The Grinder (2.5.3), you should
+      also add the installation's <code>jython.jar</code> to the start
+      of the <code>CLASSPATH</code> used to launch the agent.</p>
+
+      <p>Jython picks up user and site preferences from several
+      sources (see <a
+      href="ext:jython/registry">http://www.jython.org/docs/registry.html</a>).
+      A side effect of setting <code>python.home</code> is that the
+      installed registry file will be used.</p>
+      </section>
+  </section>
+
+</body>
+</document>

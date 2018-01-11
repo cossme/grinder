@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+    "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+  <header>
+    <title>The Web Interface</title>
+  </header>
+  <body>
+
+    <section id="web-interface-intro">
+      <title>Introduction</title>
+      <p>
+        The web interface allows the console to be controlled from a
+        web browser. We expect that it will eventually replace the <a
+        href="site:console/ui>">classic interface</a>. The web
+        interface has several advantages. It can be accessed
+        concurrently by more than one user. It can be used from any
+        computer on networked to the console host machine. The user
+        interface is modern, and is <em>mashable</em> into other
+        interfaces and portals.</p>
+
+        <p>The initial release in The Grinder 3.12 is usable, but does
+        not have the full capability of the classic interface. In
+        particular, saving results, <a
+        href="site:console/ui/distribute">script distribution</a>, and
+        <a href="site:console/ui/edit">script editing</a> are all
+        missing. Until these features have been implemented, you may
+        want to use the classic interface and the web interface
+        together.</p>
+    </section>
+
+     <section id="access">
+      <title>How to access the web interface</title>
+
+      <p>The web interface shares its <a
+      href="site:console/service/configuration">configuration</a> with
+      the console service. With the default configuration, once the
+      console process has started, you can access the web console on
+      your local computer at <a
+      href="http://localhost:6373/ui">http://localhost:6373/ui</a>.</p>
+
+      <p>The default configuration binds to all local interfaces, so
+      you can change <em>localhost</em> in the URL to an externally
+      accessible host name or IP address. You should understand the <a
+      href="site:console/service/security">security implications</a>
+      of remote access.</p>
+
+      <section id="browser-compatibility">
+        <title>Browser compatibility</title>
+      </section>
+    </section>
+
+    <section id="process-control">
+      <title>Process control page</title>
+    </section>
+
+    <section id="data">
+      <title>Data page</title>
+    </section>
+
+    <section id="properties">
+      <title>Console properties page</title>
+    </section>
+
+  </body>
+</document>

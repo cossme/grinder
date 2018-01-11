@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+  <body>
+Client API for The Grinder console.
+
+<p>The current implementation builds up the standard grinder communications
+package, which can run over streams including process input/output streams and
+a custom TCP/IP socket protocol layer. The communication package uses Java
+Serialization for marshalling. To implement the client API, the communications
+package was extended to support a "blocking send" over TCP/IP. (Previously,
+only "one-way", asynchronous messaging had been required).</p>
+
+<p>I decided that the console API required synchronous interaction since
+this provides a more natural API. In the future, I may extend it to include
+an asynchronus event channel for pushing data back to "subscribing" clients.
+</p>
+
+<p>Some notes about the alternatives I rejected:
+
+<ul>
+  <li>Hessian not usable - requires a servlet engine.</li>
+
+  <li>Java RMI - possible.
+     <ul>
+       <li>Build process would need to invoke <code> rmic</code>.</li>
+       <li>Bootstrapping issues are painful. Wouldn't want to run separate
+       registry process. Really don't want to have new ports to contact
+       the console - configuration more complext, would prevent simple
+       tunnelling. Extending the grinder comms layer to provide bootstrapping
+       is at least as work than implementing synchronous messaging ourselves.
+       </li>
+     </ul>
+  </li>
+
+  </body>
+</html>

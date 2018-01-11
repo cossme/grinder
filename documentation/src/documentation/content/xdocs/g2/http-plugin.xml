@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+  <header>
+    <title>The HTTP Plug-in</title>
+  </header>
+  <body>
+    <section>
+      <title>HTTP plug-in class</title>
+
+      <p>To use the HTTP plug-in, specify:</p>
+
+<source class="text">
+grinder.plugin=net.grinder.plugin.http.HttpPlugin
+</source>
+    </section>
+
+    <section>
+      <title>HTTP plug-in properties</title>
+
+      <p>This table lists the HTTP plug-in properties that you can set
+      in <code>grinder.properties</code> in addition to the <a
+      href="site:properties">core properties</a>. You can use the
+      TCPSniffer to <a
+      href="site:tcpsniffer/HttpPluginSnifferFilter">record</a> HTTP
+      plug-in scripts.</p>
+
+      <table>
+  <tr>
+    <td><code>grinder.test0.parameter.url</code></td>
+
+    <td>The URL to call. The HTTP <code>GET</code> method is
+    used unless <code>grinder.test0.parameter.post</code> is
+    specified. The contents of the file can be varied using a
+    <code>string bean</code>, see this <a
+    href="site:gfaq/g2faq/post-and-string-beans">FAQ</a>.</td>
+  </tr>
+
+  <tr>
+    <td><code>grinder.test0.parameter.post</code></td>
+
+    <td>Specify a file containing <code>POST</code> data to
+    send. The value can be varied using a <a
+    href="#string-bean">string bean</a>.</td>
+  </tr>
+
+  <tr>
+    <td><code>grinder.test0.parameter.header.name</code></td>
+
+    <td>(Where <code>name</code> can be an arbitrary string).
+    Add a <code>name:</code> header to the request with the
+    specified value. The value can be varied using a <a
+    href="#string-bean">string bean</a>.</td>
+  </tr>
+
+  <tr>
+    <td><code>grinder.plugin.parameter.stringBean</code></td>
+
+    <td>Fully qualified class name of a Java bean that can
+    generate dynamic strings. See <a href="#string-bean">What's
+    a String Bean?</a>.</td>
+  </tr>
+
+  <tr>
+    <td><code>grinder.test0.parameter.ok</code></td>
+
+    <td>Fail if the returned page doesn't contain this string.
+    The value can be varied using a <a
+    href="#string-bean">string bean</a>.</td>
+  </tr>
+
+  <tr>
+    <td><code>grinder.test0.parameter.basicAuthenticationRealm</code><br/>
+    <code>grinder.test0.parameter.basicAuthenticationUser</code><br/>
+    <code>grinder.test0.parameter.basicAuthenticationPassword</code><br/>
+    </td>
+
+    <td>Used together, these specify an HTTP BASIC
+    authentication header that will be sent with the request. If
+    you specify one of these values, you must specify all three.
+
+      <p>Note, the default <a href="#HTTPClient">HTTPClient
+      implementation</a> only sends this if challenged by the
+      server, as a browser would, and the specified
+      basicAuthenticationRealm must match the realm required by
+      the WWW-Authenticate header in the challenge. The values
+      can be varied using a <a href="#string-bean">string
+      bean</a>.</p>
+    </td>
+  </tr>
+
+  <tr>
+    <td><code>grinder.plugin.parameter.useCookies</code></td>
+
+    <td>Set to <code>false</code> to disable cookie handling (it
+    defaults to <code>true</code>).</td>
+  </tr>
+
+  <tr>
+    <td><code>grinder.plugin.parameter.disablePersistentConnections</code></td>
+
+    <td>Set to <code>true</code> to send a <code>Connection:
+    close</code> message with every request. See <a
+    href="ext:innovation/httpclient/advanced/pers_con">http://www.innovation.ch/java/HTTPClient/advanced_info.html#pers_con</a>.
+    Only works with the default <a href="#HTTPClient">HTTPClient
+    implementation</a>. The default is <code>false</code>.</td>
+  </tr>
+
+  <tr>
+    <td><code>grinder.plugin.parameter.followRedirects</code></td>
+
+    <td>
+      <p>Set to <code>true</code> to automatically follow
+      redirects, so you don't have to have additional URLs in
+      you scripts. The default is <code>false</code>. You should
+      always set this to <code>false</code> for TCPSniffer
+      generated scripts.</p>
+
+      <p>If you are using WebLogic Server and Web Application
+      form-based authentication you leave this property set to
+      false. This is because a redirect request that follows
+      authentication contains a key cookie - setting the
+      property to <code>true</code> prevents the cookie from
+      being picked up by the plug-in.</p>
+    </td>
+  </tr>
+
+  <tr>
+    <td><code>grinder.useHTTPClient</code></td>
+
+    <td>Controls which of the <a href="#HTTPClient">two
+    different HTTP libraries</a> the HTTP plug-in uses. The
+    default value is <code>true</code>, meaning that the
+    HTTPClient implementation should be used.</td>
+  </tr>
+      </table>
+
+      <section id="string-bean">
+  <title>What's a String Bean?</title>
+
+  <p>When using the HTTP plug-in, it is often necessary to
+  parametrise parts of URLs, POST data, and other request
+  strings. The easy way to do this is to use a <em>string
+  bean</em> - a Java Bean that returns <code>String</code>s from
+  its <code>get</code> methods.</p>
+
+  <p>For example, suppose you wanted to modify the URL
+  <code>http://myhost/test.jsp?n=1</code> such that
+  <code>n</code> is set to a random number each time? Easy!
+  Here's how.</p>
+
+  <ol>
+    <li>
+      <p>Write a simple bean:</p>
+
+<source class="java">
+// MyStringBean.java
+package mystuff;
+
+import java.util.Random;
+
+public class MyStringBean {
+  private Random m_random = new Random();
+
+  public String getRandomInteger() {
+    return Integer.toString(m_random.nextInt());
+  }
+}
+</source>
+    </li>
+
+    <li>
+      <p>Compile this and put it in your <code>CLASSPATH</code>.
+      Then alter your <code>grinder.properties</code> to include
+      this line:</p>
+<source class="text">
+grinder.plugin.parameter.stringBean=mystuff.MyStringBean
+</source>
+    </li>
+
+    <li>
+      <p>Alter the test URL parameter as follows:</p>
+
+<source class="text">
+grinder.test0.parameter.url=http://myhost/test.jsp?n=&lt;getRandomInteger&gt;
+</source>
+
+    </li>
+  </ol>
+
+  <p>The <em><code>&lt;beanMethodName&gt;</code></em> syntax can
+  be used in URL strings, <code>POST</code> data files, HTTP
+  headers and in OK strings. It must correspond to a
+  <code>public</code> method of the string bean that takes no
+  parameters and returns a <code>String</code>.</p>
+
+  <p>The HTTP plug-in is relaxed about a partial string bean tag
+  matches (for example <code>&lt;notAMethod&gt;</code> or
+  <code>&lt;abc&lt;def&gt;xyz&gt;</code>); if it can't find a
+  suitable match it simply outputs the literal text. This allows
+  string bean tags to be used within XML <code>POST</code> data.
+  If you find that your string bean is not invoked when you
+  expect it to be, use the <a
+  href="site:tcpsniffer">TCPSniffer</a> to find out what is
+  actually being sent and check your spelling.</p>
+
+  <p>Each string bean instance is instantiated per thread, and
+  maintains its state between invocations. If your bean needs
+  additional information regarding the test life cycle (for
+  example, to reset a counter and the beginning of a cycle), it
+  can implement the
+  <code>net.grinder.plugin.http.StringBean</code> interface. See
+  the examples in
+  <code>net.grinder.plugin.http.example</code>.</p>
+
+  <p>Advanced string beans can implement the
+  <code>net.grinder.plugin.http.StringBean</code> and/or
+  <code>net.grinder.plugin.http.HTTPClientResponseListener</code>
+  interfaces to receive callbacks about the test life cycle. See
+  the examples in
+  <code>src/net/grinder/plugin/http/example</code>.</p>
+      </section>
+    </section>
+
+    <section id="HTTPClient">
+      <title>HTTPClient</title>
+
+      <p>The HTTP plugin has two implementations. The default
+      implementation is based on Ronald Tschal&#xE4;r's excellent
+      <strong>HTTPClient</strong> library. An alternative
+      implementation which uses the JDK's
+      <code>HttpURLConnection</code> can also be used, but is
+      deprecated and will be removed from The Grinder in a future
+      release. If you really want to you can specify that the HTTP
+      plug-in should use <code>HttpURLConnection</code> instead of
+      HTTPClient:</p>
+
+<source class="text">
+grinder.plugin.parameter.useHTTPClient=false
+</source>
+
+      <p>I highly recommend the HTTPClient implementation, see below
+      for some reasons why. However the HttpURLConnection
+      implementation has two features that the HTTPClient
+      implementation doesn't. The first feature is an additional
+      parameter:</p>
+
+      <table>
+  <tr>
+    <td><code>grinder.plugin.parameter.useCookiesVersionString</code></td>
+
+    <td>Set to <code>false</code> to remove the
+    <code>$Version</code> string from cookies (it defaults to
+    true). This is to work around broken (?) JRun 2.3.3.
+    behaviour.</td>
+  </tr>
+      </table>
+
+      <p>The HTTPClient cookie support is damn good, so this probably
+      isn't an issue. It will be fixed if it turns out to be a
+      problem.</p>
+
+      <p>The second additional feature is the reporting of the
+      <em>mean time to first byte</em> statistic in addition to the
+      normal total transaction time statistic. This will be supported
+      by the HTTPClient implementation in a future release.</p>
+
+      <section>
+  <title>HTTPClient versus HttpURLConnection</title>
+
+  <p>HTTPClient has many more features than HttpURLConnection,
+  see <a href="ext:innovation/httpclient/urlcon-vs-httpclient">
+  http://www.innovation.ch/java/HTTPClient/urlcon_vs_httpclient.html</a>
+  for a comparison. I hope to lever features such as proxy
+  support, connection timeouts and persistent cookies into
+  future versions of The Grinder.</p>
+
+  <p>You can access many HTTPClient features by setting system
+  properties. See <a
+  href="ext:innovation/httpclient/advanced">http://www.innovation.ch/java/HTTPClient/advanced_info.html</a>
+  for a list of properties. For example, you can force
+  HTTPClient to use HTTP 1.0 instead of HTTP 1.1 with the
+  following parameter:</p>
+
+<source class="text">
+grinder.jvm.arguments=-DHTTPClient.forceHTTP_1.0=true
+</source>
+
+  <p>One of the key advantages for The Grinder is that
+  HTTPClient allows explicit control of connection management,
+  whereas HttpURLConnection uses connection pooling "under the
+  covers". Because HTTPClient uses extra connections, it may
+  appear slower - <a href="site:timing">particularly if the
+  client and server are co-hosted</a>. However, its a better
+  model of reality (one cycle equals one browser session).</p>
+
+  <p>In my experience, HTTPClient is <em>much</em> more RFC
+  compliant, and less buggy than HttpURLConnection.</p>
+      </section>
+    </section>
+
+    <section id="https">
+      <title>How do I use HTTPS?</title>
+
+      <p>There are patches available to HTTPClient to work with
+      several SSL implementations. See <a
+      href="ext:innovation/httpclient/https">http://www.innovation.ch/java/HTTPClient/https.html</a>
+      for details. The instructions that follow assume you are using
+      JSSE 1.0.3 or later.</p>
+
+      <ol>
+  <li>
+    <p>If you are using an old JVM (earlier than 1.4.1), you'll need
+    to install <a href="ext:oracle/java/jsse-archive">JSSE1.0.3</a>. I
+    recommend installing the JSSE as an installed extension for
+    simplicity.</p>
+  </li>
+
+  <li>
+    <p>Download the HTTPClient JSSE patch from <a
+    href="ext:innovation/httpclient/jsse-zip">http://www.innovation.ch/java/HTTPClient/JSSE.zip</a></p>
+
+    <p>Extract the class files contained within the zip into a
+    directory called HTTPClient, then create a jar containing
+    that directory:</p>
+
+<source class="sh">
+mkdir HTTPClient; cd HTTPClient
+jar xf /download/JSSE.zip
+cd ..
+jar cf HTTPClient-JSSE.jar HTTPClient
+</source>
+
+    <p>Add this jar to the <em>start</em> of your
+    <code>CLASSPATH</code> before running The Grinder. Its worth
+    reading the file README in JSSE.zip.</p>
+  </li>
+
+  <li>You can now use URLs that start with <code>https:</code>
+  in your <code>grinder.properties</code>.</li>
+      </ol>
+
+      <p>You may well need to create a trust store containing CA
+      certificates that sign the server certificate. See the JSSE
+      documentation for full details, here's a quick hint:</p>
+
+<source class="sh">
+keytool -import -v -keystore ./mycastore -file d:/wls5/myserver/ca.pem
+</source>
+
+      <p>You should then add
+      <code>-Djavax.net.ssl.trustStore=mycastore</code> to
+      <code>grinder.jvm.arguments</code> in your
+      <code>grinder.properties</code>. Refer to the JSSE documentation
+      for other useful properties. In particular
+      <code>-Djavax.net.debug=ssl</code> might come in useful.</p>
+
+      <p>HTTPClient checks that the host name in each request URL
+      matches the subject DN field in the certificate. If this isn't
+      the case, you might need to add an entry to
+      <code>/etc/hosts</code>,
+      <code>c:/WINNT40/system32/drivers/etc/</code>, DNS or whatever,
+      and then use that hostname in the request URLs.</p>
+
+      <p>The JSSE SSL implementation isn't quick. This should be taken
+      into account when comparing round trip times, as a compiled
+      browser version is likely to be <em>a lot</em> faster.</p>
+    </section>
+
+    <section>
+      <title>How do I use the HTTPS plug-in? <em>(HttpURLConnection
+      implementation only)</em></title>
+
+      <note>This information applies to the deprecated
+      HttpURLConnection implementation. For information on using HTTPS
+      with the default HTTPClient implementation, see <a
+      href="#https">above</a>.</note>
+
+      <ol>
+  <li>Install JSSE1.0.3 as described above.</li>
+
+  <li>In your <code>grinder.properties</code>, use the
+  HttpsPlugin rather than HttpPlugin:
+
+<source class="text">
+grinder.plugin=net.grinder.plugin.http.HttpsPlugin
+</source>
+  </li>
+
+  <li>You can now use URLs that start with <code>https:</code>
+  in your <code>grinder.properties</code>.</li>
+
+  <li>If you want two-way authentication, add the lines like:
+
+<source class="text">
+grinder.plugin.parameter.clientCert=./philclient.p12
+grinder.plugin.parameter.clientCertPassword=acrobat
+</source>
+
+    You can export a P12 certificate from Netscape.
+  </li>
+      </ol>
+    </section>
+  </body>
+</document>

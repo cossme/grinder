@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Coordination</title>
+</header>
+<body>
+
+  <p>Most scripts are written so that their worker threads operate
+  independently of each other. For web load generation, a worker
+  thread corresponds to the actions of a single, independent user.
+  Worker threads can generate unique data using methods such as <a
+  href="site:api/ScriptContext/getProcessNumber">getProcessNumber()</a>
+  and <a
+  href="site:api/ScriptContext/getThreadNumber">getThreadNumber()</a>.
+  Coordination of activity within a worker process can use standard
+  Java or Jython synchronisation APIs.
+  </p>
+
+  <p>Occasionally a script needs to coordinate worker threads across
+  multiple worker processes. The Grinder supports this requirement
+  through a distributed synchronisation feature,
+  <em>barriers</em>.</p>
+
+  <section>
+    <title>Barriers</title>
+
+    <p>A <a href="site:api/Barrier">barrier</a> is a pre-arranged
+    synchronisation point at which worker threads will wait for each
+    other. There can be many synchronisation points; each uses a
+    unique barrier name.
+    </p>
+
+    <p>Each worker thread that wants to participate in a
+    synchronisation point should create a barrier with the given name
+    using the <a href="site:ScriptContext/barrier">ScriptContext</a>. The
+    worker thread can wait for all other threads that have created
+    barriers with a particular name by calling <a
+    href="site:api/Barrier/await">await</a>.
+    </p>
+
+    <p>Barriers are usually created in the
+    <code>TestRunner.__init__</code> constructor to ensure every
+    worker thread has created its barriers before any of the threads
+    try to wait for the barrier. </p>
+
+    <section>
+      <title>Sample script</title>
+
+<source class="jython">
+ from net.grinder.script.Grinder import grinder
+
+ class TestRunner:
+   def __init__(self):
+     # Each worker thread joins the barrier.
+     self.phase1CompleteBarrier = grinder.barrier("Phase 1")
+
+   def __call__(self):
+
+     # ... Phase 1 actions.
+
+     # Wait for all worker threads to reach this point before proceeding.
+     self.phase1CompleteBarrier.await()
+
+     # ... Further actions.
+</source>
+    </section>
+
+    <section>
+      <title>Barrier scope</title>
+
+      <p>Distributed barriers that allow coordination across worker
+      processes require that the worker processes are started with the
+      console.
+      </p>
+
+      <p>Barriers are not shared across worker processes that are not
+      started using the console, even if they are started by the same
+      agent. In this case, each barrier will only provide coordination
+      locally, between the worker threads of a worker process.</p>
+    </section>
+
+    <section>
+      <title>Barrier life cycle</title>
+
+      <p>A worker thread can reuse a barrier by calling <a
+      href="site:api/Barrier/await">await</a> again. The call will
+      block until the other workers using barriers with the same name
+      all call <code>await</code>.</p>
+
+     <p>A worker thread can wait for a limited time by using one of
+     the versions of <code>await</code> that allow a timeout to be
+     specified. If the timeout elapses, the barrier instance will be
+     cancelled and become invalid. Other worker threads will no longer
+     wait for the cancelled barrier. A new barrier can be created if
+     required.</p>
+
+     <p>Worker threads can remove themselves from a synchronisation
+     point by <a href="site:api/Barrier/cancel">cancelling</a> a
+     barrier directly.</p>
+    </section>
+  </section>
+
+</body>
+</document>

@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+    "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+  <header>
+    <title>The Console Service</title>
+  </header>
+  <body>
+
+    <section id="console-service-intro">
+      <title>Overview</title>
+      
+      <p>The console service provides an interface for automating The
+      Grinder. It allows The Grinder to be controlled by a scheduler
+      or a Continuous Integration framework such as Hudson/Jenkins;
+      remote monitoring using a web browser; and creative
+      possibilities such monitoring and influencing the test
+      execution from a test script, perhaps by starting additional
+      worker processes.</p>
+
+      <p>You can use the console service to start and stop worker
+      processes; change console options; distribute script files;
+      start and stop recordings; and obtain aggregated test
+      results.</p>
+
+      <p>The first version of the console service was released as part
+      of The Grinder 3.10, and provides REST web services. Future
+      releases will provide other flavours of interface, such as a
+      browser-based user interface, and event-driven publication of
+      data.</p>
+    </section>
+
+    <section id="configuration">
+      <title>Configuration</title>
+      
+      <p>The console hosts an HTTP server that runs the console
+      service and the <a href="site:console/webui">web interface</a>.
+      When the console is started, the server listens for HTTP
+      requests on port 6373. For most users, the console service
+      should work out of the box with no further configuration.</p>
+
+      <p>If port 6373 is unavailable, an error message will be
+      presented. This usually occurs because another program has
+      claimed the port. Perhaps there two copies of the console have
+      been started. You can change the HTTP port using the console
+      options, and also set the HTTP host to your publicly accessible
+      host name or IP address. In fact, unless you change the host
+      name, the HTTP server will listen on localhost, and you'll only
+      be able to connect to the console from local processes.</p>
+
+      <p>You can check that the console service has started correctly
+      by using your browser to access <a
+      href="http://localhost:6373/version">http://localhost:6373/version</a>.
+      If the service is running, the browser will display the version
+      of The Grinder.</p>
+
+      <section id="security">
+        <title>Remote access and security considerations</title>
+        <warning>
+          You are responsible for your system's security.
+        </warning>
+        <p>For convenience, the default configuration listens on all
+        interfaces. You can replace <em>localhost</em> in the URL with
+        an externally accessible host name or IP address, and access
+        the console service or the web interface from another
+        computer on the network.</p>
+
+        <p> Remote control is part of the rationale for both the
+        console service and the web interface, but the requirement for
+        remote access is more general. The console process must be
+        exernally accessible so that it can be contacted by agent and
+        worker processes running on other machines.</p>
+
+        <p>However, remote access opens up the possibility of
+        accidental or mallicious misuse by other networked computers.
+        It is a particularly bad idea to open any port of any of The
+        Grinder's processes to the Internet. The Grinder code is not
+        written nor tested to withstand mallicious attacks, as
+        required for Internet facing software such as web servers. An
+        attacker might potentially find a way to use The Grinder as a
+        vector. Neither the console service nor the web interface
+        require a user to authenticate. The communication is not
+        encrypted. At the very least, an attacker could easily disrupt
+        your testing. At worst, they might be able to gain full
+        control over your computers and network. You should configure
+        your operating systems, network components, and firewalls to
+        restrict access appropriately.</p>
+      </section>
+
+      <section id="headless">
+	<title>Running without a GUI window</title>
+
+	<p>If you don't use the classic <a href="site:console/ui">user
+	interface</a>, you can start the console in in a terminal mode
+	by passing the <code>-headless</code> option as follows.</p>
+    
+	<source class="text">
+	  java -classpath lib/grinder.jar net.grinder.Console -headless
+	</source>
+      </section>
+    </section>
+
+    <section id="rest">
+      <title>The REST interface</title>
+
+      <p>The REST interface accepts HTTP <code>GET</code>,
+      <code>POST</code>, and <code>PUT</code> requests.  The request's
+      <code>Accept</code> header is used to select the formatting of
+      the response.</p>
+   
+
+      <table>
+
+	<tr>
+	  <th>Accept header</th>
+	  <th>Response body format</th>
+	</tr>
+
+	<tr>
+	  <td><code>application/clojure</code></td>
+          <td>Clojure data structure</td>
+	</tr>
+
+	<tr>
+	  <td><code>application/json</code></td>
+          <td>JSON</td>
+	</tr>
+
+	<tr>
+	  <td><code>application/x-yaml</code></td>
+          <td>YAML</td>
+	</tr>
+
+	<tr>
+	  <td><code>text/html</code></td>
+          <td>YAML wrapped in HTML</td>
+	</tr>
+
+	<tr>
+	  <td><em>No accept header</em></td>
+          <td>JSON</td>
+	</tr>
+
+	<tr>
+	  <td><em>Other values</em></td>
+          <td><em>406 Not Acceptable</em></td>
+	</tr>
+      </table>
+
+      <p>The YAML in HTML support allows simple access to some of the
+      services (those that use <code>GET</code>) from a web
+      browser.</p>
+
+      <p>Some of the <code>POST</code> and <code>PUT</code> requests
+      require additional data to be supplied in the body of the
+      request. The request's <code>Content-Type</code> header is used
+      to determine whether the request body should be parsed as JSON,
+      YAML, or a Clojure data structure.</p>
+
+      <table>
+
+	<tr>
+	  <th>Content-Type header</th>
+	  <th>Request body format</th>
+	</tr>
+
+	<tr>
+	  <td><code>application/clojure</code><br/>
+              <code>application/x-clojure</code></td>
+          <td>Clojure map</td>
+	</tr>
+
+	<tr>
+	  <td><code>application/json</code><br/>
+              <code>application/x-json</code></td>
+          <td>JSON object</td>
+	</tr>
+
+	<tr>
+	  <td><code>application/yaml</code><br/>
+          <code>application/x-yaml</code><br/>
+	  <code>text/yaml</code><br/>
+          <code>text/x-yaml</code></td>
+          <td>YAML map</td>
+	</tr>
+
+	<tr>
+	  <td><em>Other values</em></td>
+          <td><em>Ignored</em></td>
+	</tr>
+      </table>
+     
+    <section id="rest-services">
+      <title>Available services</title>
+
+      <p>The following services are available.</p>
+
+      <table>
+
+	<tr>
+	  <th>Method</th>
+	  <th>URL</th>
+	  <th>Description</th>
+	</tr>
+
+	<tr>
+	  <td><code>POST</code></td>
+	  <td><code>/agents/start-workers</code></td>
+	  <td>Send a start signal to the agents to start worker processes.
+	  Equivalent to the <a
+	  href="site:console/ui/process-controls">start processes</a>
+	  button.</td>
+	</tr>
+
+	<tr>
+	  <td><code>GET</code></td>
+	  <td><code>/agents/status</code></td>
+	  <td>Returns the status of the agent and worker processes.</td>
+	</tr>
+
+	<tr>
+	  <td><code>POST</code></td>
+	  <td><code>/agents/stop</code></td>
+	  <td>Terminates all agents and their worker processes. You
+	  will usually want <code>/agents/stop-workers</code> instead.</td>
+	</tr>
+
+	<tr>
+	  <td><code>POST</code></td>
+	  <td><code>/agents/stop-workers</code></td>
+	  <td>Send a stop signal to connected worker processes.
+	  Equivalent to the <a
+	  href="site:console/ui/process-controls">reset processes</a>
+	  button.</td>
+	</tr>
+
+	<tr>
+	  <td><code>POST</code></td>
+	  <td><code>/files/distribute</code></td>
+	  <td>Start the distribution of files to agents that have an
+	  out of date cache. Distribution may take some time, so the
+	  service will return immediately and the files will be
+	  distributed in proceeds in the background.  The service
+	  returns a map with an <code>:id</code> entry that can be
+	  used to identify the particular distribution request. </td>
+	</tr>
+
+	<tr>
+	  <td><code>GET</code></td>
+	  <td><code>/files/status</code></td>
+	  <td>Returns whether the agent caches are stale (i.e. they
+	  are out of date with respect to the console's central copy
+	  of the files), and the status of the last file
+	  distribution.</td>
+	</tr>
+
+	<tr>
+	  <td><code>GET</code></td>
+	  <td><code>/properties</code></td>
+	  <td>Return the current values of the console options.</td>
+	</tr>
+
+	<tr>
+	  <td><code>PUT</code></td>
+	  <td><code>/properties</code></td>
+	  <td>Set console options. The body of the request should be a
+	  map of keys to new values; you can provide some or all of
+	  the properties. A map of the keys and their new values will
+	  be returned. You can find out the names of the keys by
+	  issuing a GET to <code>/properties</code>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>POST</code></td>
+	  <td><code>/properties/save</code></td>
+	  <td>Save the current console options in the preferences
+	  file. The preferences file is called
+	  <code>.grinder_console</code> and is stored in the home
+	  directory of the user account that is used to run the
+	  console.</td>
+	</tr>
+
+
+	<tr>
+	  <td><code>GET</code></td>
+	  <td><code>/recording/data</code></td>
+	  <td>Return the current recorded data. Equivalent to the data
+	  in the <a href="site:console/ui/results">results
+	  tab</a>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>GET</code></td>
+	  <td><code>/recording/data-latest</code></td>
+	  <td>Return the latest sample of recorded data. Equivalent to 
+	  the data in the lower pane of the <a href="site:console/ui/results">results
+	  tab</a>.</td>
+	</tr>
+
+	<tr>
+	  <td><code>POST</code></td>
+	  <td><code>/recording/start</code></td>
+	  <td>Start capturing data. An initial number of samples may
+	  be ignored, depending on the configured console
+	  options.</td>
+	</tr>
+
+	<tr>
+	  <td><code>POST</code></td>
+	  <td><code>/recording/stop</code></td>
+	  <td>Stop the data capture.</td>
+	</tr>
+
+	<tr>
+	  <td><code>GET</code></td>
+	  <td><code>/recording/status</code></td>
+	  <td>Return the current recording status.</td>
+	</tr>
+
+	<tr>
+	  <td><code>POST</code></td>
+	  <td><code>/recording/reset</code></td>
+	  <td>Discard all recorded data. After a reset, the model
+	    loses all knowledge of Tests; this can be useful when swapping
+	    between scripts. It makes sense to reset with
+	    the worker processes stopped.</td>
+	</tr>
+
+	<tr>
+	  <td><code>POST</code></td>
+	  <td><code>/recording/zero</code></td>
+	  <td>Reset the recorded data values to zero.</td>
+	</tr>
+
+	<tr>
+	  <td><code>GET</code></td>
+	  <td><code>/version</code></td>
+	  <td>Returns the version of The Grinder.</td>
+	</tr>
+
+      </table>
+
+    </section>
+
+    </section>
+
+    <section id="rest-example">
+      <title>Example session</title>
+
+      <p>Let's have a look at an example terminal session that
+      exercises the REST interface. We'll use <a
+      href="ext:curl">curl</a> as a client, but other HTTP clients
+      will work will as well.</p>
+
+
+	<note>A web cast of a similar example session is <a
+	href="ext:youtube/grinder-console-service">available on YouTube</a>.
+	</note>
+
+      <section>
+	<title>Starting up</title>
+      
+	<p>First, we start the console, specifying
+	<code>-headless</code> because we're not going to be using the
+	GUI.</p>
+
+      <source class="text">
+% java -classpath lib/grinder.jar net.grinder.Console -headless
+
+2012-05-30 18:33:30,472 INFO  console: The Grinder 3.10-SNAPSHOT
+2012-05-30 18:33:30,505 INFO  org.eclipse.jetty.server.Server: jetty-7.6.1.v20120215
+2012-05-30 18:33:30,538 INFO  org.eclipse.jetty.server.AbstractConnector: 
+ Started SelectChannelConnector@:6373
+</source>
+
+        <p>You can see the console service is listening on port 6373,
+        as expected.  Now open another terminal window, and check the
+        lights are on.</p>
+
+	<source class="text">
+% curl http://localhost:6373/version
+
+The Grinder 3.10-SNAPSHOT
+</source>
+
+        <p>The console service has responded with the appropriate
+        version string, as expected.</p>
+
+	<p>Next let's ask for the current
+        console options.</p>
+
+	<source class="text">
+% curl http://localhost:6373/properties
+
+{"httpPort":6373,"significantFigures":3,"collectSampleCount":0,
+"externalEditorCommand":"","consolePort":6372,"startWithUnsavedBuffersAsk":true,
+"scanDistributionFilesPeriod":6000,"resetConsoleWithProcesses":false
+"sampleInterval":3100,"resetConsoleWithProcessesAsk":true,
+"frameBounds":[373,168,1068,711],"httpHost":"","externalEditorArguments":"",
+"ignoreSampleCount":0,"consoleHost":"","distributeOnStartAsk":false,
+"propertiesNotSetAsk":true,"distributionDirectory":"/tmp/grinder-3.9.1/foo",
+"propertiesFile":"/tmp/grinder-3.9.1/foo/grinder.properties",
+"distributionFileFilterExpression":
+"^CVS/$|^\\.svn/$|^.*~$|^(out_|error_|data_)\\w+-\\d+\\.log\\d*$",
+"saveTotalsWithResults":false,"stopProcessesAsk":true,"lookAndFeel":null}
+</source>
+
+        <p>The console options are returned in the response body as a
+        JSON object containing key/value pairs. This format is easily
+        to parse with a scripting language, or JavaScript in a
+        browser.</p>
+
+      </section>
+
+      <section>
+	<title>Setting the properties</title>
+
+        <p>Some of the console options are only relevant to the GUI,
+        but others also affect the console service. The following
+        command changes the distribution directory to the examples
+        directory in our distribution, and selects the
+        <code>grinder.properties</code> file.</p>
+
+	<source class="text">
+% curl -H "Content-Type: application/json" -X PUT http://localhost:6373/properties
+    -d '{"distributionDirectory":"examples", "propertiesFile":"grinder.properties"}'
+
+{"propertiesFile":"grinder.properties","distributionDirectory":"examples"}
+</source>
+
+        <p>The properties that were changed are returned in the
+        response body.</p>
+
+      </section>
+
+      <section>
+	<title>Connecting an agent</title>
+
+        <p>In a third terminal window, let's start an agent. We'll be
+        distributing files to the agent which it will cache in its
+        working directory, so we'll do so in a temporary
+        directory.</p>
+
+	<source class="text">
+% cd /tmp
+% java -classpath ${GRINDER_HOME}/lib/grinder.jar net.grinder.Grinder
+
+2012-05-30 18:54:30,674 INFO  agent: The Grinder 3.10-SNAPSHOT
+2012-05-30 18:54:30,737 INFO  agent: connected to console at localhost/127.0.0.1:6372
+2012-05-30 18:54:30,737 INFO  agent: waiting for console signal
+</source>
+
+        <p>The agent has connected to the console. We could start up
+        other agents, perhaps on other machines; we'd just need to add
+        <code>-Dgrinder.console.Host=console-machine</code> before
+        <code>net.grinder.Grinder</code>.</p>
+
+        <p>We can confirm that the console knows about the agent.</p>
+
+	<source class="text">
+% curl http://localhost:6373/agents/status
+
+[{"id":"paston02:968414967|1338400470671|425013298:0","name":"paston02","number":-1,
+"state":"RUNNING","workers":[]}]
+</source>
+
+        <p>The agent is running, and it has not yet started any worker
+        processes. Now we'll distribute the scripts to the agent.</p>
+
+
+	<source class="text">
+% curl -X POST http://localhost:6373/files/distribute
+
+{"id":1,"state":"started","files":[]}
+</source>
+
+        <p>File distribution is asynchronous - the result indicates
+        that the distribution request has been queued, and allocated
+        id 1. We can find out where it's got to by querying the
+        status.</p>
+
+	<source class="text">
+% curl http://localhost:6373/files/status
+
+{"stale":false,"last-distribution":{"per-cent-complete":100,"id":1,"state":"finished",
+"files":["cookies.py","digestauthentication.py","ejb.py","jdbc.py","httpg2.py","console.py",
+"slowClient.py","httpunit.py","sequence.py","jmssender.py","grinder.properties","sync.py",
+"amazon.py","helloworldfunctions.py","form.py","xml-rpc.py","parallel.py","jaxrpc.py",
+"scenario.py","threadrampup.py","statistics.py","jmsreceiver.py","helloworld.py",
+"helloworld.clj","proportion.py","fba.py","scriptlifecycle.py","email.py","http.py"]}}
+</source>
+
+	<p>This tells us that the agent caches are no longer stale,
+	and the distribution 1 completed, sending the list of files to
+	the agents.</p>
+
+      </section>
+
+      <section>
+	<title>Starting the workers</title>
+
+	<p>We're going to have The Grinder start some worker processes
+	and run the <a
+	href="site:script-gallery/helloworld.py">helloworld.py</a>
+	script, which is one of the files we've just sent.</p>
+
+        <p>We previously set the console option
+        <em>propertiesFile</em> to a properties file in the
+        distributed files (we chose
+        <code>grinder.properties</code>). Setting this option causes
+        the agent to first look for any script file in its
+        distribution cache, falling back to its working directory if
+        the file isn't found. We can override the values in the
+        distributed <code>grinder.properties</code> file in properties
+        sent with the start command.</p>
+
+	<note>Distributing the files to the agents is optional. If you
+	do so, then be sure to set <em>propertiesFile</em> to a valid
+	properties file in the distribution. Otherwise, the agent will
+	resolve the script file name relative to its working
+	directory, ignoring the files in the distribution cache. If
+	you don't distribute the files you'll have to make sure the
+	agent can find the script through some other means, such as a
+	file system share.
+
+	<br/> <br/>
+
+	Properties supplied with the start command override those
+	specified with <em>propertiesFile</em>, which in turn override
+	those specified as system properties on the agent or worker
+	process command lines, which in turn override those found in a
+	<code>grinder.properties</code> file in the agent's working
+	directory.
+	</note>
+
+	<p>The following starts two worker processes, to perform three
+	runs of <em>helloworld.py</em>, using five worker threads
+	each.</p>
+
+	<source class="text">
+% curl -H "Content-Type: application/json" -X POST http://localhost:6373/agents/start-workers -d '{"grinder.processes" : "2", "grinder.threads" : "5", "grinder.runs" : "3",  "grinder.script" : "helloworld.py" }'
+
+success
+</source>
+
+      </section>
+
+      <section>
+	<title>Obtaining the results</title>
+
+	<p>Let's stop the recording. Until we do this, the TPS will be
+	calculated over an increasing duration, and steadily
+	fall. When doing real tests, it's more common to set
+	<code>grinder.runs</code> to <code>0</code> so that the
+	workers don't stop until instructed to do so, and to record a
+	period of data before they are stopped.</p>
+
+	<source class="text">
+% curl -X POST http://localhost:6373/recording/stop
+
+{"state":"Stopped","description":"Collection stopped"}
+</source>
+
+        <p>We can now retrieve the recording data.</p>
+
+	<source class="text">
+% curl http://localhost:6373/recording/data
+
+{"status":{"state":"Stopped","description":"Collection stopped"},
+"columns":["Tests","Errors","Mean Test Time (ms)","Test Time Standard Deviation (ms)","TPS","Peak TPS"],
+"tests":[{"test":1,"description":"Log method","statistics":[30,0,0.2,0.4,9.674298613350532,
+9.67741935483871]}],
+"totals":[30,0,0.2,0.4,9.674298613350532,9.67741935483871]}
+</source>
+
+        <p>There were 30 executions of Test 1 as expected (2 worker
+        processes x 5 worker threads x 3 runs), with an average
+        execution time of 0.2 ms.</p>
+        
+        
+	<source class="text">
+% curl http://localhost:6373/recording/data-latest
+
+{"status":{"state":"Stopped","description":"Collection stopped"},
+"columns":["Tests","Errors","Mean Test Time (ms)","Test Time Standard Deviation (ms)","TPS","Peak TPS"],
+"tests":[{"test":1,"description":"Log method","statistics":[30,0,0.2,0.4,9.674298613350532,
+9.67741935483871]}],
+"totals":[30,0,0.2,0.4,9.674298613350532,9.67741935483871]}
+</source>
+
+        <p>Adding the -latest will retrieve the latest sample 
+        data available. This is most useful to get near real time 
+        data a currently executing test.<br/>  Again, there were 
+        30 executions of Test 1 as expected (2 worker processes x
+         5 worker threads x 3 runs), with an average execution time of 0.2 ms.</p>
+        
+
+      </section>
+
+      <section>
+	<title>Conclusion</title>
+
+	<p>I hope you've enjoyed this quick tour of the console
+	service. Start the console and an agent yourself, and have a
+	play.</p>
+
+	<note><strong>Tips</strong>
+	<br/>
+        If a call to a service results in <em>Resource not
+        found</em>, check you've used the appropriate HTTP method
+        (GET, PUT, or POST).
+	<br/>
+	You might find it simpler to run the console GUI
+	(don't add <code>-headless</code> to the command line). This
+	will allow you to see the current console status at a glance.
+
+	</note>
+
+      </section>
+      
+    </section>
+    
+  </body>
+</document>

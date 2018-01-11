@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>grinder-core</artifactId>
+  <packaging>jar</packaging>
+  <name>${project.artifactId}</name>
+  <url>http://grinder.sourceforge.net</url>
+  <description>The Grinder.</description>
+
+  <parent>
+    <groupId>net.sf.grinder</groupId>
+    <artifactId>grinder-parent</artifactId>
+    <version>3.12-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>grinder-translation</artifactId>
+      <version>3.12-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>grinder-dcr-agent</artifactId>
+      <version>3.12-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>grinder-test-support</artifactId>
+      <version>3.12-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>asm</groupId>
+      <artifactId>asm</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.jsr166-mirror</groupId>
+      <artifactId>extra166y</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.picocontainer</groupId>
+      <artifactId>picocontainer</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.python</groupId>
+      <artifactId>jython-standalone</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>clojure</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*.html</include>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/*.html</exclude>
+          <exclude>**/*.properties</exclude>
+        </excludes>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+        </configuration>
+      </plugin>
+
+      <!-- Sigh, because of MDEP-259 we have to always have 'install'
+      as a goal for this to work when running from the parent project,
+      even if we don't care. E.g. "mvn install site", not "mvn site".
+      -->
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dcr-agent</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>grinder-dcr-agent</artifactId>
+                  <type>jar</type>
+                  <overWrite>true</overWrite>
+                  <destFileName>grinder-dcr-agent.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- Large permgen required because Jython has classloader leaks.
+          See net.grinder.testutility.JythonVersionRunner. -->
+          <argLine>-javaagent:${project.build.directory}/grinder-dcr-agent.jar
+            -XX:MaxPermSize=600m -XX:+HeapDumpOnOutOfMemoryError</argLine>
+          <systemPropertyVariables>
+            <grinder.version>${project.version}</grinder.version>
+
+            <!-- Put Jython droppings in one place. -->
+            <python.cachedir>${project.basedir}/target/python.cache</python.cachedir>
+
+            <!-- Alternative Jython implementations for unit tests. If you don't
+              have these, comment out the property. -->
+            <jython2_2_1.dir>/opt/jython/jython2.2.1</jython2_2_1.dir>
+            <jython2_5_0.dir>/opt/jython/jython2.5.0</jython2_5_0.dir>
+            <jython2_5_1.dir>/opt/jython/jython2.5.1</jython2_5_1.dir>
+            <jython2_5_2.dir>/opt/jython/jython2.5.2</jython2_5_2.dir>
+            <jython2_5_3.dir>/opt/jython/jython2.5.3</jython2_5_3.dir>
+            <jython2_5_4rc1.dir>/opt/jython/jython2.5.4rc1</jython2_5_4rc1.dir>
+            <jython2_7b1.dir>/opt/jython/jython2.7b1</jython2_7b1.dir>
+
+            <!-- I considered managing the Jython installations with the
+                 maven dependency plugin, but the various versions are not
+                 all available on maven central. -->
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+
+      <plugin>
+       <artifactId>maven-jar-plugin</artifactId>
+       <executions>
+         <execution>
+           <goals>
+             <goal>test-jar</goal>
+           </goals>
+         </execution>
+       </executions>
+     </plugin>
+
+
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <filters>
+                <filter>
+                  <artifact>org.codehaus.jsr166-mirror:extra166y</artifact>
+                  <includes>
+                    <include>**/CustomConcurrentHashMap*</include>
+                  </includes>
+                </filter>
+              </filters>
+              <artifactSet>
+                <includes>
+                  <include>org.codehaus.jsr166-mirror:extra166y</include>
+                </includes>
+              </artifactSet>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <reportPlugins>
+            <plugin>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>checkstyle</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+              <configuration>
+                <configLocation>${project.parent.basedir}/etc/checkstyle.xml</configLocation>
+                <propertyExpansion>config_loc=${project.parent.basedir}/etc/</propertyExpansion>
+              </configuration>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>findbugs-maven-plugin</artifactId>
+
+              <configuration>
+                <effort>Max</effort>
+                <threshold>Medium</threshold>
+                <excludeFilterFile>${project.parent.basedir}/etc/findbugs-exclude.xml</excludeFilterFile>
+              </configuration>
+            </plugin>
+          </reportPlugins>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

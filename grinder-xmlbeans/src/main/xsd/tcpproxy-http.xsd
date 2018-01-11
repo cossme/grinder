@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema
+  targetNamespace="http://grinder.sourceforge.net/tcpproxy/http/1.0"
+  xmlns:tns="http://grinder.sourceforge.net/tcpproxy/http/1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  attributeFormDefault="unqualified" elementFormDefault="qualified">
+
+  <xs:element name="http-recording" type="tns:HTTPRecordingType">
+    <xs:key name="BaseURIID">
+      <xs:selector xpath="base-uri" />
+      <xs:field xpath="uri-id" />
+    </xs:key>
+
+    <xs:key name="CommonHeadersID">
+      <xs:selector xpath="common-headers" />
+      <xs:field xpath="headers-id" />
+    </xs:key>
+
+    <xs:key name="TokenID">
+      <xs:selector xpath="token" />
+      <xs:field xpath="token-id" />
+    </xs:key>
+
+    <xs:keyref name="BaseURIIDRef" refer="tns:BaseURIID">
+      <xs:selector xpath="page/request/uri" />
+      <xs:field xpath="extends" />
+    </xs:keyref>
+
+    <xs:keyref name="CommonHeadersIDRef" refer="tns:CommonHeadersID">
+      <xs:selector xpath="page/request/headers" />
+      <xs:field xpath="extends" />
+    </xs:keyref>
+
+    <xs:key name="TokenIDRef">
+      <xs:selector xpath="page/request/response/token-reference|page/request/uri/path/token-reference|page/request/uri/query-string/token-reference|page/request/body/form/token-reference" />
+      <xs:field xpath="token-id" />
+    </xs:key>
+  </xs:element>
+
+  <xs:simpleType name="IDType">
+    <xs:restriction base="xs:NMTOKEN" />
+  </xs:simpleType>
+
+  <xs:complexType name="HTTPRecordingType">
+    <xs:sequence>
+      <xs:element name="metadata">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="version" type="xs:normalizedString" />
+            <xs:element name="time" type="xs:dateTime" />
+            <xs:element name="test-number-offset" type="xs:int"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="common-headers" type="tns:CommonHeadersType"
+        minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="base-uri" type="tns:BaseURIType"
+        minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="token" type="tns:TokenType"
+        minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="page" type="tns:PageType"
+        minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BaseURIType">
+    <!-- Scheme and conventional server authority. No support for userinfo. -->
+    <xs:sequence>
+      <xs:element name="scheme">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="http" />
+            <xs:enumeration value="https" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="host" type="xs:NMTOKEN" />
+      <xs:element name="port" type="xs:unsignedShort" />
+    </xs:sequence>
+    <xs:attribute name="uri-id" type="tns:IDType" />
+  </xs:complexType>
+
+  <xs:complexType name="TokenType">
+    <xs:sequence>
+      <!-- Might have different token types in the future, but for now we just
+           capture name-value pairs. -->
+      <xs:element name="name" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="token-id" type="tns:IDType" />
+  </xs:complexType>
+
+  <xs:complexType name="PageType">
+    <xs:sequence>
+      <xs:element name="request" type="tns:RequestType"
+        minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TokenReferenceType">
+    <xs:sequence>
+      <xs:element name="new-value" type="xs:string" minOccurs="0"/>
+      <xs:element name="conflicting-value" minOccurs="0" maxOccurs="unbounded"
+        type="tns:ConflictingTokenReferenceType"/>
+    </xs:sequence>
+    <xs:attribute name="token-id" type="tns:IDType" />
+
+    <!-- Source is specified if value should be obtained dynamically. -->
+    <xs:attribute name="source" type="xs:string" use="optional"/>
+  </xs:complexType>
+
+  <xs:simpleType name="TokenResponseLocationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RESPONSE_LOCATION_HEADER_PATH_PARAMETER" />
+      <xs:enumeration value="RESPONSE_LOCATION_HEADER_QUERY_STRING" />
+      <xs:enumeration value="RESPONSE_BODY_URI_PATH_PARAMETER" />
+      <xs:enumeration value="RESPONSE_BODY_URI_QUERY_STRING" />
+      <xs:enumeration value="RESPONSE_BODY_HIDDEN_INPUT" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="ConflictingTokenReferenceType">
+    <xs:sequence>
+      <xs:element name="value" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute name="source" type="xs:string"/>
+  </xs:complexType>
+
+  <!-- XML Schema, what did we do to deserve it? -->
+  <xs:complexType name="ResponseTokenReferenceType">
+    <xs:complexContent>
+      <xs:restriction base="tns:TokenReferenceType">
+        <xs:sequence>
+          <xs:element name="new-value" type="xs:string" minOccurs="0"/>
+          <xs:element name="conflicting-value" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:restriction base="tns:ConflictingTokenReferenceType">
+                  <xs:sequence>
+                    <xs:element name="value" type="xs:string"/>
+                  </xs:sequence>
+                  <xs:attribute name="source" type="tns:TokenResponseLocationType"/>
+                </xs:restriction>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="token-id" type="tns:IDType" />
+
+        <xs:attribute name="source" type="tns:TokenResponseLocationType"/>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ResponseType">
+    <xs:sequence>
+      <xs:element name="token-reference" type="tns:ResponseTokenReferenceType"
+        minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="status-code" type="xs:unsignedShort" />
+    <xs:attribute name="reason-phrase" type="xs:normalizedString" />
+  </xs:complexType>
+
+  <xs:complexType name="RequestType">
+    <xs:sequence>
+      <xs:element name="comment" type="tns:CommentType"
+             minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="time" type="xs:dateTime" />
+      <xs:element name="method">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+            <xs:enumeration value="DELETE" />
+            <xs:enumeration value="GET" />
+            <xs:enumeration value="HEAD" />
+            <xs:enumeration value="OPTIONS" />
+            <xs:enumeration value="POST" />
+            <xs:enumeration value="PUT" />
+            <xs:enumeration value="TRACE" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="uri" type="tns:RelativeURIType" />
+      <xs:element name="headers" type="tns:HeadersType" />
+      <xs:element name="description" type="xs:normalizedString" />
+      <xs:element name="annotation" type="xs:normalizedString" minOccurs="0" />
+      <xs:element name="sleep-time" type="xs:unsignedInt" minOccurs="0" />
+      <xs:element name="body" type="tns:BodyType" minOccurs="0" />
+      <xs:element name="response" type="tns:ResponseType" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ParsedURIPartType">
+    <xs:sequence maxOccurs="unbounded">
+      <xs:element name="text" type="xs:normalizedString" />
+      <xs:element name="token-reference" type="tns:TokenReferenceType" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RelativeURIType">
+    <xs:sequence>
+      <xs:element name="unparsed" type="xs:normalizedString" />
+      <xs:element name="path" type="tns:ParsedURIPartType" />
+      <xs:element name="query-string" type="tns:ParsedURIPartType" minOccurs="0" />
+
+      <!-- Browsers, and HTTPClient, strip fragments from URIs they send to the
+      wire. We capture it just for completeness. If a browser was used for the
+      TCPProxy recording, there won't be any fragments in the incoming stream
+      anyway. -->
+      <xs:element name="fragment" type="xs:normalizedString" minOccurs="0" />
+    </xs:sequence>
+
+    <xs:attribute name="extends" type="tns:IDType" />
+  </xs:complexType>
+
+  <xs:complexType name="HeadersType">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="header" type="tns:HeaderType" />
+        <xs:element name="authorization" type="tns:AuthorizationHeaderType" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="extends" type="tns:IDType" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="CommonHeadersType">
+    <xs:complexContent>
+      <xs:extension base="tns:HeadersType">
+        <xs:attribute name="headers-id" type="tns:IDType" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HeaderType">
+    <xs:complexContent>
+      <xs:extension base="tns:NameValueType" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AuthorizationHeaderType">
+    <xs:sequence>
+      <xs:element name="basic" type="tns:BasicAuthorizationHeaderType" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BasicAuthorizationHeaderType">
+    <xs:attribute name="userid">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[^:]*" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="password" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="BodyType">
+    <xs:sequence>
+      <xs:element name="content-type" type="xs:normalizedString"
+        minOccurs="0" />
+      <xs:choice>
+        <xs:element name="binary" type="tns:BinaryBodyType" />
+        <xs:element name="file" type="tns:FileNameBodyType" />
+        <xs:element name="form" type="tns:FormBodyType" />
+        <xs:element name="escaped-string" type="tns:EscapedStringBodyType" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="BinaryBodyType">
+    <xs:restriction base="xs:base64Binary" />
+  </xs:simpleType>
+
+  <xs:simpleType name="FileNameBodyType">
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+
+  <xs:complexType name="FormBodyType">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="form-field" type="tns:FormFieldType" />
+        <xs:element name="token-reference" type="tns:TokenReferenceType" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="multipart" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="FormFieldType">
+    <xs:complexContent>
+      <xs:extension base="tns:NameValueType" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="CommentType">
+    <xs:restriction base="xs:string" />
+  </xs:simpleType>
+  <xs:simpleType name="EscapedStringBodyType">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="NameValueType" abstract="true">
+    <xs:attribute name="name" type="xs:NMTOKEN" />
+    <xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+</xs:schema>
