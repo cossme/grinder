@@ -349,8 +349,9 @@ public class CookieModule implements HTTPClientModule
 		    names.insertElementAt(cookie.toExternalForm(), idx);
 		    lens.insertElementAt(new Integer(len), idx);
 
-		    if (cookie instanceof Cookie2)
-			version = Math.max(version, ((Cookie2) cookie).getVersion());
+// ** OME **
+//		    if (cookie instanceof Cookie2)
+//			version = Math.max(version, ((Cookie2) cookie).getVersion());
 		}
 	    }
 
@@ -367,8 +368,9 @@ public class CookieModule implements HTTPClientModule
 	{
 	    StringBuffer value = new StringBuffer();
 
-	    if (version > 0)
-		value.append("$Version=\"" + version + "\"; ");
+// ** OME **
+//	    if (version > 0)
+//		value.append("$Version=\"" + version + "\"; ");
 
 	    value.append((String) names.elementAt(0));
 	    for (int idx=1; idx<names.size(); idx++)
@@ -379,20 +381,21 @@ public class CookieModule implements HTTPClientModule
 	    hdrs = Util.resizeArray(hdrs, hdrs.length+1);
 	    hdrs[hdrs.length-1] = new NVPair("Cookie", value.toString());
 
+// ** OME **
 	    // add Cookie2 header if necessary
-	    if (version != 1)	// we currently know about version 1 only
-	    {
-		int idx;
-		for (idx=0; idx<hdrs.length; idx++)
-		    if (hdrs[idx].getName().equalsIgnoreCase("Cookie2"))
-			break;
-		if (idx == hdrs.length)
-		{
-		    hdrs = Util.resizeArray(hdrs, hdrs.length+1);
-		    hdrs[hdrs.length-1] =
-				    new NVPair("Cookie2", "$Version=\"1\"");
-		}
-	    }
+//	    if (version != 1)	// we currently know about version 1 only
+//	    {
+//		int idx;
+//		for (idx=0; idx<hdrs.length; idx++)
+//		    if (hdrs[idx].getName().equalsIgnoreCase("Cookie2"))
+//			break;
+//		if (idx == hdrs.length)
+//		{
+//		    hdrs = Util.resizeArray(hdrs, hdrs.length+1);
+//		    hdrs[hdrs.length-1] =
+//				    new NVPair("Cookie2", "$Version=\"1\"");
+//		}
+//	    }
 
 	    req.setHeaders(hdrs);
 

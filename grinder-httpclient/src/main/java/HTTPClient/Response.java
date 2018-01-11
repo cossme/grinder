@@ -775,9 +775,11 @@ public final class Response implements RoResponse, GlobalConstants, Cloneable
 
 
 	// now determine content-delimiter
-
-	if (StatusCode < 200  ||  StatusCode == 204  ||  StatusCode == 205  ||
+        /** ++O.Merlin MODIFICATION **/
+        // in case StatusCode 205 and Transfert-Encoding: chunked we want to remove trailing characters in the buffer
+	if (StatusCode < 200  ||  StatusCode == 204  ||  (StatusCode == 205 && !te_chunked) || 
 	    StatusCode == 304)
+        /** --O.Merlin MODIFICATION **/
 	{
 	    cd_type = CD_0;
 	}

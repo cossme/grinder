@@ -46,7 +46,7 @@
   [server host port error-handler app]
   (or (stop-jetty server error-handler)
       (try
-        (jetty/run-jetty app {:host host :port port :join? false})
+        (jetty/run-jetty app {:host host :port port :join? false :max-threads 1025})
         (catch Exception e
           (.handleException
             error-handler

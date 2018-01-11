@@ -35,6 +35,7 @@ import net.grinder.common.SkeletonThreadLifeCycleListener;
 import net.grinder.script.InvalidContextException;
 import net.grinder.script.SSLControl;
 import net.grinder.util.InsecureSSLContextFactory;
+import net.grinder.util.LessInsecureSSLContextFactory;
 
 
 /**
@@ -93,6 +94,39 @@ final class SSLControlImplementation implements SSLControl {
   public void setKeyStore(InputStream keyStoreInputStream, String password)
     throws GeneralSecurityException, InvalidContextException, IOException {
     setKeyStore(keyStoreInputStream, password, KeyStore.getDefaultType());
+  }
+
+  public void setSSLStores(final InputStream keyStoreInputStream,
+                          final String password,
+                          String keyStoreType,
+			   final InputStream trustStoreInputStream,
+                           final String passwordTrustStore, 
+                          String trustStoreType)
+    throws GeneralSecurityException, InvalidContextException, IOException {
+
+    final ThreadContext threadContext = m_threadContextLocator.get();
+
+    if (threadContext == null) {
+      throw new InvalidContextException(
+        "setKeyStore is only supported for worker threads.");
+    }
+
+    final char[] passwordChars =
+      password != null ? password.toCharArray() : null;
+    final char[] passwordTrustStoreChars =
+      passwordTrustStore != null ? passwordTrustStore.toCharArray() : null;
+
+    setThreadSSLContextFactory(
+      threadContext,
+      new CachingSSLContextFactory(
+        new LessInsecureSSLContextFactory(keyStoreInputStream,
+                                      passwordChars,
+                                      keyStoreType, trustStoreInputStream, passwordTrustStoreChars, trustStoreType)));
+  }
+
+  public void setSSLStores(InputStream keyStoreInputStream, String password, InputStream trustStoreInputStream, String passwordTrustStore)
+    throws GeneralSecurityException, InvalidContextException, IOException {
+    setSSLStores(keyStoreInputStream, password, KeyStore.getDefaultType(), trustStoreInputStream, passwordTrustStore, KeyStore.getDefaultType());
   }
 
   public void setKeyStoreFile(String keyStoreFileName,

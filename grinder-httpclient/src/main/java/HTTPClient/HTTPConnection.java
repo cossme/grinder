@@ -305,7 +305,8 @@ public class HTTPConnection implements GlobalConstants, HTTPClientModuleConstant
 
     /** ++GRINDER MODIFICATION **/
     /** hack to disable trailers */
-    private static boolean       noTrailers = false;
+    /** OME - disabling by default **/
+    private static boolean       noTrailers = true;
 
     /** hack to capture DNS lookup time */
     private        AtomicLong          DNS_time = new AtomicLong();
@@ -1332,6 +1333,128 @@ public class HTTPConnection implements GlobalConstants, HTTPClientModuleConstant
     }
 
 
+    /*********** PATCH BEGIN **************/
+    /**
+     * PATCHs the data into the specified file. The data is converted to an
+     * array of bytes using the default character converter.
+     * The request ist sent using the content-type "application/octet-stream".
+     *
+     * @param     file the absolute path of the file
+     * @param     data the data
+     * @return    an HTTPResponse structure containing the response
+     * @exception java.io.IOException when an exception is returned from
+     *                                the socket.
+     * @exception ModuleException if an exception is encountered in any module.
+     * @see java.lang.String#getBytes()
+     */
+    public HTTPResponse Patch(String file, String data)
+		throws IOException, ModuleException
+    {
+	return Patch(file, data, null);
+    }
+
+    /**
+     * PATCHs the data into the specified file using the additional headers
+     * for the request.
+     *
+     * @param     file     the absolute path of the file
+     * @param     data     the data
+     * @param     headers  additional headers
+     * @return    an HTTPResponse structure containing the response
+     * @exception java.io.IOException when an exception is returned from
+     *                                the socket.
+     * @exception ModuleException if an exception is encountered in any module.
+     * @see java.lang.String#getBytes()
+     */
+    public HTTPResponse Patch(String file, String data, NVPair[] headers)
+		throws IOException, ModuleException
+    {
+	byte tmp[] = null;
+
+	if (data != null  &&  data.length() > 0)
+	    tmp = data.getBytes();
+
+	return Patch(file, tmp, headers);
+    }
+
+    /**
+     * PATCHs the raw data into the specified file.
+     * The request is sent using the content-type "application/octet-stream".
+     *
+     * @param     file     the absolute path of the file
+     * @param     data     the data
+     * @return    an HTTPResponse structure containing the response
+     * @exception java.io.IOException when an exception is returned from
+     *                                the socket.
+     * @exception ModuleException if an exception is encountered in any module.
+     */
+    public HTTPResponse Patch(String file, byte data[])
+		throws IOException, ModuleException
+    {
+	return Patch(file, data, null);
+    }
+
+    /**
+     * PATCHs the raw data into the specified file using the additional
+     * headers.
+     *
+     * @param     file     the absolute path of the file
+     * @param     data     the data
+     * @param     headers  any additional headers
+     * @return    an HTTPResponse structure containing the response
+     * @exception java.io.IOException when an exception is returned from
+     *                                the socket.
+     * @exception ModuleException if an exception is encountered in any module.
+     */
+    public HTTPResponse Patch(String file, byte data[], NVPair[] headers)
+		throws IOException, ModuleException
+    {
+	if (data == null)  data = new byte[0];	// PATCH must always have a CL
+	return setupRequest("PATCH", stripRef(file), headers, data, null);
+    }
+
+    /**
+     * PATCHs the data written to the output stream into the specified file.
+     * The request is sent using the content-type "application/octet-stream".
+     *
+     * @param     file     the absolute path of the file
+     * @param     stream   the output stream on which the data is written
+     * @return    an HTTPResponse structure containing the response
+     * @exception java.io.IOException when an exception is returned from
+     *                                the socket.
+     * @exception ModuleException if an exception is encountered in any module.
+     */
+    public HTTPResponse Patch(String file, HttpOutputStream stream)
+		throws IOException, ModuleException
+    {
+	return Patch(file, stream, null);
+    }
+
+    /**
+     * PATCHs the data written to the output stream into the specified file
+     * using the additional headers.
+     *
+     * @param     file     the absolute path of the file
+     * @param     stream   the output stream on which the data is written
+     * @param     headers  any additional headers
+     * @return    an HTTPResponse structure containing the response
+     * @exception java.io.IOException when an exception is returned from
+     *                                the socket.
+     * @exception ModuleException if an exception is encountered in any module.
+     */
+    public HTTPResponse Patch(String file, HttpOutputStream stream,
+			    NVPair[] headers)
+		throws IOException, ModuleException
+    {
+	return setupRequest("PATCH", stripRef(file), headers, null, stream);
+    }
+    
+
+    
+    /*********** PATCH END **************/
+    
+    
+    
     /**
      * Request OPTIONS from the server. If <var>file</var> is "*" then
      * the request applies to the server as a whole; otherwise it applies

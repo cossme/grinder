@@ -23,6 +23,7 @@ package net.grinder.console.communication;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.System;
 
 import javax.annotation.PreDestroy;
 
@@ -56,7 +57,7 @@ public final class ConsoleCommunicationImplementation
   private final ErrorHandler m_errorHandler;
   private final TimeAuthority m_timeAuthority;
   private final long m_idlePollDelay;
-  private final long m_inactiveClientTimeOut;
+  private long m_inactiveClientTimeOut;
 
   private final MessageDispatchSender m_messageDispatcher =
     new MessageDispatchSender();
@@ -125,10 +126,19 @@ public final class ConsoleCommunicationImplementation
     m_idlePollDelay = idlePollDelay;
     m_inactiveClientTimeOut = inactiveClientTimeOut;
 
-    properties.addPropertyChangeListener(
-      new PropertyChangeListener() {
-        public void propertyChange(PropertyChangeEvent event) {
-          final String property = event.getPropertyName();
+    String s_inactiveClientTimeOut = System.getProperty("grinder.inactiveClientTimeOut");
+    if (s_inactiveClientTimeOut == null ) {
+      // 5 minutes by default instead of 30 seconds
+      m_inactiveClientTimeOut = 300000;
+    }
+    else {
+      m_inactiveClientTimeOut = Integer.parseInt(s_inactiveClientTimeOut);
+    }
+    System.out.println("grinder.inactiveClientTimeOut set to " + m_inactiveClientTimeOut);
+    
+    properties.addPropertyChangeListener(new PropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent event) {
+        final String property = event.getPropertyName();
 
           if (property.equals(ConsoleProperties.CONSOLE_HOST_PROPERTY) ||
               property.equals(ConsoleProperties.CONSOLE_PORT_PROPERTY)) {

@@ -122,12 +122,12 @@
       <version>3.11</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>ring</groupId>
       <artifactId>ring-devel</artifactId>
       <version>1.1.0</version>
       <scope>test</scope>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>tools.trace</artifactId>

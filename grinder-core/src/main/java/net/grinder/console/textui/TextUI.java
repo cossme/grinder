@@ -82,7 +82,8 @@ public class TextUI implements UI {
     m_sampleModel.addModelListener(
       new SampleModel.AbstractListener() {
         public void stateChanged() {
-          m_logger.info(m_sampleModel.getState().getDescription());
+            // Ome, (11/09/16) avoid having the INFO message appearing in console mode every second.
+        	//m_logger.info(m_sampleModel.getState().getDescription());
         }
       });
   }
