@@ -1,3 +1,0 @@
-# Register the dynamic console component.
-
-net.grinder.console.service.Bootstrap
