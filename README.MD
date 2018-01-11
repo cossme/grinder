@@ -1,5 +1,5 @@
 
-# The Grinder processes
+# The Grinder
 
 The Grinder is a framework for running test scripts across a number of machines. The framework is comprised of three types of _process_
 (or program): _worker processes_, _agent processes_, and the _console_. The responsibilities of each of the process types are:
@@ -14,6 +14,12 @@ The Grinder is a framework for running test scripts across a number of machines.
     *   Coordinates the other processes.
     *   Collates and displays statistics.
     *   Provides script editing and distribution.
+
+# Download
+You can download the lattest grinder version here:
+[Grinder 3.13](https://github.com/solcyr/grinder/releases/download/3.13/grinder-3.13-binary.zip)
+    
+# Grinder Architecture    
 
 As The Grinder is written in Java, each of these processes is a Java Virtual Machine (JVM).
 
