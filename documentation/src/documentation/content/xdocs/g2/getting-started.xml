@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+  <header>
+    <title>Getting started</title>
+  </header>
+
+  <body>
+    <note>Please read <a href="site:gfaq/common/g2vsg3">Should I use The
+    Grinder 2 or The Grinder 3</a>?</note>
+
+    <section>
+      <title>The Grinder processes</title>
+      <p>The Grinder is composed of three key processes:</p>
+
+      <ul>
+	<li><strong>Worker processes</strong>
+	  <ul>
+	    <li>Perform the tests using a plug-in</li>
+	  </ul>
+	</li>
+	<li><strong>Agent processes</strong>
+	  <ul>
+	    <li>Manage worker processes</li>
+	    <li>A single agent process runs on each client machine</li>
+	  </ul>
+	</li>
+	<li><strong>The console</strong>
+	  <ul>
+	    <li>Coordinates the other processes</li>
+	    <li>Collates and displays statistics</li>
+	  </ul>
+	</li>
+      </ul>
+
+      <p>As The Grinder is written in Java, each of these processes is
+      a Java Virtual Machine (JVM).</p>
+
+      <p>For heavy duty testing, you can start an agent process on
+      each of several client machines. The worker processes they
+      launch can be controlled and monitored using the console. There
+      is little reason to run more than one agent on a single machine,
+      but you can if you wish.</p>
+    </section>
+
+    <section>
+      <title>How do I start The Grinder?</title>
+
+      <p>Its easy:</p>
+
+      <ol>
+	<li>Set your <code>CLASSPATH</code> to include the
+	<code>grinder.jar</code> file in the <code>lib</code>
+	directory.<p/></li>
+
+	<li>Start the console:
+<source class="sh">
+java net.grinder.Console
+</source>
+	</li>
+
+	<li>Create a <code>grinder.properties</code> file which
+	defines the test you want to perform. See the
+	<code>examples</code> directory for inspiration.<p/></li>
+
+	<li>Start an agent process:
+<source class="sh">
+java net.grinder.Grinder
+</source>
+	</li>
+      </ol>
+
+      <p>The agent process forks child Java processes to do the work.
+      You can also specify an explicit properties file as the first
+      argument. For example:</p>
+
+<source class="sh">
+java net.grinder.Grinder myproperties
+</source>
+
+      <p>The console does not read the grinder.properties file. It has
+      its own options dialog (choose the <em>File/Options</em> menu
+      option), which you should use to set the communication addresses
+      and ports to match those in the grinder.properties files.</p>
+
+      <p>When the child processes start, they inform the console of
+      the tests they will run. If you start the console after the
+      agent process, you should press the <em>Reset processes</em>
+      button. This will cause the existing worker processes to exit
+      and the agent process to start new child processes, which will
+      update the console with the new test information.</p>
+
+      <section>
+	<title>Network addresses</title>
+
+	<p>The worker processes listen for console signals on a
+	multicast address, by default this is
+	<code>228.1.1.1:1235</code>. Each worker process sets up a TCP
+	network connection to the console to report statistics. By
+	default, the console listens on port <code>6372</code> on all
+	local network interfaces of the machine running the
+	console.</p>
+
+	<p>If the default multicast addresses are not valid, alter
+	following properties in the <code>grinder.properties</code>
+	file before starting the Grinder agents</p>
+
+<source class="text">
+        grinder.consoleAddress  (Address of machine running console)
+        grinder.consolePort
+        grinder.grinderAddress  (Multicast address)
+        grinder.grinderPort
+</source>
+	</section>
+    </section>
+
+    <section>
+      <title>Output</title>
+
+      <p>Each worker process writes logging information to a file
+      called <code>out-host-n.log</code>, where <code>host</code> is
+      the machine host name and <code>n</code> is the worker process
+      number. Errors will be written to <code>error-host-n.log</code>.
+      If no errors occur, an error file will not be created.</p>
+
+      <p>Data about individual test invocations is written into a file
+      called <code>data-host-n.log</code>. This can be imported into a
+      spreadsheet tool such as Microsoft Excel&#8482; for further
+      analysis.</p>
+
+      <p>The final statistics summary (in the <code>out-*</code> files
+      of each process) looks something like this:</p>
+
+<source class="text">
+Final statistics for this process:
+
+              Successful
+              Transactions  Errors        Average (ms)  
+Test 0        25            0             255.52        
+Test 1        25            0             213.40        
+Test 2        25            0             156.80         "Image"
+Test 3        25            0             90.48         
+Test 4        25            0             228.68         "Login page"
+Test 5        25            0             86.12          "Security check"
+Test 6        25            0             216.20        
+Test 7        25            0             73.20         
+Test 8        25            0             141.92        
+Test 9        25            0             104.68         "Logout page"
+
+Totals        250           0             156.70     
+</source>
+
+      <p>The console displays a similar dynamic display of information
+      collected from all the worker processes.</p>
+
+      <p>Each test has one of two possible outcomes:</p>
+
+      <ol>
+	<li>Success. The number of <em>Successful Transactions</em>
+	for that test is incremented The time taken to perform the
+	test is added to the <em>Total</em>.
+	</li>
+
+	<li>Error. The exact interpretation of an error depends on the
+	plug-in. The number of <em>Errors</em> for the test is
+	incremented.
+	</li>
+      </ol>
+
+      <p>The <em>Total</em> and <em>Average</em> figures are
+      calculated based only on successful transactions.</p>
+    </section>
+  </body>
+</document>

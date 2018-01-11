@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xb:config xmlns:xb="http://www.bea.com/2002/09/xbean/config">
+    <xb:namespace uri="http://grinder.sourceforge.net/tcpproxy/http/1.0">
+        <xb:package>net.grinder.plugin.http.xml</xb:package>
+    </xb:namespace>
+</xb:config>

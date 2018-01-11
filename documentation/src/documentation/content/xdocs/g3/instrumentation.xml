@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Script Instrumentation</title>
+</header>
+<body>
+
+  <section>
+  <title>About Instrumentation</title>
+
+  <p>The Grinder allows a script to mark the parts of the script code
+  that should be recorded. This is called <em>instrumentation</em>.
+  </p>
+
+  <p>Code is instrumented for a <a href="site:scripts-intro/tests">Test</a>.
+  When instrumented code is called, the test's statistics are updated.
+  The standard statistics record the time taken, number of calls, and number
+  of errors. Advanced scripts can add additional
+  <a href="site:g3/statistics">custom statistics</a>.</p>
+
+    <p>We've seen an example of using instrumentation in the <a
+    href="site:scripts-intro/tests">introduction</a>.  To recap, you
+    instrument an object by using a <code>Test</code> to modify the
+    Java byte code of the object.  Here's the example code again.</p>
+
+<source class="jython">
+from net.grinder.script import Test
+from net.grinder.script.Grinder import grinder
+ 
+test1 = Test(1, "Log method")
+ 
+# Instrument the info() method with our Test.
+test1.record(grinder.logger.info)
+ 
+class TestRunner:
+    def __call__(self):
+        log("Hello World")
+</source>
+
+    <p>Each time "Hello World" is written to the log file, the time taken
+    will be recorded by The Grinder.</p>
+
+
+  <p>Instrumentation can be <em>nested</em>. For example, you might
+  instrument a method with Test 1, and the method code might call two
+  <code>HTTPRequest</code>s that are instrumented with Test 2 and Test
+  3. The code instrumented by Tests 2 and 3 is nested within the Test
+  1 code. The time recorded against the Test 1 will be greater than
+  the total time recorded for Tests 2 and 3. It will also include any
+  time spent in the function itself, for example calls to
+  <code>grinder.sleep()</code>.</p>
+  </section>
+
+   <section>
+      <title>Supported targets</title>
+
+      <p>A wider range of target objects can be instrumented.</p>
+
+      <table>
+        <tr>
+        <td>Java instance</td>
+        <td>Each call to a non-static method is recorded, including
+        calls to super classes methods. Instances of arrays and
+        primitive types cannot be instrumented.</td>
+        </tr>
+
+        <tr>
+        <td>Java class</td>
+        <td>Each call made to a constructor or a static method declared by
+        the class is recorded. Calls of non-static methods or static methods
+        defined by super classes are not recorded.</td>
+        </tr>
+
+        <tr>
+        <td>Jython instance</td>
+        <td>Each call to an instance method is recorded.</td>
+        </tr>
+
+        <tr>
+        <td>Jython function or method</td>
+        <td>Each call of the function or method is recorded.</td>
+        </tr>
+
+        <tr>
+        <td>Jython class</td>
+        <td>Each call made to the Jython class (i.e. constructor calls) is
+        recorded.</td>
+        </tr>
+
+        <tr>
+        <td>Clojure function</td>
+        <td>Each call of the function is recorded.</td>
+        </tr>
+      </table>
+
+      <p>JVM classes loaded in the bootstrap classloader, and classes
+      from The Grinder's <code>net.grinder.engine.process</code>
+      implementation package cannot be instrumented.</p>
+
+  </section>
+
+    <section>
+      <title>Selective instrumentation</title>
+
+      <p>The Grinder 3.7 adds an overloaded version of <a
+      href="site:api/Test/record-filter">record</a> that allows the
+      target object to be instrumented selectively.</p>
+
+      <p>Selective instrumentation is useful for instrumenting
+      instances of the <a href="site:api/HTTPRequest">HTTPRequest</a>
+      class, which has ancillary methods that typically need to be
+      called without affecting test statistics. Here's an example of
+      how to use selective instrumentation.
+      </p>
+
+<source class="jython">
+from net.grinder.script import Test
+from net.grinder.plugin.http import HTTPRequest
+ 
+test = Test(1, "my test")
+ 
+class GetAndPostFilter(Test.InstrumentationFilter):
+  def matches(self, method):
+    return method.name in ["GET", "POST"]
+ 
+request = HTTPRequest(url="http://grinder.sourceforge.net")
+test.record(request, GetAndPostFilter())
+ 
+class TestRunner:
+    def __call__(self):
+        # GET() is instrumented, so call statistics are reported.
+        request.GET()
+ 
+        # getUrl() is not instrumented, no call statistics are reported.
+        print "Called %s" % request.url
+</source>
+
+    </section>
+
+  <section id="troubleshooting-instrumentation">
+    <title>Troubleshooting Instrumentation</title>
+
+    <p>The instrumentation relises on Dynamic Code Redefinition, a
+    Java 6 feature.</p>
+
+    <p>When you start an agent process, you will normally see a line
+    like this in the <a href="site:getting-started/output">worker
+    process log file</a>.</p>
+
+    <source class="text">
+    16/11/09 08:02:18 (process paston01-0): instrumentation agents:
+    byte code transforming instrumenter for Jython 2.1/2.2; byte code transforming instrumenter for Java</source>
+
+    <p>If you see the following line, you should check you are using a
+    Java 6 JVM.</p>
+
+      <source class="text">
+      16/11/09 07:59:42 (process paston01-0): instrumentation agents: NO INSTRUMENTER COULD BE LOADED</source>
+    </section>
+
+</body>
+</document>

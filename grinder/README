@@ -1,0 +1,16 @@
+Please refer to the file LICENSE for license and copyright
+information.
+
+The Grinder is a load testing framework that makes it easy to run a
+distributed test using many load injector machines. Test scripts are
+written in Jython, and HTTP scripts can be recorded easily from a
+browser session. The Grinder is freely available under a BSD-style
+open-source license.
+
+The Grinder's home page is http://grinder.sourceforge.net. This site
+contains the latest version of the user manual for The Grinder.
+
+The site also contains details of mailing lists that you might like to
+join. In particular, if you have questions that are not answered by
+the documentation, please try asking on the grinder-use mail list
+(http://grinder.sourceforge.net/support.html).

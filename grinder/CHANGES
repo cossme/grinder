@@ -1,0 +1,2182 @@
+The Grinder 3.11
+----------------
+
+  Upgrade the packaged version of Jython to Jython 2.5.3, including
+  the Jython standard library. Remove the support for the traditional
+  Jython instrumenter.
+
+  Fix bug #220 - Memory leak in MarkerFactory. Thanks to Fei for the
+  report.
+
+  Fix bug #221 - "time to establish connection" for re-used
+  connection. The HTTP plugin host resolution and connection
+  establishment times are now only recorded when a new connection is
+  established; for tests that re-use connections, these values will be
+  zero. The summary statistics average these values over the number of
+  established connections, not all tests. A "New connections"
+  statistic is available in the data log. Thanks to Teresa Plumari for
+  the report.
+
+  The worker process summary statistics table now prints 0/0 as a
+  '-' character, rather than the previous behaviour of using a NaN
+  unicode character. Thanks to Travis Bear for the feedback.
+
+  Fix bug #223 - relative grinder.script path not resolved correctly
+  when using the REST API. Thanks to Kevin Laurier for the report.
+
+  Implement feature request #104 - latest Statistics from REST API.
+  Thanks to Marc Holden for the request and the implementation.
+
+  Fix bug #222 - Script directory should be added to the python
+  path. This matches the behaviour of the Python interpreter. Thanks
+  to Poornima Mallur for the report.
+
+  Implement feature request #100 - grinder.jvm.classpath should allow
+  relative paths. The grinder.jvm.classpath property is now evaluated
+  based on the worker process working directory, not the agent
+  directory. Thanks to Horace for the request.
+
+  Fix bug #217 - wrong selection of agent JAR in command line. Thanks
+  to Arne for the report.
+
+  Fix bug #224 - HTTPS and follow redirects. Thanks to Gerald Boersma
+  for the report.
+
+  Fix bug #218, #219 - Accept cookies where the domain is set to the
+  request-host and incorrectly has a leading dot. This is contrary to
+  RFC 2965, but matches the behaviour of popular browsers. Thanks to
+  Greg Merill, and an anonymous reporter.
+
+  Fix bug #215 - Log script initialisation errors to the process log
+  file as well as the terminal. Thanks to Ouray Viney for the report.
+
+
+Sourceforge upgrade
+-------------------
+
+  The Grinder now uses the new Sourceforge tooling. The existing bugs
+  and feature requests have been migrated to the new tracker tool and
+  have been assigned new numbers. The links using the old numbers in
+  the version of this file at
+  http://grinder.sourceforge.net/development/changes.html will
+  redirect to the new tracker items.
+
+
+The Grinder 3.10
+----------------
+
+  Implement feature request 3526344 - the Console Service provides a
+  RESTful API for automating The Grinder.
+
+
+The Grinder 3.9.1
+-----------------
+
+  Fix bug 3517593 - Recording Jython script with 3.9 produced an
+  invalid script. Thanks to greghmerrill and John Felten for the beta
+  testing and report.
+
+  Fix bug 3525156 - Better exception handling of invalid header arrays
+  passed to HTTPRequest. Thanks to Ouray Viney for the report.
+
+  Fix bug 3521073 - CLOSE_WAIT sockets on agent kill. Dead connections
+  should now be cleaned up after 30 seconds. Thanks to Tumri for the
+  report.
+
+
+The Grinder 3.9
+---------------
+
+  Fix bug 3511553 - TCP proxy recorded scripts do not extract headers
+  correctly, leaving a syntactically incorrect script. Thanks to Bill
+  Smith for testing the fix, and correcting the Clojure script
+  generation.
+
+  Fix bug 3511035 - 3.8 bundles additional, older version of xmlbeans.
+
+  Fix bug 3511536 - Generated Clojure script uses logger API
+  incorrectly. Thanks to Chris Bolton for the report. I also disabled
+  the "offline debug" macros by default.
+
+  Fix bug 3512095 - proxy-generated XML gives each attribute a new
+  namespace. Thanks to Bill Smith for the report.
+
+
+The Grinder 3.8
+---------------
+
+  Fix bug 3471476 - Null Pointer Exception in the TCPProxy when making
+  multiple connections through a chained HTTPS proxy. Thanks to Tadge
+  for the report and testing.
+
+  Fix bug 3484390 - FireFox 10 and HTTPS triggers a
+  NullPointerException. Thanks to Ouray Viney for the report and
+  testing.
+
+  Fix bug 3431287 and bug 3489034 - Ignore HttpOnly attributes in the
+  middle of cookies. Thanks to Alex Crane and Jeremy for the reports.
+
+  TCPProxy HTTP recording: improve the extraction of common headers to
+  reduce the number of common header sets.
+
+  Re-implement TCPProxy support for the HTTPPlugin.initialTest property.
+
+  The TCPProxy supports the recording of additional HTTP headers.
+
+  Fix bug 3475516 - the TCPProxy now records Faces-Request header for
+  JSF 2.0 AJAX requests. Thanks to Diego Vicentini for the report.
+
+  Fix bug 3505114 - userLong4 custom statistic value was overridden
+  by the test time. Thanks to Fei for the report.
+
+  Fix bug 3505060 - TCPProxy fails to handle concurrent HTTPS requests.
+  Thanks to Anders Storsveen for the report, and contributing part of
+  the fix.
+
+  Three fixes to the Clojure script generation from Bill Smith. Fixes:
+  quoting of tokens; call to httpUtilities methods; single line
+  comments.
+
+
+The Grinder 3.7.1
+-----------------
+
+  Fix bug 3479712 - Data log is not flushed on exit. Thanks to Andreas
+  for the report.
+
+
+The Grinder 3.7
+---------------
+
+  Changes that may be incompatible with existing scripts:
+
+   Implement feature request 3418525 - Switch to a standard logging
+   framework. The net.grinder.common.Logger/FilenameFactory API has
+   been removed in favor of SLF4J. Output and error messages are
+   logged to a single log file. The log file and the data log file are
+   managed by Logback.
+
+   The Grinder requires Java SE 6 ("Java 6") or later. Java SE 5 is no
+   longer supported.
+
+  Other changes:
+
+   The Java instrumenter supports selective instrumentation of a
+   target object through an overloaded version of Test.record(). The
+   full HTTPRequest interface can be used with DCR instrumentation
+   without requiring a replacement for the traditional instrumenter's
+   __target__.
+
+   Fix bug 3006631 - Null pointer exception when posting multipart
+   form data. Thanks to Edwin Clubb for the report, and to Ouray Viney
+   for testing the fix.
+
+   Fix bug 3431764 - DCR instrumentation fails with Java 7. Thanks to
+   Gary Mulder for the report.
+
+   Fix bug 3133650 - Relative classpath issues when using the console.
+   The agent process translates relative paths in the classpath to the
+   different working directory when workers are launched with scripts
+   distributed by the console. Thanks to Jared C for the report.
+
+   The Grinder is built using Apache Maven.
+
+   Tentative fix for bug 3459637 - AWT-EventQueue NullPointerException.
+   Thanks to Richard Lynch for the report.
+
+   Fix bug 3464547 - DCR instrumentation of unbound PyMethods doesn't
+   work.
+
+   Fix bug 3464533 - DCR instrumentation of bound PyMethods doesn't
+   work.
+
+   The TCPProxy can be called with "-http clojure" to generate a
+   Clojure script.
+
+   The TCPProxy can be called with "-http jython" to generate a Jython
+   script that uses the new (DCR) instrumentation. DCR instrumentation
+   will be enabled by default in the next release of The Grinder.
+
+
+The Grinder 3.6
+---------------
+
+  The script engine API has been improved so that adding support
+  for other languages is straightforward.
+
+  Clojure is supported as an alternative test script language.
+
+  Fulfil feature request 1849150 - Synchronisation points.
+  Thanks to Aditya for the request.
+
+  Fix bug 3406177 - DCR instrumented objects are not garbage
+  collected. Thanks to Gary Mulder for the report and diagnostics.
+
+  Fix bug 3413171 - TCPProxy broken in The Grinder 3.5. Thanks to
+  Lonnie Choset for the report.
+
+  Fix bug 3411728 - helloworld.py doesn't work with DCR
+  instrumentation. Thanks to Jeff Vincent for the report.
+
+  Fulfill feature request 3389028 - XSLTHelper API to control indent.
+  Thanks to Jean-Francois Poilpret for the request.
+
+
+The Grinder 3.5
+---------------
+
+  Fix bug 3008924 - Jython 2.5, assertion error if script has __del__
+  method. Thank to Thomas Falkenberg for the report.
+
+  Fix bug 2988755 - NPE in JythonScriptExecutionException
+  .tracebackToMessage(). Thanks to Brian Runck for the report.
+
+  Fix bug 2952023 - Cookie.parse should recognise "httponly" (lower
+  case). Thanks to amachang for the report and the patch.
+
+  Fix bug 3092275 - Incorrect TPS totals in output log. Thanks to
+  Travis Bear for the report.
+
+  Fix bug 3132643 - No statistics to report. This occurred if a clock
+  went backwards in time during a test, and prevented the test from
+  ever executing successfully again. Thanks to Wallander for the
+  report.
+
+  Fix bug 3132940 - Incorrect connect/DNS times when connect timeout
+  set. This was due to an error in the fix for 3132940. Thanks to
+  Jagdish A for the report, and to Wallander for testing.
+
+  Work around Jython issue 1894900. If the default Jython jar is used
+  and it looks like the Jython cachedir has not been configured, then
+  create a cache directory in lib.
+
+  Fulfil feature request 3324241 - Upgrade to PicoContainer 2.13.6.
+  Thanks to Alexis Bezverkhyy the request.
+
+  Fix bug 3287570 - Memory leak in DCR instrumentation if same target
+  was recorded multiple times using the same Test. Thanks to John
+  (crystalstone) for the report.
+
+  Support Jython 2.5.2.
+
+  Fix bug 2992248 - DCR instrumentation of Java methods.
+  Instrumentation of Java methods from Jython scripts has been
+  improved. Multiple references from a script to an instrumented
+  method work as expected. Invoking a script instrumented method from
+  Java works. Thanks to Kevin Connaughton for the report.
+
+  Fix bug 2958145 - DCR instrumentation fails with
+  grinder.debug.singleprocess.
+
+
+The Grinder 3.4
+---------------
+
+  Fix bug 2913297 - Memory leak in SSLControlImplementation. Thanks to
+  Guido Serra for the report.
+
+  Fix bug 1619450 - HTTPClient.TestCookie.testParse unit test fails.
+  Thanks to amachang for re-opening this bug and providing a patch.
+
+  Fix bug 2911790 - HTTP filter generates invalid code for Jython 2.5+.
+  Thanks to the anonymous reporter.
+
+  Fix bug 2921612 - DCR instrumentation did not work with
+  HTTPRequest. Thanks to Anil Jacob for the report.
+
+  Fulfil feature request 2914703 - Multipart form data support. Thanks
+  to Hitoshi Amano for the request and the implementation.
+
+  Fix bug 2919190 - setTimeout method does not effect read timeouts.
+  Thanks to Hitoshi Amano for the report and the fix.
+
+  Fulfil feature request 2923975 - added valuesFromHiddenInput() and
+  valuesFromBodyURI() methods to HTTPUtilities. Thanks to Anil Jacob
+  for the request.
+
+  Fulfil feature request 2841789 - added valueFromBodyInput() and
+  valuesFromBodyInput() methods to HTTPUtilities. Thanks to Satheesh
+  Babu Vattekkat for the request.
+
+  Fix bug 2816501 - Test numbers larger than 6 digits get truncated
+  in out file. Thanks to Vivin Paliath for the report.
+
+  Fix bug 2501418 - Handle socket lingering properly. Thanks to Dawid
+  Weiss for the report and suggested fixes.
+
+  Fix bug 2837600 - Content-type header written instead of Content-Type.
+  Thanks to Guido Serra for the report.
+
+  Implement feature request 887214 - the console now optionally includes
+  the totals line in saved results. Thanks to Karol Muszynski for
+  prompting me to implement this.
+
+  Fix bug 2945358 - Fail gracefully if the agent jar file can't be
+  found.
+
+  Fix bug 2947509 - Improve algorithm that finds agent jar.
+
+  Fix bug 2936167 - Script execution hangs when using Jython 2.5.1 and
+  Windows. Thanks to Mark Cleveland, Dave Martin, and svalkanesko for
+  their reports and assistance with the diagnosis.
+
+  Fix bug 2980291 - "Resolve host" time incorrect. The HTTP plug-in time
+  To Resolve Host and Time To Establish Connection statistics no longer
+  include the time taken for automatic redirects. Time To First Byte is
+  still based on the time the HTTPRequest call was initiated. Thanks to
+  Travis Bear for the report, and to Bryce Howard for the patch.
+
+
+The Grinder 3.3
+---------------
+
+  Changes that may be incompatible with existing scripts:
+
+    The Grinder now requires J2SE 5.0 ("Java 5"). J2SE 1.4 is no longer
+    supported.
+
+    Fix bug 2315181 - Classpath of distributed jars. When distributing
+    scripts from the console, the worker process working directory is
+    now the root of the local cache directory. This allows scripts to
+    refer to distributed resources using relative paths. Thanks to
+    ujik for reporting this.
+
+  Other changes:
+
+    The TCPProxy now supports HTTPS proxies that use
+    challenge/response authentication protocols such as NTLM and
+    Negotiate. This will allow scripts to be recorded through such a
+    proxy, but are no plans to add support for replaying scripts
+    through the proxy. Thanks to Suvendu Kumar Mohapatra for extensive
+    testing of candidate patches.
+
+    The stream support for HTTPRequest introduced in 3.2 has been
+    enhanced to use the Content-Length header if provided. This allows
+    the stream to be sent directly to the server without buffering,
+    whether or not HTTP/1.1 chunking is available. Thanks to Walter
+    Tuvell for the requirement and extensive testing.
+
+    Add HTTPRequest.getPluginProcessContext() so subclasses outside of
+    the Java package can access the process context. This is useful
+    when following the advice in the setReadResponseBody
+    documentation. Thanks to Walter Tuvell for the requirement.
+
+    Updated Spanish translation from Antonio Manuel Muñiz Martin.
+
+    Updated Polish translation from from KArol Muszynski.
+
+    The Grinder now always uses the Java 5 System.nanoTime() method for
+    timing. The grinder.useNanoTime property has been removed.
+
+    Fulfil feature request 1949447. A new, alternative instrumentation
+    engine has been introduced. This allows new capabilities, including the
+    ability to instrument code from within Java. The new instrumentation
+    engine requires Java SE 6.
+
+    Fulfil feature request 2907553. The Grinder 3.3 supports Jython 2.5 and
+    Jython 2.5.1. This support is based on the new instrumentation engine.
+    The default, included version of Jython remains Jython 2.2.1. Thanks to
+    Chris Cooper for the request.
+
+    Fix bug 2686259 - Java 1.5 compilation fails in Eclipse. Thanks to
+    A Bagehot for the report.
+
+
+The Grinder 3.2
+---------------
+
+  Add net.grinder.ScriptContext startWorkerThread() and
+  startWorkerThread(testRunner) methods which scripts can use to start
+  additional worker threads.
+
+  Fulfil feature request 1694369 - Ability to stop worker threads from
+  script. See the ScriptContext stopThisWorkerThread() and stopWorkerThread()
+  methods.
+
+  Fix bug 2018168 - HTTP filter generates invalid Jython variable
+  names.
+
+  Address bug 2058502 - Add example script showing how to ramp up threads.
+  Thanks to Travis Bear for the prompt.
+
+  Fix bug 2092881 - Agents do not start first time after reset if console
+  overrides consoleHost or consolePort properties. Thanks to HappySpaceInvader
+  for the report.
+
+  Fix bug 2138601 - Moving table columns results in incorrect formatting.
+  Thanks to Walter Tuvell for the report.
+
+  Fulfil feature request 2201502. Add stream based versions of POST, PUT,
+  OPTIONS to HTTPRequest. This allows arbitrarily large amount of data can be
+  sent without requiring a corresponding amount of memory. Thanks to Walter
+  Tuvell for the suggestion.
+
+  Fix bug 1576609 - "Accept Cookie" rules too strict. I've relaxed the
+  rules about what cookie domains are acceptable to The Grinder, better to
+  align it with current browser implementations. Thanks to Bryan Cornies for
+  the report.
+
+  Fix bug 1580340 - Can't invoke static methods through a wrapped Java class.
+
+  Fix bug 2314157 - Log4j classes reloaded by IsolatingClassLoader. This bug
+  was really a feature request to allow specific classes to be shared when
+  running with grinder.debug.singleprocess=true. This is important because
+  GrinderStone uses the single process mode.  Classes can now be share with
+  the new grinder.debug.singleprocess.sharedclasses property. Thanks to
+  Fei Fan for requesting this.
+
+  Dutch console translation from Marc Van Giel.
+
+  Fulfil feature request 2412104 - Support streaming HTTP responses. Thanks
+  to Randy Shaffer for requesting this feature, and to Olivier Merlin for
+  testing an initial patch.
+
+  Fulfil feature request 2298825 - Worker number which is reset for each test
+  run. Added ScriptContext.getFirstProcessNumber() which a script can use with
+  getProcessNumber() to calculate a zero based value for indexing into test
+  data.
+
+  Fix bug 2412121 - Not compatible with servers that only provide SSLv3. I've
+  altered the TCPProxy and the HTTPClient library so that the SSL sockets they
+  create enable all the protocols and cipher suites supported by the underlying
+  JVM. These can be overridden if necessary with the https.cipherSuites and
+  https.protocols Java system properties. Thanks to Lorance Stinson for the
+  report and for testing various candidate patches.
+
+  Fulfill feature request 1677083 - Agent should produce TPS when run without
+  Console. Thanks to MattyM76 for requesting this feature.
+
+
+The Grinder 3.1
+---------------
+
+  The console now has a "-headless" option which causes it to start
+  without the graphical user interface. This is useful when used with
+  the console client API.
+
+  Add ConsoleConnection.stopAgents(), requested by Andreas Spall.
+
+  Refine console sampling model:
+  - Fix bug 1618759 - Console should not discard first sample.
+  - Count empty samples when deciding when to stop recording.
+  - Count empty samples when triggered and ignoring samples.
+  - Display sample data when triggered and ignoring samples.
+
+  Relative paths set for grinder.script are now resolved relative to
+  the location of the properties file. This fixes two bugs. - Bug
+  1889281 - grinder.script relative path bug. Thanks to Ross Nicholson
+  for the report, and the suggested fix. - Bug 1875880 - Script
+  validation wrong for properties file in sub directory.
+
+  HTTP Digest Authentication example from Matt Moran.
+
+  German console translation updates from Matthias Dillier.
+
+  Italian console translation updates from Meo Bogliolo.
+
+  French console translation updates from Tagnon Soko.
+
+  Fulfil feature request 1891023 - Worker and Agent id's. The script
+  context has new getAgentNumber() and getProcessNumber() methods.
+  getThreadID() has been renamed to getThreadNumber() for consistency.
+  Thanks to Ross Nicholson for requesting this feature.
+
+  Fix bug 1897988 - grinder.initialSleepTime issue. The
+  initialSleepTime property was broken. Thanks to whoever reported
+  this.
+
+  Fix bug 1893027 - ArrayIndexOutOfBoundsException in TCPProxy. Thanks
+  to Brian Dols for reporting this.
+
+  Fix bug 1709285 - HTTP plug-in records wrong times with
+  grinder.useNanoTime=true. Thanks to liaoya for the report.
+
+  Fulfil feature request 1902280 - Use absolute start times in the
+  data log. This allows the logs from different workers to be merged,
+  so long as their machine clocks are synchronised. Thanks to Olivier
+  Merlin for requesting this feature.
+
+  Fix bug 1549708 - HTTPRequest.setDataFromFile() is not thread safe.
+  The HTTPRequest methods that set defaults are now thread safe, and
+  the Javadoc has been updated to warn that the default setters are
+  not intended to be used by multiple worker threads. Thanks to
+  Huifeng Shen for the report.
+
+  Fulfill feature request 1731843 - Ability to close explicitly the
+  HTTP connection. Thanks to whoever requested this feature.
+
+  Fix bug 1913049 - dist build target fails due to syntax issues.
+  Thanks to Travis Swicegood for the report.
+
+  Fix bug 1913056 - release fails on build of test-src. Thanks to
+  Travis Swicegood for the report.
+
+  The file distribution now only updates out of date agents, and only
+  sends the updated files.
+
+  Fulfill feature request 1723753 - Agent service needed. Agents can
+  now be started in a "daemon" mode where they automatically reconnect
+  to a console. Thanks to Travis Bear for the request, and to Pawel
+  Lacinski for the initial implementation.
+
+  Fix bug 1926601 - Jython change breaks byte arrays in generated
+  scripts. Thanks to Dhinakar K and O.A.Francis for reporting this.
+
+  Fix bug 1953141 - line feeds and other characters not correctly
+  captured by HTTP TCPProxy filter. Thanks to Dhinakar K for reporting
+  this.
+
+  The "Stop Processes" action has been removed from the tool bar since
+  it is required only rarely.
+
+
+The Grinder 3.0.1
+-----------------
+
+  Fix bug 1876273 - grinder.jar has incorrect manifest classpath.
+
+
+The Grinder 3.0
+---------------
+
+  The console now expects a properties file to be selected, rather than a
+  script. The properties file determines the script to run through the
+  grinder.script property. Other properties override the values in the
+  agents' local grinder.properties file. This provides much better
+  centralised control from the console.
+
+  Updates to the German console translation from Matthias Diller.
+
+  Fix bug 1808854 - Incorrect synchronisation in TestStatisticsMap.
+  Thanks to Ishan Oshadi Jayawardene for the report.
+
+  Partially address feature request in bug 1688988 by translating
+  InterruptedIOExceptions due to timeouts in HTTPClient code to a
+  specific TimeoutException. Thanks to Andrew McGuigan for the report.
+
+  Fix bug 1700158 - ShutdownException thrown when using
+  grinder.duration. Thanks to Caroline Rioux for the report.
+
+  Update the cookie.py example to show how to send a cookie, and to
+  retrieve and modify the cookies for the current thread. Thanks to
+  "tz" and Ying Moy for prompting me to do this.
+
+  Fix bug 1825639 - "Connection ... already opened" when recording HTTPS.
+  Thanks to Peter Zadrozny and Brian Dols for the report.
+
+  Refine logging:
+  - The first error message is written to the terminal as well as the
+    error log. This is handy for catching script typos.
+  - Don't word wrap log messages from the Agent.
+  - Don't truncate log lines to an arbitrary number of characters.
+
+  Fix bug 1831651 - Some parts of the distribution file filter should be
+  fixed. Also, added ".svn" directories to the default filter - you will
+  need to delete .grinder_console from your home directory/profile to
+  pick up this change. Thanks to Andrew Stephens for the report.
+
+  Fix TCPProxy filter bug which would cause some form data not to be
+  identified and tokenised. Increase the size of form data that will be
+  in-lined in the script. Thanks to Brian Dols for the prompt and testing.
+
+  Fix bug 1846218 - Delayed statistics are not flushed on next test.
+
+  Console script editor keyboard shortcut for "Save-File" (Ctrl-S).
+
+  The console allows files to be opened in a configurable external editor.
+
+  The console optionally automatically distributes changed files when
+  processes are started.
+
+  The -httpplugin and -newhttpplugin TCPProxy filter options have been
+  removed. They were deprecated in 3.0-beta29. The new -http filter should
+  be used instead.
+
+  Upgrade embedded version of Jython from Jython 2.1 to Jython 2.2.1.
+
+  Fix bug 1874815 - '-' does not work in statistics expressions. Also,
+  relax '+' and '*' so they are defined for zero or one argument.
+  Thanks to Heidi Thompson for the report.
+
+
+The Grinder 3.0-beta33
+----------------------
+
+  Fulfil Feature Request 1524827 - Mnemonics needed. Requested by
+  Travis Bear.
+
+  Fulfil Feature Request 1484448 - Console window size doesn't persist.
+  Requested by Travis Bear.
+
+  Fulfil Feature Request 1185967 - Insert comments while capturing with
+  the TCPProxy. Patch implemented by Venelin Mitov.
+
+  Really fix bug 1495428 - Plugin thread context not correctly
+  registered for events. This bug prevented custom plugins from
+  receiving thread lifecycle events but did not affect the HTTP
+  plugin. Thanks to Klaus-Peter Berg for reporting that this was still
+  broken.
+
+  Fix bug 1638659 - Deadlock in SleeperImplementation. Thanks to
+  Bruce Adams for the report.
+
+  Change the console's monitoring of changes to files so that it no
+  longer assumes system time matches the file system time. This should
+  fix some subtle bugs, particularly for file systems on shared storage.
+
+  Fix bug 1639383 - Extra lines added to Content-Disposition. Previously,
+  The Grinder relied on the script maintaining line endings for textual
+  POST bodies, in particular multipart/form-data. This was brittle, text
+  editors, email, and cross platform transfer frequently alters line
+  endings; and I'm sure the Jython interpreter also takes a liberal
+  approach where a file has mixed line endings. I've applied a simple
+  escaping scheme to fix this. Thanks to Claes T Tenell for the report.
+
+  Fix bug 1228335 - File editing should consider end of line. The console
+  editor now canonicalises line endings on input, and uses the host
+  platform line ending on output.
+
+  Fix bug 1619450 - Unit test HTTPClient.TestCookie.testParse fails. Thanks
+  to Bastiaan Bakker for the report.
+
+  Fulfil Feature Request 1510072 - Save absolute timestamp somewhere.
+  Log both the current time zone and the start time in milliseconds since
+  the Epoch in the output log. Requested by Vladimir Sitnikov.
+
+  Add process control methods to console API, and provide a factory for
+  obtaining a ConsoleClient.
+
+  Tentative fix to bug 1677087. Thanks to Matt Moran for the report.
+
+  Remove all support for implicit 'grinder' script context object. It was
+  deprecated in beta 15, and the implementation was broken.
+
+  New Chinese translation from Hugh Chen. If you use this, you'll also need
+  to set up Java for Chinese fonts. The following blog entry may help:
+  http://blog.lizhao.net/2007/03/java-chinese-fonts-on-ubuntu.html
+
+
+The Grinder 3.0-beta32
+----------------------
+
+  Fix bug 1577573 - valueFromBodyURI() could be optimised. TCPProxy
+  recorded scripts use this method, and its previous inefficiency
+  caused beta 30 and beta 31 to be overly demanding of CPU and memory.
+  Thanks to Andy Kim for the original bug report.
+
+  Fix bug 1579641 - Exceptions thrown by HTTPRequest.processResponse()
+  were not logged correctly. Thanks to Richard Taylor for the report.
+
+  Fix bug 1585912 - jdbc.py incorrectly indented. Thanks to Coey
+  (cminear at users.sourceforge.net) for the report.
+
+  Fix bug 1593169 - AssertionError thrown in instrumentation code. Thanks
+  to Peter Wickersham and Matt Schlobohm for the report and analysis.
+
+  Added MQ library and example code from Phillip Mayhew to the contrib
+  directory.
+
+  Fix bug 1592664 - InterruptedException when grinder.processes > 1.
+  This is due to JRE badness that I've had to work around. Thanks to
+  Stephane Nicoll and whoever opened the bug for the reports.
+
+  Fix bug 1604111 - Deadlock on shutdown (TCPProxy). Thanks to Graham
+  Sweetland for his assistance in reproducing this problem.
+
+  Added an initial version of the console API. This API is under
+  development and not stable. It will grow and change over the next
+  few releases. Its not ready for mass consumption yet, but advanced
+  users can check out the API (net.grinder.console.client.ConsoleClient).
+
+
+The Grinder 3.0-beta31
+----------------------
+
+  Fix bug 1199086 - Distribution to multiple agents hangs. Thanks to
+  capwin@sourceforge.net for analysing the problem.
+
+  Fix bug 1495428 - Plugin thread context not correctly registered for
+  events.
+
+  Fix HTTPPlugin TCPProxy filter to remove extraneous quote from
+  reference to POST data files. Thanks to Saurabh Sehgal for the
+  report.
+
+  Fix bug 1525387 - Relax cookie parsing to cope with .NET nonsense.
+  Requested and prototyped by John S. White.
+
+  Fulfil Feature Request 1482811 - slow socket connections. Requested
+  by Travis Bear. See HTTPPluginConnection.setBandwidthLimit(). Travis
+  and Leland Olney assisted in the testing and fixing of this feature.
+
+  Fix console bug where the Total line in statistics tables could be
+  incorrectly rendered in red.
+
+  Fix bug 1525628 - Throw NotWrappableTypeException not
+  NullPointerException on attempt to wrap a null object.
+
+  Fix bug 1527299 - statistics.delayReports doesn't work with nested
+  tests. This required a significant change to the script statistics
+  API. The script can now distinguish between the statistics for the
+  current test (statistics.forCurrentTest), and the statistics for the
+  last completed test (statistics.forLastTest). If there is a current
+  test, it's statistics can be queried and modified. If there is a
+  last reported test, it's statistics can be queried and can be
+  modified if statistics reports are delayed.
+
+  The statistics for an erroneous test is now recorded in the data
+  log, but not included in the aggregate statistics sent to the
+  console and the summary table (only the number of errors is
+  incremented). This makes the aggregate statistics averages correct,
+  whilst still allowing the test time to be retrieved from the data
+  log. (Previously, the test time was zeroed for erroneous tests, so
+  both the data log and the aggregate statistics averages other than
+  test time were incorrect).
+
+  Fix bug 1484703 - Total statistics wrong for composite tests. This
+  was most apparent with the HTTP plugin - the total average test time
+  also included the page tests so "double accounted" for the time of
+  individual tests. The statistics display has now been changed so
+  that the statistics for composite tests (tests which wrap calls of
+  other tests) are no longer including in the totals.
+
+
+The Grinder 3.0-beta30
+----------------------
+
+  Fix HTTPlugin TCPProxy filter so that scripts send the real token
+  name back to the server, not the token id. Thanks to VmasterZen for
+  reporting this.
+
+  Changes to the script statistics API:
+
+    Scripts now refer to statistics by name rather than indicies. This
+    means they don't need to use StatisticsIndexMap. This addresses an
+    issue with scripts being unable to access StatisticsIndexMap -
+    thanks to Stefan Grinsted for the report.
+
+    The ScriptContext registerSummaryStatisticsView() and
+    registerDetailStatisticsView() methods have been replaced with
+    Statistics.registerSummaryExpression() and
+    Statistics.registerDataLogExpression(). The new methods use
+    expression strings, rather than requiring the use StatisticsView
+    and ExpressionView objects.
+
+    The scripts no longer need objects from the net.grinder.statistics
+    package; consequently that package has been removed from the
+    statistics API.
+
+  Fix scripts statistics so the query methods work outside of an open
+  test dispatch context; they return values for the last test reported
+  by the worker thread. This was broken by the support for nested
+  tests introduced in the last beta.
+
+  The grinder.recordTime property has been replaced by a new
+  grinder.reportTimesToConsole property. Test times are now always
+  recorded in the worker process data log, irrespective of the value
+  of grinder.reportTimesToConsole.
+
+
+The Grinder 3.0-beta29
+----------------------
+
+  Nested Tests are supported. That is, you can now use a Test to
+  instrument script code that calls things wrapped by other Tests.
+
+  A __target__ field has been added to test proxy wrappers, allowing
+  convenient access to the wrapped object.
+
+  New implementation of the HTTPPlugin TCPProxy filter. Key new
+  features over the previous filter (which is deprecated):
+   - Records to a single script.
+   - Basic Authorization is recorded.
+   - Modular implementation based on an XSLT style sheet.
+   - Requests are grouped together into pages, using simple rules that
+     guess the resources belonging to a page based on the resource type.
+     Pages are instrumented as separate tests.
+   - Name value tokens are identified in URL path parameters and query
+     strings and mapped to script variables. Most session tokens that
+     encoded in URLs or present in hidden form fields will now be
+     handled automatically.
+
+  Several changes to the script API, including:
+    net.grinder.plugin.http.HTTPRequest:
+     - Removed addHeader(), deleteHeader()
+     - Header arrays passed to GET, POST, etc. are now merged with the
+       default values held by the HTTPRequest. Previously they setting
+       an array on the request overrode all the default values.
+
+    net.grinder.plugininterface.PluginThreadContext:
+     - getStartTime(), startTimedSection(), stopTimedSection() have
+       been replaced with pauseClock(), resumeClock() to support nested
+       tests. (Since now there can be multiple active dispatch contexts).
+
+    net.grinder.script.Statistics:
+     - Query methods now return meaningful results within wrapped code.
+     - Added getStatisticsIndexMap. Thanks to Beecher Greenman for
+       reporting this omission.
+
+    net.grinder.plugin.http.HTTPUtilities
+     - New class. This has methods that HTTP scripts might find useful.
+
+  The HTTPClient Authorization module is no longer enabled by default
+  because it prevents raw Authorization headers being sent through.
+  The module also slows things down as HTTPClient must parse responses
+  for challenges. Advanced users who still wish to use the HTTPClient
+  Authorization module can enable it with the new
+  HTTPPluginConnection.setUseAuthorizationModule() method. The
+  following convenience wrappers around the HTTPClient API were also
+  removed: addBasicAuthorization(), removeBasicAuthorization(),
+  addDigestAuthorization(), removeDigestAuthorization().
+
+  The worker process to console communication has been made more
+  efficient, and a race condition which caused "Ignoring unknown test"
+  messages has been removed. Thanks to Dhinakar K for the report.
+
+  The Grinder can now optionally use J2SE 5 System.nanoTime() which
+  might give more precision on some platforms. Times are still
+  reported in milliseconds. See the grinder.useNanoTime property.
+  Thanks to Tom Barnes for requesting this feature.
+
+  Fix console file scanning to used the same filtering as the file
+  distributon. Thanks to whoever reported this. (Bug 1447361).
+
+  The HTTP proxy code in the TCPProxy has been improved; this should
+  address problems seen when chaining TCPProxy's together as HTTPS
+  proxies. Thanks to Justin Nowell for prompting me to look at this.
+
+
+Grinder 3.0-beta28
+------------------
+
+  Updates to the Italian translation from Meo Bogliolo.
+
+  Refactoring of statistics package API. This may affect existing
+  custom plugins. See PluginProcessContext.getStatistics.
+
+  New Russian translation from Konstantin Ignatyev.
+
+  Fix the TCPProxy port forwarding mode to correctly generate https
+  URLs. (Bug 1324640).
+
+  Fix the exception logging to include Jython stack traces. Simplify
+  the exception log formatting.
+
+  Java methods can now be wrapped. The resulting object should be
+  invoked Python style, i.e. non-static methods must be supplied with
+  a 'self' instance as the first argument.
+
+  New grinder.debug.singleprocess property. If set to true, the agent
+  process spawns engines in threads rather than processes, using
+  special classloaders to isolate the engines. This allows the engine
+  to be easily run in a debugger. This is primarily a tool for
+  debugging The Grinder engine, but it might also be useful to
+  advanced users.
+
+  More relaxed handling of invalid dates in Cookies. Requested by
+  Martin Wagner.
+
+  Nicer output for ConnectExceptions and UnknownHost exceptions.
+  (Bug 927828).
+
+  Handle Cookies with empty expires attribute. (Bug 982834).
+
+  Added a pop-up menu to the editor file tree.
+
+  Support Jython 2.2a1. Simply add the Jython 2.2a1 jython.jar to the
+  start of your class path. Thanks to Martin Wagner for prompting me
+  to do this.
+
+  The documentation is now distributed in a separate zip file.
+
+
+Grinder 3.0-beta27
+------------------
+
+  The TCPProxy is now relaxed about empty query strings. Thanks to
+  John Sinclair for the suggestion.
+
+  Updates to the Spanish translation from Jose Antonio Zapata.
+
+  New Polish translation from KArol Muszynski.
+
+  New Italian translation from Meo Bogliolo.
+
+  The documentation sources are now hosted on SourceForge CVS, and are
+  no longer part of the source distribution. See
+  http://sourceforge.net/cvs/?group_id=18598.
+
+  Modify HTTPClient code so that HTTPResponse.getText() works with
+  more content types. (Bug 1297821).
+
+  Fix out of date documentation references to getIndexForLong (it has
+  been renamed to getLongIndex). Thanks to Dietrich Bollmann for the
+  report.
+
+
+Grinder 3.0-beta26
+------------------
+
+  The Grinder now requires J2SE 1.4.
+
+  The console now displays agent process status.
+
+  Fix the TCPProxy to cope correctly with 8 bit strings in all
+  locales (Bug 1167731). Thanks to Anton Malykh for the report.
+
+  Fix a bug where system properties specified on the command line were
+  incorrectly quoted when building the worker process command line.
+  Thanks to Dietrich Bollmann for the report.
+
+  Be more strict about matching line endings in the HTTP TCPProxy
+  filters. Previously there was a platform specific bug. Thanks to
+  Alex Bolgarov for the report.
+
+  Change to the script API: getGrinderID() has been renamed
+  getProcessName().
+
+  Correct SSL documentation - The Grinder does not support the
+  javax.net.ssl.* system properties.
+
+  Fix to the JMS receiver example from Dietrich Bollmann: use a queue
+  to pass state between threads in a thread safe way.
+
+  Make the TCPProxy HTTP engine more resilient to connections being
+  dropped. Thanks to Jon Weygandt for the suggestion.
+
+
+Grinder 3.0-beta25
+------------------
+
+  The statistics engine has been enhanced to report the standard
+  deviation of the test times. This addresses Feature Request 1029224.
+  The change requires some changes to the statistics API - the
+  timedTests and timedTestTime long statistics have been replaced with
+  a single timedTests long sample statistic; there is currently no way
+  for a script to directly set, or query, timedTests.
+
+  Latest updates from Bertand Ave for the new HTTP Plugin TCPProxy
+  filter. Addresses RFE 1041267, bug 1164319.
+
+  Change the HTTPlugin TCPProxy filters so that they no longer
+  interpret ';' as a query string separator. Thanks to Nichole
+  Holthoefer for the problem report.
+
+  Fix a bug where the engine would incorrectly override the plugin if
+  the plugin had marked a test as an error.
+
+  Correct a few typos. Thanks to Henry Chan for pointing then out.
+
+  Fix a bug so that Test invocation works from from __init__ or
+  __del__. Thanks to Bertrand Ave for the bug report.
+
+  Most source files have been converted to use the Unix line endings.
+  This is better supported by the Eclipse CVS module and Cygwin tools.
+
+
+Grinder 3.0-beta24
+------------------
+
+  The TCPProxy now returns HTML error messages to the browser where it
+  can.
+
+  When used in the default HTTP proxy mode, the TCPProxy always
+  listens as an HTTPS proxy as well. The TCPProxy -ssl option now only
+  applies to port forwarding mode.
+
+  Fix a bug where the TCPProxy could raise an
+  ArrayIndexOutOfBoundsException. Thanks to Alan Droege for the
+  report.
+
+  Historically The Grinder has used the terms "transaction" and "test"
+  synonymously - this is inconsistent and confusing. "Test" is now
+  used consistently everywhere.
+
+  Fix a bug with the new HTTP instrumentation. The statistics were
+  incorrectly calculated when more than one HTTPRequest was wrapped in
+  a given Test. Thanks to Bernd Pressler and Sebastien Lemeunier for
+  reporting the problem.
+
+  The distribution control in the console is now enabled only if the
+  agent file caches might be out of date. This acts as a visual
+  indication that the files need to be distributed. Added warning
+  dialog about attempting to start the processes without distributing
+  files.
+
+  The process controls in the console are now enabled only if an agent
+  is connected. Added warning dialog about attempting to start the
+  processes with unsaved buffers.
+
+
+Grinder 3.0-beta23
+------------------
+
+  Scripts can now control the SSL context used by each worker thread.
+  This can be used to vary the client certficate based on the thread.
+  Thanks to Ryan Whitaker and William Babilon for requesting this.
+
+  Enhancement from Slavik Gnatenko that allows the grinder.threads,
+  grinder.reportToConsole.interval, and grinder.duration properties to
+  be overridden in scripts initialistion section.
+
+  Fix TCPProxy to make it more relaxed about 8 bit characters in HTTP
+  URLs. Thanks to Thomas Býhne for reporting problems.
+
+  Fix another bug in HTTPClient related to responses with a
+  Content-Length of 0. Thanks to John Lee for the report.
+
+  German console translation updates from Marc Born and Andreas
+  Schmidt.
+
+  French console translation updates from Bertrand Ave.
+
+  New documentation built with Apache Forrest.
+
+  Additional HTTP instrumentation from Calumn Fitzgerald. This adds
+  new statistics measuring time to resolve host names (DNS), time to
+  establish the connection, and time to first byte.
+
+  XML-RPC example from Sebastiýn Fontana.
+
+
+Grinder 3.0-beta22
+------------------
+
+  Major work on console editing and script distribution features. These
+  are undocumented, but now quite usable. See TODO for details of the
+  enhancements to be done in the additional releases before The
+  Grinder 3.0 is promoted out of beta.
+
+  Fix bug in HTTPPlugin. Now The Grinder doesn't automatically follow
+  redirects by default.
+
+  Fix bug in new HTTPPlugin filter which caused an exception when
+  attempting to record POSTs that have query strings.
+
+  Fix bug in HTTPPlugin. Can now handle responses with a
+  Content-Length of 0.
+
+  The TCPProxy now uses a built-in default key store if none is
+  specified.
+
+
+Grinder 3.0-beta21
+------------------
+
+  New process ramp-up feature from Bertrand Ave and Phil Aston. New
+  properties: grinder.initialProcesses, grinder.processIncrement, and
+  grinder.processIncrementInterval. (Whilst this new feature is useful,
+  process ramp-up and other scheduling will eventually be implemented
+  by the console.)
+
+
+Grinder 3.0-beta20
+------------------
+
+  Fix bug 912050 - gr3-b19 doesn't playback recorded URL params.
+  Fix bug 911966 - gr3-b19 doesn't playback User-Agent: header.
+  Thanks to Koen Debruyckere for the timely reports.
+
+  Simplify HTTPRequest API slightly by removing some redundant
+  overloaded methods and ordering parameters for consistently.
+
+  Other fixes to HTTPRequest:
+   - DELETE() mistakenly invoked a Trace() method.
+   - GET() and OPTIONS() could pass header values to query strings.
+
+  The PluginRegistry class that a plugin must use has been moved to
+  the plugininterface package.
+
+
+Grinder 3.0-beta19
+------------------
+
+  Removed redundant getLogger() and getFilenameFactory() from
+  PluginProcessContext and PluginThreadContext. Plug-ins can get these
+  services from the script context object and share them with worker
+  threads.
+
+  The PluginRegistry.register() method now takes an instance of
+  GrinderPlugin, rather than a class that implements GrinderPlugin,
+  and no longer returns a PluginProcessContext.
+
+  Fix bug 820481 - StringIndexOutOfBoundsException when logging.
+  Thanks to Dragos Cernahoschi and Gordon Reid for reports.
+
+  Fix bug 805013 - mean time is not correct. Thanks to all who
+  reported this, and to Jan Wilmaers and Bart Bauwens for their
+  investigation and analysis.
+
+  HTTP response errors statistic from John Stanford White.
+
+  Added a processResponse method to HTTPRequest so that scripts
+  subclasses can process respones.
+
+  The console can now be set to start as soon as the first worker
+  process starts its threads. ("Ignore 0 samples").
+
+
+Grinder 3.0-beta18
+------------------
+
+  Fix console column header resizing by working around Java bug
+  4760433.
+
+  Fix the TCPProxy SSL support that I inadvertently broke in beta 17.
+
+  Allow the console Look and Feel to be changed.
+
+  HTTPPlugin updates from Bertrand:
+
+   - Provide access to HTTPClient content and transfer decoding
+   support.
+
+   - Minor updates to HTTPPluginTCPProxyFilter2.
+
+  Remove the Sniffer web app.
+
+  Fail hard if script attempts to register detail statistics view from
+  worker thread.
+
+  Support scripts that sleep outside of worker threads.
+
+  Allow table cells to be copied to clipboard and (with J2SE 1.4 and
+  later) copy dragged.
+
+
+Grinder 3.0-beta17
+------------------
+
+  Fix bug 872546 - using HTTPPlugin with no console hangs the worker
+  processes. The change involves explicitly calling
+  InetAddress.getLocalHost() up front, indicating that the underlying
+  cause is a very strange JVM issue.
+
+  Fix bug 876097 - ClonePyInstance not included in grinder.jar. Thanks
+  to Karl Wyer for the report.
+
+  Fix implicit grinder object deprecation message. Thanks to Christian
+  Sell for the report.
+
+  Minor updates and fixes to the HTTPPluginTCPProxyFilters from
+  Bertrand Ave.
+
+  Fix bug 868587 - The HTTP plugin now uses a new SSL session for each
+  thread and for each run. This corresponds to the orthodox grinder
+  model of one run corresponding to one user browser session.
+  Previously SSL sessions were pooled across threads, leading to
+  unrealistic results when using The Grinder to drive a cluster of
+  servers through SSL session-aware load balancers. More SSL sessions
+  will be created, so expect high CPU load on both client and server,
+  and average times for first contact with an HTTPS server within a
+  test run to be significantly higher. Thanks to Joshua Reedy for
+  prompting me to do this, and for testing the change.
+
+  Example of how to use The Grinder with HTTPUnit from Tony Lodge.
+
+  Email script example from Tom Pittard.
+
+  Implement HTTPPluginConnection.removeBasicAuthorization() and
+  HTTPPluginConnection.removeDigestAuthorization(). The parameters
+  to this method, and semantics of the corresponding add methods, have
+  been changed to match HTTPClient. The clearAll methods have been
+  removed from the API.
+
+  Add addValue() methods to the script Statistics API.
+
+  The HTTP plugin now records the length of responses and reports mean
+  response length and response bytes per second to the console. Thanks
+  to John Stafford White for prompting me to do this. I've altered the
+  console tables to word wrap the column labels so that more columns
+  can be displayed neatly. This only appears to size correctly with
+  J2SE 1.3, and even then not every time. J2SE 1.4 only shows the
+  first line. I hope to have this swinging nicely by the next beta.
+
+  Spanish translation updates from Jose Antonio Zapata Rey.
+
+
+Grinder 3.0-beta16
+------------------
+
+  Multicast is no longer used for distributing console messages
+  signals.
+
+  Multicast has been a frequent source of newbie problems, and has
+  also made The Grinder unreasonably hard to use with some corporate
+  network configurations. Console messages are now sent over TCP
+  connections to the agent processes, which fan-out the signals to
+  their worker processes. The processing is multi-threaded and
+  asynchronous and I expect it to scale well.
+
+  IMPORTANT: The communication properties have changed. The following
+  properties can be set in grinder.properties:
+
+    grinder.consoleHost   (previously grinder.consoleAddress)
+    grinder.consolePort
+    grinder.useConsole    (previously grinder.receiveConsoleSignals /
+                     grinder.reportToConsole)
+
+  The grinder.grinderAddress and grinder.grinderPort properties have
+  been removed. Corresponding changes have been made to the console
+  options dialog.
+
+
+Grinder 3.0-beta15
+------------------
+
+  The use of the implicit 'grinder' script context object is
+  deprecated. You should explicitly "from net.grinder.Grinder import
+  grinder" in your scripts to ensure they remain compatible with
+  future releases.
+
+  Fix bug 810532 - problems invoking methods. You can now wrap Jython
+  objects that are subclassed from Java objects. Thanks to Karl Wyer
+  for the report, and also to John Stanford White for requesting this.
+
+  HTTPPluginTCPProxyFilter now records the User-Agent header. Thanks
+  to Danny Faught for pointing out the opportunity.
+
+  Fix bug 852217 - sample interval jumps after I set it. Thanks to
+  Danny Faught for the report.
+
+  Fix/enhance the TCPProxy's support for chained HTTPS proxies. This
+  should now work with a wider range of proxies.
+
+  Improved console error handling.
+
+  Fix bug 852298 - null pointer exception when multicast fails. Thanks
+  to Danny Faught for the report.
+
+  Remove support for grinder.appendLog, I suspect it was rarely used.
+  Add new feature which keeps archives of old logs, see
+  grinder.numberOfOldLogs. This should be much more useful when
+  resetting processes with the console.
+
+  Add a confirm dialog to "Stop Processes" as its probably not what
+  the user wants to do.
+
+  Bertrand Ave has added support for regular expressions to his new
+  HTTPPluginTCPProxyFilter (see notes below). The implementation now
+  has its own response filter; use the TCPProxy "-newhttpplugin" as a
+  short cut. An example properties file can be found in
+  contrib/httpplugin.
+
+
+Grinder 3.0-beta14
+------------------
+
+  Hack HTTPClient to provide a tentative fix to the "premature EOF"
+  problem. This widely reported problem occurs when a server times out
+  and closes a connection, after which writes to the connection
+  silently fail and we don't learn about the problem until we read
+  from the connection.
+
+  Clean up the Jython interpreter correctly so that scripts can use
+  exit functions. (See the standard Python atexit module).
+
+  Guarantee that the TestRunner __del__ call is called on shutdown so
+  that scripts can use it to tidy up per-thread state. Thanks to
+  Stefano Santoro for inspiration.
+
+  Add a new HTTPPluginTCPProxyFilter from Bertrand Ave. This is
+  currently undocumented and should be considered beta, but is more
+  feature rich than the default HTTPPluginTCPProxyFilter. Over time it
+  is likely to become the default HTTPPlugin filter. If you'd like to
+  try it out, you'll need to start the TCPProxy with "-requestFilter
+  net.grinder.plugin.http.HTTPPluginTCPProxyFilter2 -responseFilter
+  net.grinder.plugin.http.HTTPPluginTCPProxyReponseFilter". You'll
+  also need the WebUtils Python module that can be found in
+  contrib/httpplugin.
+
+  Fix bug 850939 - dead link in documentation. Thanks to Danny Faught
+  for the report.
+
+
+Grinder 3.0-beta13
+------------------
+
+  Fix bug 847571 - console does not display image icons. Thanks to
+  Stefano Santoro for the report.
+
+
+Grinder 3.0-beta12
+------------------
+
+  Updates to the TCPProxy from Bertrand Ave:
+
+   - Added a "-console" switch. When used, the TCPProxy creates a
+     simple Swing dialog that allows it to be cleanly interrupted.
+
+   - Added a "-properties" switch to pass System properties to
+     filter implementations. Removed the HTTPPluginTCPProxyFilter's
+     "-initialTest" option in favour of this more general mechanism.
+
+   - Added a shutdown hook to increase chance of clean shutdown.
+
+  Fix TCPProxy so that it supports HTTP/1.1 from the browser when
+  acting as an HTTP Proxy. Recording of cross-site links should now
+  work. Thanks to Jimmy Wang for the report.
+
+  Remove the -proxy option from the TCPProxy. The TCPProxy now listens
+  as an HTTP proxy by default unless either -remoteHost or -remotePort
+  is specified.
+
+  Add a new -httpproxy option to the TCPProxy. This option specifies
+  that output should to be directed through another HTTP/HTTPS proxy;
+  this may help you reach the Internet. There is also a -httpsproxy
+  option which allows you to have a different HTTPS proxy. These
+  options are not supported in port forwarding mode.
+
+  The TCPProxy now supports chains of filters. Some may find
+  "-httpPlugin -requestFilter ECHO -responseFilter ECHO" useful.
+
+  The TCPProxy now displays key store configuration when starting in
+  SSL mode. Support for setting the key store using system properties
+  has been removed.
+
+  Optimise TCPProxy SSL initialisation for speed rather than
+  cryptographic strength. Do not rely on the TCPProxy to provide
+  strong security.
+
+  Change the TCPProxy -timeout option so the TCPProxy will not exit
+  if there are active connections.
+
+  Fix a TCPProxy HTTPS proxy bug that caused SSLHandshakeExceptions
+  when used with Internet Explorer 6.0.
+
+  Enhancement from Richard Perks that allows scripts to specify the
+  local interface to use for HTTP connections. See
+  HTTPPluginConnection.setLocalAddress().
+
+  HTTP Plugin enhancement: If the User-Agent header is specified,
+  don't append the HTTPClient version string.
+
+  Fix bug 836028 - incorrect platform specific separator for
+  classpath. Thanks to Stefano Santoro for the report.
+
+
+Grinder 3.0-beta11
+------------------
+
+  Updates to the French console translation from Betrand Ave.
+
+  German console translation from Huibert Alblas.
+
+  "grinder." properties specified on the agent command line are now
+  passed through to worker processes. The original motivation for this
+  was to allow the log directory to be set based on the system date.
+
+  HTTPPlugin enhancements:
+
+   - Script API to set whether an exception should be thrown when
+     establishing an HTTPS connection if the server's certificate
+     doesn't match the host name. The default behaviour has been
+     changed to disable this check.
+
+  Fix bug 804272 - console results table column order varies according
+  to how classes are packaged. Thanks to Karl Wyer for the report.
+
+  Updated TCPProxy documentation.
+
+  If console cannot be contacted, don't expect console signals.
+
+  The 'grinder' context object can now be explicitly imported from
+  net.grinder.Grinder.grinder. It is good practice to add an explict
+  import to the top of your scripts so that they can be called as
+  Python modules from other scripts.
+
+  Fix bug so that TestRunners are now initialised using their worker
+  thread.
+
+  New property, grinder.duration, from Kalyanaraman Venkatasubramaniy.
+  This property allows an overall time limit to be set for worker
+  processes.
+
+  Be more agressive about interrupting workers. Thanks to Venkat for
+  the idea and  original implementation.
+
+  Incorporated feature matrix into documentation. Thanks to Edwin
+  DeSouza for his help with this.
+
+
+Grinder 3.0-beta10
+------------------
+
+  Fix saving of console data. (Bug 749461).
+
+
+Grinder 3.0-beta9
+-----------------
+
+  Incorporate HTTPClient HTTPS patch into main distribution. The Grinder
+  now *requires* the JSSE, so you must install it if you are using a
+  version of the J2SE earlier than 1.4.
+
+  Fix use of J2SE 1.4.1 Color constants. Should compile with J2SE 1.3.1
+  again. Thanks to Kumar Mettu for the report.
+
+  Minor fixes to how the HTTP Plugin TCPProxy filter parses content
+  length.
+
+  Minor fidling with timing.
+
+  Tutorial from Richard Perks.
+
+  Incorporate the jEdit Syntax package which will be used for
+  development of a console script editor. The basics of the editor are
+  there, but will not be functional until I've reworked the
+  communications layer to allow the script to be distributed.
+
+  The HTTP plugin now records the HTTP response status code to the
+  data log for HTTPRequests that are wrapped in Tests. If multiple
+  HTTPRequests are wrapped in a Test, the status code of the last
+  response is recorded. Thanks to Carlos Franco for the idea.
+
+  Incorporate patch from Bill Schnellinger: Fix
+  HTTPPluginTCPProxyFilter so that large data uploads (>1K) are stored
+  in separate data files rather than inlined in the script. This
+  should fix bug 702022.
+
+  Fulfil Feature Request 732676 raised by Bertrand Ave by adding a
+  "milliseconds since start" column to the data file.
+
+  French console translation from Bertrand Ave.
+
+  Example script that interprets an grinder.properties HTTP test
+  script for The Grinder 2.
+
+
+Grinder 3.0-beta8
+-----------------
+
+  Fix a bug in the TCPProxy which prevented the recording of 8-bit
+  POST data. Thanks to Joakim Suarez for the report.
+
+  The TCPProxy now copes with query strings and form data that are not
+  name value pairs. Thanks to Ryan Balsam for the report.
+
+  Tentative fix to bug 690639. (TCPProxy recorded HTTP script refers
+  to header array before declaration.)
+
+  Documentation updates. Correct JMS example scripts.
+
+  Spruce up console UI.
+
+  Allow the console to be optionally reset with the worker processes.
+  (Feature request 686632).
+
+
+Grinder 3.0-beta7
+-----------------
+
+  Fix synchronisation of the console new tests event which was causing
+  null pointer exceptions.
+
+  Fix synchronisation of TestStatisticsMap that caused potential data
+  loss and worker process stack traces.
+
+  Fix handling of thread shutdown exceptions. Threads again now
+  respond correctly to shutdown/reset requests.
+
+  Improve console handling of large numbers of tests.
+
+
+Grinder 3.0-beta6
+-----------------
+
+  Enhanced statistics API for scripts.
+
+  Documentation.
+
+  Source code clean up.
+
+
+Grinder 3.0-beta5
+-----------------
+
+  Expose script and document API to allow scripts to work with custom
+  statistics.
+
+  Rationalise the plugin API so that PluginProcessContext and
+  PluginThreadContext no longer extend Logger and FilenameFactory.
+
+  Add JMS examples.
+
+  Improve cleaning up of child processes when the agent is killed.
+
+  Some script documentation.
+
+
+Grinder 3.0-beta4
+-----------------
+
+  Correct implementation to read grinder.consolePort rather than
+  grinder.console.consolePort. Thanks to Dave Tauzell for the report.
+
+  Replace mandatory properties with reasonable defaults.
+
+  Fix HTTPPlugin static initialisation order so that script settings
+  are not overridden by default initialisation. Thanks to Mark Wilson
+  and Brett Schmoll for reports.
+
+  Script API to provide access to The Grinder build version -
+  net.grinder.common.GrinderBuild.
+
+  Script API to provide access to the HTTPClient connection context
+  for a thread -
+  net.grinder.plugin.http.HTTPPluginControl.getHTTPClientContext().
+
+  Script API to provide access to grinder.properties values -
+  net.grinder.script.ScriptContext.getProperties(). Thanks to Dave
+  Tauzell for feature request 672691.
+
+
+Grinder 3.0-beta3
+-----------------
+
+  Fix bug in wrapping code that broke the hello-world examples. Thanks
+  to Simon Cousins for finding this.
+
+
+Grinder 3.0-beta2
+-----------------
+
+  Improved exception handling and logging. Any exception thrown by a
+  wrapped test is recorded as an "error", if the script doesn't
+  catch the exception the run is aborted.
+
+  Jython instances can now be Test.wrap()'d.
+
+  First cut of HTTPPlugin TCPProxy filter.
+
+  HTTPRequest API now has overloaded GET and HEAD methods that take a
+  query string NVPair[].
+
+
+Grinder 3.0-beta1
+-----------------
+
+   Fix bug 608392 - console data file field separator conflicts with
+   localised decimal points. Fields are now tab separated. Thanks to
+   Martin Vilcans for the report.
+
+   Fix bug 631144 - worker processes sometimes fail to launch on real
+   operating systems. Thanks to Martin Voss for the report.
+
+
+Grinder 3.0-beta0
+-----------------
+
+   Jython meets The Grinder and the magic starts to happen.
+
+
+Grinder 2.8.6
+-------------
+
+   Fix bug 608392 - console data file field separator conflicts with
+   localised decimal points. Fields are now tab separated. Thanks to
+   Martin Vilcans for the report.
+
+   Fix bug 631144 - worker processes sometimes fail to launch on real
+   operating systems. Thanks to Martin Voss for the report.
+
+
+Grinder 2.8.5
+-------------
+
+   Fix TCPSniffer bug for non-proxy, non-ssl startup.
+
+
+Grinder 2.8.4
+-------------
+
+   Unified HTTP/HTTPS proxy.
+
+   Allow spaces in grinder.properies file names and host names.
+
+   Documentation on The Grinder vs LoadRunner courtesy of Tom
+   Braverman.
+
+   Spanish translation of the console from Jose Antonio Zapata Rey.
+
+
+Grinder 2.8.3
+-------------
+
+   String beans can now implement an interface that allows them to
+   access the HTTPClient HTTPResponse object. This means that
+   StringBeans can perform assertions on the HTTP response, and snarf
+   data from that response for use in subsequent requests.
+
+   The HTTP plugin is now relaxed when it finds a partial string bean
+   tag, it just outputs the literal text. This allows string bean tags
+   to be used within XML POST data.
+
+   Fix sleepTimeVariation documentation. Thanks to Mika Laitio for the
+   report.
+
+   Allow query strings to be passed with POSTs. Thanks to Kjetil JD
+   for the fix.
+
+   The TCP Sniffer parameters for passing keystore information have
+   changed, see doc/TCPSniffer.txt.
+
+   I've removed the TCP Sniffer URL rewriting filter; use -proxy
+   instead.
+
+   All of the TCP Sniffer engines have been reworked. This SSL proxy
+   engine is more efficient when making multiple requests. The TCP
+   Sniffer -proxy mode can now be used with any filter. The TCP
+   Sniffer should no longer spin CPU when idle.
+
+   Reworked HttpPluginSnifferFilter:
+  - Outputs a full usable test script.
+  - Copes with POST data split across TCP packets.
+  - Fixed bug where POST with multiple lines was read incorrectly,
+    this required moving to Jakarta ORO because Jakarta Regexp
+    bombed with a trivial regexp.
+  - Removed multipart form handling.
+  - Records 401 (authentication) exchanges.
+
+   (A note is necessary on the multipart form handling. The more I
+   looked at the existing support in the sniffer, the more dubious it
+   looked. Here's what the HTTP specification says on the subject:
+
+  "In general, HTTP treats a multipart message-body no
+  differently than any other media type: strictly as payload.
+  The one exception is the "multipart/byteranges" type ..."
+
+   This means that the sniffer should just chuck the data directly
+   into the POST file, which is what it now does. And no Cynthia, we
+   do not support multipart/byteranges.)
+
+   Support for disabling persistent connections with the HTTPClient
+   plugin courtesy of Todd Wasson.
+
+   Other miscellaneous fixes and documentation.
+
+
+Grinder 2.8.2
+-------------
+
+   The Grinder is now released under a BSD style license.
+
+   New UI showing worker process status from Dirk Feufel.
+
+   Fix console communication bug where socket reader threads would
+   sleep each time a dead socket handle was polled.
+
+   Fix SocketPlugin bug where multiple request files were incorrectly
+   handled. Thanks to Hussein Badakhchani for the report.
+
+
+Grinder 2.8.1
+-------------
+
+   Communication from the worker processes to the Console now uses a
+   unicast TCP connection. Multicast has been used here since the
+   beginning (it was cheap and cheerful to implement) but caused
+   several problems:
+  - Under heavy load, multicast packets are lost.
+  - I've had a report of multicast packets being duplicated.
+
+   Clearly neither of these are good for statistics reporting. Signals
+   from the Console to the worker processes still use multicast.
+
+   IMPORTANT: The communication properties have changed, you must set
+   the following in grinder.properties:
+
+  grinder.consoleAddress  (Address of machine running Console)
+  grinder.consolePort
+  grinder.grinderAddress  (Multicast address)
+  grinder.grinderPort
+
+   [grinder.consoleAddress is a new property. grinder.multicastAddress
+   and grinder.multicastPort have been renamed to
+   grinder.grinderAddress and grinder.grinderPort.]
+
+   You should make the corresponding changes in the Console options
+   dialog. Please refer to the README file for more details.
+
+   Fix the data file title line.
+
+   Reinstate the hack to prevent the HTTPClient from sending HTTP
+   trailers. Say -DHTTPClient.disableTrailers=true in your
+   grinder.jvm.arguments.
+
+
+Grinder 2.8
+-----------
+
+   New heavy iron statistics engine. Allows plugins to dynamically
+   add new statistics and derived statistic views.
+
+   As an example, I've used the new statistic engine to implement an
+   additional "mean time to first byte" for the HttpURLConnection
+   implementation of the HTTPPlugin. This replaces the old
+   "timeIncludesTransaction" parameter. Support for HTTPClient is
+   more involved and is slated for a future release.
+
+   Console "about" dialog.
+
+
+Grinder 2.7.2
+-------------
+
+   Console enhancements:
+    - Console no longer reads grinder.properties:
+    - New options dialog to set communication details.
+    - Console responds dynamically new tests registered by Grinder
+      processes.
+    - Can no longer set ignore samples to 0, doing this used to cause
+      incorrect triggering.
+    - Colour coded state label.
+
+   Miscellaneous engine enhancements:
+    - Sleeping processes can now be interrupted by the Console, so
+      they respond more quickly.
+    - Logging tweaks.
+    - Add dropped message detection to the communications.
+
+   HTTPPlugin enhancements:
+    - Filenames of result pages now contain test description.
+
+   More changes to the plugin API:
+    - A better fix for non-contiguous test numbers that doesn't
+      pollute the Test interface.
+    - Coallese processID and hostID into a single grinderID.
+    - Much repackaging and rationalisation. Plugins should only need
+      to use the "common" and "plugininterface" packages.
+
+
+Grinder 2.7.1
+-------------
+
+   Fix bug with non-contiguous test numbers.
+
+   Fix basic authentication bug.
+
+
+Grinder 2.7
+-------------
+
+  Console enhancements:
+   - All text is now read from Console.properties (think I18N).
+   - Highlight errors labels if errors > 0.
+   - Table view now has average TPS and peak TPS.
+   - Removed individual sample TPS labels.
+   - New last sample statistics tab.
+
+  Remove distinction between "abortions" and "errors" from the
+  recorded statistics. All tests now result in a "successful
+  transaction" or an "error".
+
+  Removed deprecated BookHttpPlugin example. Use StringBeans instead.
+
+  Minor changes to the plugin interface.
+
+  New HTTP plugin sniffer filter option, -initialTest.
+
+  HTTPPlugin enhancements
+   - Can now send arbitrary headers. Note, the specific
+     If-Modified-Since property has been removed, use the arbitrary
+     header support. The TCPSniffer filter has been updated
+     accordingly.
+   - Most request strings, including the arbitrary header values, are
+     now affected by the String Bean, see doc/HTTPPlugin.txt.
+   - HTTPClient is now the default implementation. The
+     timeIncludesTransaction parameter (which is ignored by the
+     HTTPClient implementation) now defaults to true.
+     HttpURLConnection support is deprecated and will be removed in a
+     future release. See doc/HTTPPlugin.txt for more information,
+     including notes on HTTPS support.
+
+  Features from Kalle Burbeck:
+   - HTTP plugin sniffer filter now has limited support for
+     multipart forms.
+   - HTTP plugin sniffer filter now generates test descriptions.
+
+  Features from Paddy Spencer:
+   - New "Sniff 'n' Grind" webapp (the management take no
+     responsibility for Paddy's sense of humour).
+
+   - Reworked HTTP proxy, added new HTTPS proxy
+
+   - TCPSniffer changes:
+     -timeout to set the proxy to timeout;
+     -localSSLPort for use with the HTTPS proxy;
+     -localHost for use with multiple local IP addresses;
+     doesn't barf if you set remote host/port with proxy;
+
+
+Grinder 2.6.5
+-------------
+
+  New tabbed Console layout.
+
+  Arm/stop is now a single Console control.
+
+  New "reset" Console control. This allows you to start a single
+  Grinder process per machine and control the whole show from the
+  Console.
+
+  New Console control for the number of significant figures to
+  display.
+
+  You can now save data from console.
+
+  HTTPClientHandler now supports multiple servers.
+
+  Graph colour is now based on response time.
+
+  Documentation fixes.
+
+
+Grinder 2.6.4
+-------------
+
+  Fix -colour.
+
+  Fix distribution: add HTTPClient classes to grinder.jar.
+
+  Patch HTTP to fix handling of query strings.
+
+  Fix: don't throw NPE when using HTTPClient to retrieve zero length
+  body response.
+
+  Make the console "ignore samples" and "collect samples" controls
+  text fields rather than sliders - allows big numbers for power
+  users.
+
+  Hack a switch onto HTTPClient to disable the use of
+  trailer-related headers, and use it in HTTPClientHandler. Better for
+  the less well-travelled server implementations.
+
+  Extra documentation. The changes to doc/Timing.txt are particular
+  worth a scan.
+
+
+Grinder 2.6.3
+-------------
+
+  New socket plugin from David Freels.
+
+  Console summary table now uses a JTable.
+
+  Fix to recording of short response times from Mikael Suokas.
+
+  Thread safety fix from Mikael Suokas.
+
+  Fix basic authentication property names. Thanks to Andrew
+  Sliwkowski for reporting this.
+
+  Added new file doc/Problems.txt to hold wisdom from Mikael Suokas.
+  Split the documentation of the plugins and the TCPSniffer into
+  separate files.
+
+  The HTTP plugin now has experimental support for Ronald Tschalýr's
+  excellent HTTPClient library instead of HttpURLConnection.
+  HTTPClient has many more features than HttpURLConnection, see
+  http://www.innovation.ch/java/HTTPClient/urlcon_vs_httpclient.html
+  for a comparision. I hope to lever features such as proxy support,
+  connection timeouts and persistent cookies into future versions of
+  The Grinder. Unfortunately experimentation shows HTTPClient
+  sometimes does not perform well in a multithreaded environment. I'm
+  guessing this should be straightforward to fix. See the file
+  doc/HTTPPlugin.txt for details on how to turn on the HTTPClient
+  support.
+
+  The TCPSniffer echo filter now reports connection open and close
+  events.
+
+  The TCPSniffer now has a funky "-colour" option.
+
+
+Grinder 2.6.2
+-------------
+
+  Added support for HTTP basic authentication. You can now use two new
+  HTTP plugin test parameters, basicAuthenticationUser and
+  basicAuthenticationPassword, to specify the appropriate parameters
+  for each request. See README for details.
+
+  New HTTP plugin parameter: timeIncludesTransaction. By default the
+  time that the HTTP plugin reports is the time it takes for the
+  remote server to accept the connection request. When using the times
+  as an indicator of user experience, this is usually what you want.
+  Sometimes however you are more interested in the time the entire
+  HTTP transaction takes, including the time required to read the HTTP
+  response over the network. If so, set this parameter to true.
+
+  Removed property grinder.thread.beginCycleSleepTime, as its
+  redundant. (Use grinder.test0.sleepTime instead).
+
+  New property: grinder.thread.initialSleepTime. See README for
+  details.
+
+  When the property grinder.recordTime is false, the time is no longer
+  logged to the data file. (The prime purpose of recordTime is to
+  control whether times are _reported_ to the console, in fact times
+  are always recorded. This is too subtle for some users ;-) so I've
+  made this change for an easy life).
+
+  Reworked the logging code. The visible change is improved logging of
+  sub-process events to the controlling terminal.
+
+  Changed the sense of the "-norewriteURLs" TCPSniffer option to make
+  it "-rewriteURLs". Rewriting is no longer the default behaviour.
+
+
+Grinder 2.6.1
+-------------
+
+  Various tweaks to the timing code. The response times reported by
+  your test scripts will almost certainly be smaller and more correct
+  with this version. See doc/Timing.txt for information.
+
+  New property: grinder.recordTime. See the file doc/Timing.txt for
+  details.
+
+  New property: grinder.logProcessStreams. See README for details.
+
+  Handle multiple Set-Cookie headers, courtesy of Christian Nedregard.
+
+
+Grinder 2.6
+-----------
+
+  Console rework. Extra knobs and dials which allow the console to be
+  set to capture a certain number of samples - see README for details.
+  New average TPS reporting.
+
+  You can now use the Console to request that Grinder processes exit.
+  ** IMPORTANT** The property "grinder.waitForConsoleSignal" has been
+  renamed to "grinder.receiveConsoleSignals".
+
+  Cool HttpPluginSnifferFilter enhancements from Dr Paddy Spencer that
+  rewrite absolute URLs on the fly. This makes creating test scripts
+  for sites that use absolute URL's much less painful. The solution
+  includes a new way of running the sniffer by defining it as a proxy
+  to the browser. Paddy promises to document all of this RSN.
+
+  Several bug fixes including:
+   - Don't spin uselessly when not reporting to the console.
+   - Don't broadcast needless cruft in the statistics report messages.
+     (read: your network will no longer creak, this explains the need
+      to up the buffer in 2.5).
+   - Log directory is no longer mandatory.
+
+
+Grinder 2.5
+-----------
+
+  The HTTP plugin now supports "string beans". These allow URL's and
+  POST data to be easily parameterised.
+
+  I've up'ed the read buffer size to 64K to allow more test statistics
+  to be sent in a single multicast message. If this is too low you'll get
+  exceptions - either null pointer exceptions in the Receiver or
+  "can't bind to socket" exceptions in the Sender code. If any one is
+  still running into problems, please mail
+  grinder-use@lists.sourceforge.net.
+
+  JRun friendly patch from Stuart Tily.
+
+  Better socket handling for TCPSniffer from Phillip Burgess.
+
+
+Grinder 2.4
+-----------
+
+  The console UI has been slightly tidied up. Graphs are now
+  histograms.
+
+  The JUnit plugin should work again. It also has a new parameter
+  (logStackTraces) and improved logging.
+
+  You can now specify an explicit properties file to both the Grinder
+  and the Console as the first argument. For example:
+
+  java net.grinder.Grinder myproperties
+
+  Credit to Marc Stogner for this idea and initial implementaion.
+
+  (More version musings: The last version was _meant_ to named be 2.4,
+  not 2.3.2. According to my schem, increments the third number is
+  meant to be reserved for bug fix releases only. The new console
+  funtionallity really deserves something more significant. Rather
+  than rewriting history, I'm treating 2.3.2 as a "beta" of the
+  console functionality, and upping the second number here.)
+
+
+Grinder 2.3.2
+-------------
+
+  A shiny new console, with true TPS measurement.
+
+  New communciations layer.
+
+
+Grinder 2.3.1
+-------------
+
+  Even more bug fixes to the HTTP plugin. The cookie handling has been
+  reworked to more accurately reflect RFC 2109. Multiple cookies
+  should now work, with the exception that only one Set-Cookie header
+  is recognised per request. This is a limitation of the
+  java.net.HttpURLConnection class, which I will rant about at length
+  to anyone who asks.
+
+  The HTTP plugin parameter 'grinder.plugin.parameter.keepSession' has
+  been renamed to 'grinder.plugin.parameter.useCookies'.
+
+  The Grinder now has a logo, courtesy of Richard Wallace.
+
+
+Grinder 2.3
+-----------
+
+  A HTTP plugin bug fix release. See the ChangeLog for details.
+
+
+Grinder 2.2
+-----------
+
+  The promised JUnit plugin is here! See README for more information.
+
+  I've introduced the concept of a TestSetPlugin that defines the set
+  of tests to perform. This is primarily to support the JUnit plugin.
+
+  Bug fix to SSLSnifferEngine from Paddy Spencer. (You're first name
+  doesn't _have_ to begin with 'P' to get into AUTHORS, but it helps
+  :-)).
+
+  More tweaks to the logging and terminal output.
+
+  The Console _should_ work again. Can't verify this as multicast is
+  currently not working on my machine.
+
+
+Grinder 2.1
+-----------
+
+  The plugin interface now has a single "doTest" dispatch interface
+  instead of using reflection. This simplifies the writing of generic
+  plugins. The "grinder.methods" property has been removed. Instead
+  tests are specified by a number of "grinder.testX" properties (where
+  test is any number). See README for details.
+
+  [Support for testing classes using reflection will be provided by a
+  JUnit plugin which will come in 2.2].
+
+  The "initial sleep time" has been removed, a "begin cycle sleep
+  time" has been added in its place. Individual method sleep times can
+  now be specified. All sleep times are now randomly varied according
+  to a Normal distribution. See README for details.
+
+  The HttpPlugin now supports an "ifModifiedSince" parameter. This
+  translates to the HTTP "If-Modified-Since" request header. This
+  allows the grinder to simulate the mechanism browsers use to check
+  for cached pages.
+
+  The HttpPluginSnifferFilter has been updated to record sleep times,
+  If-Modified-Since headers, and reflect the property format changes.
+
+  The logging of the HTTP plugin has been improved.
+
+  The output and error log format is now more useful. There was no
+  point in displaying the host and process for each line (each process
+  gets its own output file). I've added the current cycle and test
+  number instead.
+
+  I've removed the "simple" and "ejb" plugins as they are not useful
+  in their own right and I got fed up of maintaining them. Both would
+  be best addressed using the planned JUnit plugin. Examples will come
+  with Grinder 2.2.
+
+  We have our first JUnit test case. We need more.
+
+  The TCPSniffer is now silent about SocketExceptions.
+
+  Renamed "GrinderContext" to more correct "PluginContext". Renamed
+  "method" to "test" throughout.
+
+
+Grinder 2.0
+-----------
+
+  "Huh - what happened to the version numbers?": This release of the
+  Grinder should be published on http://developer.bea.com/ and its
+  logically a "1.0" release. However, Paco's original was released as
+  1.6 and I don't want to confuse the public too much as to the latest
+  and greatest.
+
+
+  New TCPSniffer - the SnifferServlets are dead! (Big thanks to Phil
+  Dawes for the sweat behind this).
+
+
+  The HTTP plugin now automatically follows redirects only if you
+  set the property
+
+  grinder.plugin.parameter.followRedirects=true
+
+  See the README file for details.
+
+
+  The build auto-detects what modules to build by checking your
+  classpath for classes the module depends on. You may have to unset
+  your classpath if this doesn't do what you want. Currently the
+  conditionally built modules are:
+
+   HTTP SSL plugin (Needs the JSSE)
+   TCPSniffer SSL engine (Needs the JSSE)
+   TCPSniffer HTTP plugin filter (Needs Apache Jakarta Regexp)
+   WebLogic Server 5.1 Trader EJB plugin (needs WLS Trader EJB)
+
+
+  Fixed a bug that caused the thread ID to be displayed incorrectly.
+
+
+  I've added a wrapper class for the Console to the net.grinder
+  package. You should now use "java net.grinder.Console" instead of
+  "java net.grinder.console.Console". All future "main" classes will
+  belong to this package.
+
+
+Grinder 0.9
+-----------
+
+  I've finally got rid of PropsLoader. This entails a few changes to
+  properties:
+
+    grinder.jvm.path  - Specifies the java executable used for
+        the child JVMs. Defaults to "java" so
+        you do not need to specify this if
+        your path is sensible.
+
+    grinder.jvm.classpath - Use to adjust the classpath used for
+        the child VMs. Anything specified here
+        will be prepended to the classpath
+        used to start the grinder itself.
+
+    grinder.jvm.arguments - Additional arguments to child JVM's.
+
+
+  Additionally, grinder.properties does not have to be in your
+  classpath anymore. (I know I said this before - I mean it this
+  time).
+
+  PeterZ found the data file title line useful so I've reinstated it.
+
+  I'm now using Ant 1.2 as the build engine, and have decided to
+  remove Ant from the distrubution. See the build.xml file for more
+  information.
+
+
+Grinder 0.8
+-----------
+
+  HTTPS support from Phil Dawes.
+
+  HTTP 302/307 handling from Phil Dawes.

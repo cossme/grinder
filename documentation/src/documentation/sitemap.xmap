@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+  <map:components/>
+
+  <map:resources/>
+
+  <map:pipelines>
+
+    <map:pipeline>
+      <map:match pattern="development/changes.xml">
+        <map:generate type="file" src="../../generated/project-xml/changes.xml"/>
+        <map:transform src="changes2doc.xsl"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline>
+      <map:match pattern="development/todo.xml">
+        <map:generate type="file" src="../../generated/project-xml/todo.xml"/>
+        <map:transform src="todo2doc.xsl"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline>
+      <map:match pattern="g3/script-gallery.xml">
+        <map:generate type="file" src="../../generated/project-xml/scripts.xml"/>
+        <map:transform src="scripts2doc.xsl"/>
+        <map:serialize type="xml"/>
+      </map:match>
+    </map:pipeline>
+
+    <map:pipeline>
+      <map:match pattern="g3/manual.xml">
+        <map:generate src="cocoon://abs-linkmap"/>
+
+    <map:transform type="xpath">
+        <map:parameter name="include" value="//g3|//project"/>
+      <map:parameter name="exclude" value="//g3/manual"/>
+    </map:transform>
+
+    <map:transform src="{lm:transform.site.book}" />
+    <map:transform src="{lm:transform-aggregate.book.cinclude}">
+      <map:parameter name="title" value="The Grinder 3"/>
+    </map:transform>
+    <map:transform type="cinclude"/>
+    <!-- doc-to-doc-uniqueids appears broken to me. It messes up all our
+       site: and ext: links by adding a "#" to the front of them; and
+       our fragment links end up having two '#'s, and no unique ID.
+       The only affect of not applying this is that the internal links
+       are to the individual pages. Not really a bad thing.
+    <map:transform src="{lm:transform-aggregate.doc.doc-uniqueids}"/>
+    -->
+
+    <map:transform src="{lm:transform-aggregate.docs.document}"/>
+
+    <map:transform src="add-image-to-title.xsl"/>
+
+    <map:serialize type="xml"/>
+      </map:match>
+
+    </map:pipeline>
+
+  </map:pipelines>
+
+
+</map:sitemap>

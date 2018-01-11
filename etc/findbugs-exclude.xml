@@ -1,0 +1,158 @@
+<FindBugsFilter>
+  <Match>
+    <Or>
+      <Class
+        name="~net.grinder.scriptengine.jython.instrumentation.traditional.InstrumentedPy.*" />
+      <Class
+        name="~net.grinder.scriptengine.jython.instrumentation.traditional.InstrumentationHelper" />
+    </Or>
+    <Bug pattern="ES_COMPARING_PARAMETER_STRING_WITH_EQ" />
+    <Or>
+      <Method name="~findAttr.*" />
+      <Method name="invoke" />
+    </Or>
+  </Match>
+
+  <!-- PyObject subclasses typically shouldn't override equals. -->
+  <Match>
+    <Or>
+      <Class name="~.*.ClonePyInstance" />
+      <Class
+        name="~net.grinder.scriptengine.jython.instrumentation.traditional.InstrumentedPy.*" />
+    </Or>
+    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS" />
+  </Match>
+
+  <Match>
+    <Class name="net.grinder.statistics.StatisticsSetImplementation" />
+    <Bug pattern="NS_DANGEROUS_NON_SHORT_CIRCUIT" />
+    <Or>
+      <Method name="&lt;init&gt;" />
+      <Method name="addValue" />
+      <Method name="setValue" />
+    </Or>
+  </Match>
+
+  <!-- HTTPProxyTCPProxyEngine drains a stream, ignoring read() result. -->
+  <Match>
+    <Class name="net.grinder.tools.tcpproxy.HTTPProxyTCPProxyEngine" />
+    <Bug pattern="RR_NOT_CHECKED" />
+  </Match>
+
+  <!-- The object graph referenced by the thread local is correct. -->
+  <Match>
+    <Class
+      name="net.grinder.plugin.http.HTTPUtilitiesImplementation$ParsedBody" />
+    <Bug pattern="SIC_THREADLOCAL_DEADLY_EMBRACE" />
+  </Match>
+
+  <!-- Swing forces our UI components to be serializable. We don't care. -->
+  <Match>
+    <Or>
+      <Class name="~net.grinder.console.swingui.*" />
+      <Class name="net.grinder.tools.tcpproxy.TCPProxyConsole" />
+    </Or>
+    <Or>
+      <Bug pattern="SE_BAD_FIELD" />
+      <Bug pattern="SE_BAD_FIELD_STORE" />
+      <Bug pattern="SE_NO_SERIALVERSIONID" />
+    </Or>
+  </Match>
+
+  <!-- Jython forces our engine components that extend PyObject to be serializable.
+    We don't care. -->
+  <Match>
+    <Or>
+      <Class
+        name="~net.grinder.scriptengine.jython.instrumentation.traditional.*" />
+    </Or>
+    <Or>
+      <Bug pattern="SE_BAD_FIELD" />
+      <Bug pattern="SE_BAD_FIELD_STORE" />
+      <Bug pattern="SE_NO_SERIALVERSIONID" />
+      <Bug pattern="SE_NO_SUITABLE_CONSTRUCTOR_FOR_EXTERNALIZATION" />
+    </Or>
+  </Match>
+
+  <!-- findbugs erroneously detects a dead store. -->
+  <Match>
+    <Or>
+      <Class name="net.grinder.engine.agent.AgentImplementation" />
+      <Class name="net.grinder.engine.process.GrinderProcess" />
+    </Or>
+    <Bug pattern="DLS_DEAD_LOCAL_STORE" />
+  </Match>
+
+  <!-- The transient field m_registeredTest should be null after deserialisation.
+    I want it to be final, so I'm not implementing readObject(). -->
+  <Match>
+    <Class name="net.grinder.script.Test" />
+    <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
+  </Match>
+
+  <!-- I commonly use switch statements that fall through. -->
+  <Match>
+    <Bug pattern="SF_SWITCH_FALLTHROUGH" />
+  </Match>
+
+  <!-- We ignore return value of delete(), mkdir(), mkdirs()... since in these
+    cases we don't care whether the operation was successful. -->
+  <Match>
+    <Or>
+      <Class name="net.grinder.engine.process.LoggerImplementation$FileManager" />
+      <Class name="net.grinder.util.Directory" />
+      <Class name="net.grinder.util.DelayedCreationFileWriter" />
+      <Class name="net.grinder.util.FileContents" />
+      <Class
+        name="net.grinder.console.distribution.FileDistributionImplementation" />
+    </Or>
+    <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" />
+  </Match>
+
+  <Match>
+    <Class name="net.grinder.common.GrinderProperties" />
+    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS" />
+  </Match>
+
+  <!-- findbugs fails to find the loop in the superclass. -->
+  <Match>
+    <Class
+      name="net.grinder.synchronisation.BarrierImplementation$ForeverWaiter" />
+    <Bug pattern="WA_NOT_IN_LOOP" />
+  </Match>
+
+  <!-- findbugs fails to notice we close the streams. -->
+  <Match>
+    <Class name="net.grinder.engine.agent.FileStore" />
+    <Bug pattern="OBL_UNSATISFIED_OBLIGATION" />
+    <Method name="createReadmeFile" />
+  </Match>
+
+  <!-- findbugs fails to notice we close the streams. -->
+  <Match>
+    <Class name="net.grinder.util.FileContents" />
+    <Bug pattern="OBL_UNSATISFIED_OBLIGATION" />
+    <Method name="&lt;init&gt;" />
+  </Match>
+
+    <!-- findbugs fails to notice we close the streams. -->
+  <Match>
+    <Class name="net.grinder.plugin.http.HTTPRequest" />
+    <Bug pattern="OBL_UNSATISFIED_OBLIGATION" />
+    <Method name="setDataFromFile" />
+  </Match>
+
+  <!-- The following are rules which I disagree with. -->
+  <Match>
+    <Bug pattern="IMA_INEFFICIENT_MEMBER_ACCESS" />
+  </Match>
+
+  <Match>
+    <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON" /> <!-- Roll on closures -->
+  </Match>
+
+  <Match>
+    <Bug pattern="USM_USELESS_ABSTRACT_METHOD" />
+  </Match>
+
+</FindBugsFilter>

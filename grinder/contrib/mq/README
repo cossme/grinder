@@ -1,0 +1,27 @@
+Package	Name		Included
+--------------------------------------------------
+org.rextency.mq		Yes
+com.ibm.mqbind.jar	No
+connector.jar		No
+com.ibm.mq.jar		No
+
+Intro:
+This is a library to help add MQ message sending functionality to The Grinder.
+The whole idea behind this was to make it easy to implement load testing with MQ messages. While 
+org.rextency.mq library makes almost every MQ parameter adjustable, not all are.  
+If you need to extend the functionality of the library, the source code has been included. If you 
+make any changes and would like to have the changes submitted as part of the package please contact
+me with the changes you have made.  Also, if there are any bugs you find in the implementation please
+contact me.
+
+Required Files:
+The three JAR files not included, are IBM jar files.  If you have WebSphere MQ installed, then these JAR
+files by default are located in:  x:\Program Files\IBM\WebSphere MQ\Java\lib on a Windows machine.
+
+Usage:
+Simply add ALL FOUR JAR files to your Grinder agent classpath and everything should be smooth sailing.
+I've also included a sample script to help get you started.
+
+Contact:
+Phillip Mayhew
+rextencygr@gmail.com

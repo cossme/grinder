@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+<title>Agents and Workers</title>
+</header>
+<body>
+
+  <p>Refer to <a href="site:getting-started/processes">
+  The Grinder processes</a> for an overview of the various
+  processes. This page provides some further details.</p>
+
+  <section id="agent-processes">
+    <title>Agent processes</title>
+
+    <p>It is typical to run a single agent process on each load injector
+       machine. </p>
+    <p>When an agent is started, it attempts to connect to
+       the <a href="site:console">console</a>. If it can connect, it will
+       wait for a signal from the console before starting worker processes.
+       Otherwise, the agent process will start a number of worker processes
+       as specified by its local
+       <a href="site:properties">grinder.properties</a> file.
+    </p>
+
+    <p>If the network connection between the agent and the console is
+    terminated, or the console exits, the agent will exit. If you want
+    the agent to keep running and try regularly to reconnect to the console,
+    use the <code>-daemon</code> command line switch. This might prove useful
+    if you register an agent as an operating system service.
+    </p>
+
+    <section id="agent-options-summary">
+	    <title>Summary of agent process options</title>
+
+	    <p>Most agent options are controlled by the
+	    <a href="site:properties">grinder.properties</a> file. You can
+	    <a href="site:properties/commandline">set properties on the command line</a>.</p>
+
+	    <table>
+	     <tr>
+	      <td><code>-daemon [reconnect time]</code></td>
+
+	      <td>If this option is specified on the agent command line, and the
+	      connection to the console  cannot be established or the connection is
+	      lost, the agent will sleep for a while and then attempt to connect to
+	      the console again. The default sleep time is 60 seconds, but this
+	      can be controlled by providing a <em>reconnect time</em> in seconds.</td>
+	     </tr>
+	    </table>
+    </section>
+
+
+  </section>
+
+  <section id="worker-processes">
+    <title>Worker processes</title>
+
+    <p>Worker processes are started by a controlling agent process. The agent
+    process passes each worker a set of <a href="site:properties">properties</a>
+    that control its behaviour.</p>
+  </section>
+
+</body>
+</document>
+

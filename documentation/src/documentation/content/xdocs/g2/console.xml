@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+    <title>The Console</title>
+</header>
+<body>
+    <figure src="../images/console-screenshot.png" width="900" height="529"
+      alt="The Console"/>
+
+    <section>
+      <title>Process controls</title>
+
+      <p><em>Start processes</em>, <em>Reset processes</em> and
+      <em>Stop processes</em> send signals to Grinder processes that
+      are listening. (See <a href="site:properties">
+      grinder.receiveConsoleSignals</a>, <a
+      href="site:properties">grinder.grinderAddress</a> and <a
+      href="site:properties">grinder.grinderPort</a>.)</p>
+
+      <p>Worker processes that are configured to receive console
+      signals go through three states:</p>
+
+      <ol>
+	<li>Initiated (waiting for a console signal)</li>
+
+	<li>Running (performing tests, reporting to console)</li>
+
+	<li>Finished (waiting for a console signal)</li>
+      </ol>
+
+      <p>The <em>Start processes</em> control signals to worker
+      processes that they should move into the running state.
+      Processes that are already running ignore this signal. Processes
+      that are in the finished state exit; the agent process will then
+      reread the properties file and launch new worker processes in
+      the running state.</p>
+
+      <p>The <em>Reset processes</em> control signals all the worker
+      processes to exit. The agent process will then reread the
+      properties file and launch new worker processes.</p>
+
+      <p>The <em>Stop processes</em> control signals all processes to
+      exit.</p>
+
+      <warning>Warning - unless <a
+      href="site:properties">grinder.appendLog</a> is true, new worker
+      process logs will overwrite those from previous runs.</warning>
+    </section>
+
+    <section>
+      <title>Sample controls</title>
+
+      <p>The sample controls determine how the console captures
+      reports from the worker processes. capture. It is important to
+      understand that these control the console behaviour
+      <em>only</em>. For example, they do not adjust the frequency at
+      which the worker processes send reports (see <a
+      href="site:properties">grinder.reportToConsole.interval</a> for
+      that). Additionally, the sample controls do not interact in any
+      way with the process controls.</p>
+
+      <p>The slider controls the period at which the console will take
+      a <em>sample</em>. This involves adding up all the reports
+      received over that sample interval and calculating the TPS as
+      (number of transactions that occurred)/(interval length). It is
+      also the period at which the console graphs and statistics are
+      updated.</p>
+
+      <p>By default, the console discards the first non-zero sample
+      period, and starts updating the display and calculating totals
+      from the second sample. A non-zero sample period is one in which
+      an update from a worker process was received. You can adjust how
+      many non-zero sample periods the console ignores before starting
+      capture with the <em>ignore samples</em> text field.</p>
+
+      <p>The third control allows you to adjust how many samples the
+      console will collect before stopping capture.</p>
+
+      <p>You can also manually start and stop the sampling with the
+      <em>Capture statistics</em>/<em>Stop capture</em> control. Use
+      the <em>Save statistics</em> control to save the current set of
+      statistics to a file.</p>
+    </section>
+  </body>
+</document>
+

@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Features of The Grinder 3</title>
+</header>
+
+<body>
+  <p>Thanks to <strong>Edwin DeSouza</strong> for his help in
+  compiling this feature list.<br/>Last updated: 4 October 2011</p>
+
+  <section>
+    <title>Capabilities of The Grinder</title>
+    <table>
+      <tr>
+        <td>Load Testing</td>
+
+        <td>Load Testing determines if an application can support a
+        specified load (for example, 500 concurrent users) with
+        specified response times. Load Testing is used to create
+        benchmarks.</td>
+      </tr>
+
+      <tr>
+        <td>Capacity Testing</td>
+
+        <td>Capacity Testing determines the maximum load that an
+        application can sustain before system failure.</td>
+      </tr>
+
+      <tr>
+        <td>Functional Testing</td>
+
+        <td>Functional Testing proves the correct behaviour of an
+        application.</td>
+      </tr>
+
+      <tr>
+        <td>Stress Testing</td>
+
+        <td>Stress Testing is load testing over an extended period of
+        time. Stress Testing determines if an application can meet
+        specified goals for stability and reliability, under a
+        specified load, for a specified time period.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <title>Open Source</title>
+    <table>
+      <tr>
+        <td>BSD style license</td>
+
+        <td>The Grinder is distributed under a BSD style license.</td>
+      </tr>
+
+      <tr>
+        <td>Dependencies</td>
+
+        <td>The Grinder depends on a number of other open source products
+        including
+
+        <ul>
+
+        <li><a href="ext:jython">Jython</a></li>
+
+        <li><a href="ext:innovation/httpclient">HTTPClient</a></li>
+
+        <li><a href="ext:jedit-syntax">JEdit Syntax</a></li>
+
+        <li><a href="ext:xmlbeans">Apache XMLBeans</a></li>
+
+        <li><a href="ext:picocontainer">PicoContainer</a></li>
+
+        <li><a href="ext:clojure">Clojure</a></li>
+
+        </ul>
+
+        </td>
+      </tr>
+
+    </table>
+  </section>
+
+  <section>
+    <title>Standards</title>
+    <table>
+      <tr>
+        <td>100% Pure Java</td>
+
+        <td>The Grinder works on any hardware platform and any
+        operating system that supports J2SE 1.4 and above.</td>
+      </tr>
+
+      <tr>
+        <td>Web Browsers</td>
+
+        <td>The Grinder can simulate web browsers and other devices
+        that use HTTP, and HTTPS.</td>
+      </tr>
+
+      <tr>
+        <td>Web Services</td>
+
+        <td>The Grinder can be used to test Web Service interfaces
+        using protocols such as SOAP and XML-RPC.</td>
+      </tr>
+
+      <tr>
+        <td>Database</td>
+
+        <td>The Grinder can be used to test databases using JDBC.</td>
+      </tr>
+
+      <tr>
+        <td>Middleware</td>
+
+        <td>The Grinder can be used to test RPC and MOM based systems
+        using protocols such as IIOP, RMI/IIOP, RMI/JRMP, and
+        JMS.</td>
+      </tr>
+
+      <tr>
+        <td>Other Internet protocols</td>
+
+        <td>The Grinder can be used to test systems that utilise other
+        protocols such as POP3, SMTP, FTP, and LDAP.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <title>The Grinder Architecture</title>
+    <table>
+      <tr>
+        <td>Goal</td>
+
+        <td>Minimize system resource requirements while maximizing the
+        number of test contexts ("virtual users").</td>
+      </tr>
+
+      <tr>
+        <td>Multi-threaded, multi-process</td>
+
+        <td>Each test context runs in its own thread. The threads can
+        be split over many processes depending on the requirements of
+        the test and the capabilities of the load injection
+        machine.</td>
+      </tr>
+
+      <tr>
+        <td>Distributed</td>
+
+        <td>The Grinder makes it easy to coordinate and monitor the
+        activity of processes across a network of many load injection
+        machines from a central console.</td>
+      </tr>
+
+      <tr>
+        <td>Scalable</td>
+
+        <td>The Grinder typically can support several hundred HTTP
+        test contexts per load injection machine. (The number varies
+        depending on the type of test client). More load injection
+        machines can be added to generate bigger loads.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <title>Console</title>
+    <table>
+      <tr>
+        <td>Graphical Interface</td>
+
+        <td>100% Java Swing user interface.</td>
+      </tr>
+
+      <tr>
+        <td>Process coordination</td>
+
+        <td>Worker processes can be started, stopped and reset from
+        one central console.
+  </td>
+      </tr>
+
+      <tr>
+        <td>Process monitoring</td>
+
+        <td>Dynamic display of current worker processes and
+        threads.</td>
+      </tr>
+
+      <tr>
+        <td>Internationalised and Localised</td>
+
+        <td>English, French, Spanish, and German translations are
+        supplied. Users can add their own translations.</td>
+      </tr>
+
+      <tr>
+        <td>Script editing</td>
+
+        <td>Central editing and management of test scripts.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <title>Statistics, Reports, Charts</title>
+    <table>
+      <tr>
+        <td>Test monitoring</td>
+
+        <td>Pre-defined charts for response time, test throughput.
+        Display the number of invocations, test result (pass/fail),
+        average, minimum and maximum values for response time and
+        tests per second for each test.</td>
+      </tr>
+
+      <tr>
+        <td>Data collation</td>
+
+        <td>Collates data from worker processes. Data can be saved for
+        import into a spreadsheet or other analysis tool.</td>
+      </tr>
+
+      <tr>
+        <td>Instrument anything</td>
+
+        <td>The Grinder records statistics about the number of times
+        each test has been called and the response times achieved. Any
+        part of the test script can be marked as a test.</td>
+      </tr>
+
+      <tr>
+        <td>Statistics engine</td>
+
+        <td>Scripts can declare their own statistics and report
+        against them. The values will appear in the console and the
+        data logs. Composite statistics can be specified as
+        expressions involving other statistics.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <title>Script</title>
+    <table>
+      <tr>
+        <td>Record real users</td>
+
+        <td>Scripts can be created by recording actions of a real user
+        using the TCP Proxy. The script can then be customised by
+        hand.</td>
+      </tr>
+
+      <tr>
+        <td>Powerful scripting in Python</td>
+
+        <td>Simple to use but powerful, fully object-oriented
+        scripting.</td>
+      </tr>
+
+      <tr>
+        <td>Multiple scenarios</td>
+
+        <td>Arbitrary looping and branching allows the simulation of
+        multiple scenarios. Simple scenarios can be composed into more
+        complex scenarios. For example, you might allocate 10% of test
+        contexts to a login scenario, 70% to searching, 10% to
+        browsing, and 10% to buying; or you might have different
+        workloads for specific times of a day.</td>
+      </tr>
+
+      <tr>
+        <td>Access to any Java API</td>
+
+        <td>Test scripts can directly access any Java API.</td>
+      </tr>
+
+      <tr>
+        <td>Parameterization of input data</td>
+
+        <td>Input data (e.g. URL parameters, form fields) can be
+        dynamically generated. The source of the data can be anything
+        including flat files, random generation, a database, or
+        previously captured output.</td>
+      </tr>
+
+      <tr>
+        <td>Content Verification</td>
+
+        <td>Scripts have full access to test results. In the future,
+        The Grinder will include support for enhanced parsing of
+        common results such as HTML pages.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <title>The Grinder Plug-ins</title>
+    <table>
+      <tr>
+        <td>HTTP</td>
+
+        <td>The Grinder has special support for HTTP that
+        automatically handles cookie and connection management for
+        test contexts.</td>
+      </tr>
+
+      <tr>
+        <td>Custom</td>
+
+        <td>Users can write their own plug-ins to a documented
+        interface; although this is rarely necessary due to the
+        powerful scripting facilities.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <title>HTTP Plug-in</title>
+    <table>
+      <tr>
+        <td>HTTP 1.0, HTTP 1.1</td>
+
+        <td>Support for both HTTP 1.0 and HTTP 1.1 is provided.</td>
+      </tr>
+
+      <tr>
+        <td>HTTPS</td>
+
+        <td>The Grinder supports  HTTP over SSL.</td>
+      </tr>
+
+      <tr>
+        <td>Cookies</td>
+
+        <td>Full support for Cookies is provided.</td>
+      </tr>
+
+      <tr>
+        <td>Multi-part forms</td>
+
+        <td>The Grinder supports multi-part forms.</td>
+      </tr>
+
+      <tr>
+        <td>Connection throttling</td>
+
+        <td>Low bandwidth client connections can be simulated.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <title>TCP Proxy</title>
+    <table>
+      <tr>
+        <td>TCP proxy</td>
+
+        <td>A TCP proxy utility is supplied that can be used to
+        intercept system interaction at the protocol level. It is
+        useful for recording scripts and as a debugging tool.</td>
+      </tr>
+
+      <tr>
+        <td>HTTP Proxy</td>
+
+        <td>The TCP proxy can be configured as an HTTP/HTTPS proxy for
+        easy integration with web browsers.</td>
+      </tr>
+
+      <tr>
+        <td>SSL Support</td>
+
+        <td>The TCP proxy can simulate SSL sessions.</td>
+      </tr>
+
+      <tr>
+        <td>Filter-based architecture</td>
+
+        <td>The TCP proxy has a pluggable filter architecture. Users
+        can write their own filters.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <title>Documentation</title>
+    <table>
+      <tr>
+        <td>User Guide</td>
+
+        <td><a
+        href="site:getting-started">http://grinder.sourceforge.net/g3/getting-started.html</a></td>
+      </tr>
+
+      <tr>
+        <td>FAQs</td>
+
+        <td><a
+        href="site:gfaq/contents">http://grinder.sourceforge.net/faq.html</a></td>
+      </tr>
+
+      <tr>
+        <td>Tutorial</td>
+
+        <td><a
+        href="site:tutorial">http://grinder.sourceforge.net/g3/tutorial-perks.html</a></td>
+      </tr>
+
+      <tr>
+        <td>Script Gallery</td>
+
+        <td><a
+        href="site:script-gallery">http://grinder.sourceforge.net/g3/script-gallery.html</a></td>
+      </tr>
+
+      <tr>
+        <td>Articles</td>
+
+        <td><a
+        href="site:links">http://grinder.sourceforge.net/links.html</a></td>
+      </tr>
+
+      <tr>
+        <td>Commercial books</td>
+
+        <td><em>Professional Java 2 Enterprise Edition with BEA
+        WebLogic Server</em> <br/> <em><a href="site:links/book">J2EE
+        Performance Testing</a></em></td>
+      </tr>
+    </table>
+  </section>
+
+  <section>
+    <title>Support</title>
+    <table>
+      <tr>
+        <td>Mailing Lists</td>
+
+        <td>
+          <a
+          href="site:mail/grinder-use">grinder-use@lists.sourceforge.net</a><br/>
+          <a
+          href="site:mail/grinder-development">grinder-development@lists.sourceforge.net</a><br/>
+          <a
+          href="site:mail/grinder-announce">grinder-announce@lists.sourceforge.net</a>
+        </td>
+      </tr>
+    </table>
+  </section>
+
+</body>
+</document>

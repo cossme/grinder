@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Support</title>
+</header>
+<body>
+  <section>
+    <title>Mailing lists</title>
+    <p>Requests for help should be sent to <a
+    href="ext:mail/grinder-use">grinder-use@lists.sourceforge.net</a>.</p>
+
+    <note>To reduce spam, <strong>you must
+    <a href="ext:sourceforge/grinder-mail">subscribe</a>
+    to a list before you can send email to it</strong>. The email address you
+    send mail from must be the one you used to subscribe.
+    </note>
+
+    <p><a
+    href="ext:mail/grinder-announce">grinder-announce@lists.sourceforge.net</a>
+    is a low-volume mailing list which is used to announce new
+    releases and other items of interest to users of The Grinder.</p>
+
+    <p>Please <a href="site:contributing">contribute bug fixes and
+    enhancements</a> to <a
+    href="ext:mail/grinder-development">grinder-development@lists.sourceforge.net</a>.</p>
+
+    <p>You can <a href="ext:sourceforge/grinder-mail">subscribe
+    and unsubscribe</a> to the lists, and search their archives, through <a
+    href="ext:sourceforge/grinder">SourceForge.net</a>. <a
+    href="ext:gmane/grinder-lists">Gmane</a> provides alternative
+    searchable archives, together with NNTP feeds and an optional
+    Blog-like interface.</p>
+
+
+    <p>When Philip Aston finds the time to respond to mail about The
+    Grinder, <strong>messages not copied to one of the above mail lists
+    are likely to be ignored</strong>. Philip freely copies responses to the
+    lists; if there is a particular reason why you want to keep your
+    communication private you must say so. Finally, if you can provide answers
+    to questions sent to the lists, please don't be shy!</p>
+
+    <note>The Grinder is free software. No one is under any obligation
+    to fix your problem. If all else fails, you have the
+    source.</note>
+  </section>
+
+</body>
+</document>

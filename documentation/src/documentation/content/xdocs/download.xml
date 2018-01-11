@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>Downloading The Grinder</title>
+</header>
+<body>
+
+<section>
+  <title>Download</title>
+
+  <p>The Grinder can be downloaded from <a
+  href="ext:sourceforge/grinder">SourceForge.net</a>. New users are
+    <a href="site:gfaq/common/g2vsg3">advised</a> to start with The Grinder 3.
+  The <a href="site:development/contributing/source">source code</a> is also available.
+  </p>
+
+  <p>The Grinder 3 is distributed as two zip files which you should expand
+  using <code>unzip</code>, <a href="ext:winzip">WinZip</a> or
+  similar. Everything required to run The Grinder is in the zip file labelled
+  <code>grinder-</code><em>version</em><code>.zip</code>. The remaining
+  files that are needed to build The Grinder are distributed in the zip file
+  labelled <code>grinder-</code><em>version</em><code>-src.zip</code>;
+  these are mainly of interest to developers wanting to
+  <a href="site:development/contributing"> extend The Grinder</a>.
+  </p>
+
+  <section>
+  <title>What else do I need?</title>
+
+  <p>To run The Grinder:</p>
+
+  <table class="noborder">
+    <tr>
+      <td><a href="ext:oracle/java/javase">Java Standard Edition
+      6</a>, equivalent, or later</td><td>For The Grinder 3.</td>
+    </tr>
+    <tr>
+      <td><a href="ext:oracle/java/javase">Java 2 Standard Edition
+      1.3</a>, equivalent, or later</td><td>For The Grinder 2.</td>
+    </tr>
+    <tr>
+      <td><a href="ext:oracle/java/jsse/">
+        JSSE (Java Secure Socket Extension) 1.0.2</a></td>
+      <td>For SSL support with The Grinder 2.
+      <br/>JSSE is a standard part of Java 2 Standard Edition 1.4.1 and later, so this extension is not requried for The Grinder 3.
+      </td>
+    </tr>
+  </table>
+  </section>
+
+ </section>
+
+  <section>
+    <title>Downloading The Grinder using Maven</title>
+
+    <p>Some users will find it preferable to use Maven to manage The
+    Grinder. On release, the jar files are deployed to the <a
+    href="ext:sonatype/oss">Sonatype</a> OSS Nexus repository, and
+    will be synchronised to <a href="ext:mvn/central">Maven
+    Central</a> soon afterwards. You can choose either to depend on
+    the the zip file, which should be identical to the Sourceforge
+    download, or the individual jar files.</p>
+  </section>
+
+</body>
+</document>

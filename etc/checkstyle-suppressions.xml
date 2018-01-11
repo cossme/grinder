@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+  <!-- Allow use of AbstractButton as reference type in these files. -->
+  <suppress checks="IllegalType" files="ConsoleUI.java|CustomAction.java|MnemonicHeuristics.*.java"/>
+
+  <!-- Has a public 'grinder' field. -->
+  <suppress checks="StaticVariableName|VisibilityModifier"
+            files="net.grinder.script.Grinder.java"/>
+
+  <!-- Non standard method names. -->
+  <suppress checks="MethodName" files="HTTPRequest.java"/>
+  <suppress checks="MethodName" files="InstrumentedPyInstance.java"/>
+  <suppress checks="MethodName" files="InstrumentedPyJavaClass.java"/>
+  <suppress checks="MethodName" files="InstrumentedPyJavaInstance.java"/>
+  <suppress checks="MethodName" files="InstrumentedPyJavaInstanceForJavaInstances.java"/>
+  <suppress checks="MethodName" files="InstrumentedPyReflectedFunction.java"/>
+
+  <!-- Avoid Checkstyle bug 1547726. -->
+<!--
+  <suppress checks="JavadocMethod" files="Buffer.java"/>
+  <suppress checks="JavadocMethod" files="HTTPPluginControl.java"/>
+  <suppress checks="JavadocMethod" files="HTTPRequest.java"/>
+  <suppress checks="JavadocMethod" files="Statistics.java"/>
+-->
+
+  <!-- Requires a large number of parameters. -->
+  <suppress checks="ParameterNumber"
+            files="ScriptContextImplementation.java|HTTPProxyTCPProxyEngine.java"/>
+</suppressions>

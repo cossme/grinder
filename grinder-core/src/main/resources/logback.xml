@@ -1,0 +1,60 @@
+<configuration>
+
+  <appender name="filtered_stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>ERROR</level>
+      <onMatch>DENY</onMatch>
+    </filter>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>WARN</level>
+      <onMatch>DENY</onMatch>
+    </filter>
+
+    <encoder>
+      <pattern>%d %-5level %logger: %message%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="filtered_stderr" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+
+    <target>System.err</target>
+
+    <encoder>
+      <pattern>%d %-5level %logger: %message%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="stderr" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.err</target>
+
+    <encoder>
+      <pattern>%d %-5level %logger: %message%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="${grinder.logLevel:-trace}">
+    <appender-ref ref="filtered_stderr" />
+    <appender-ref ref="filtered_stdout" />
+  </root>
+
+  <!-- All tcpproxy log output is sent to stderr so that filters can generate
+       scripts to stdout. -->
+  <logger name="tcpproxy" level="${tcpproxy.logLevel:-info}" additivity="false">
+    <appender class="ch.qos.logback.core.ConsoleAppender">
+      <target>System.err</target>
+
+	    <encoder>
+	      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level: %message%n</pattern>
+	    </encoder>
+	  </appender>
+  </logger>
+
+  <logger name="org.eclipse.jetty" level="${jetty.logLevel:-info}" additivity="false">
+    <appender-ref ref="filtered_stderr" />
+    <appender-ref ref="filtered_stdout" />
+  </logger>
+
+</configuration>

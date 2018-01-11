@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+
+<document>
+<header>
+  <title>The Grinder, a Java Load Testing Framework</title>
+</header>
+  <body>
+
+    <section>
+    <title>What is The Grinder?</title>
+
+    <p>The Grinder is a Java<sup>TM</sup> load testing framework that makes it
+    easy to run a distributed test using many load injector machines. It
+    is freely available under a BSD-style open-source <a
+    href="site:license">license</a>.</p>
+
+    <p>The latest news, downloads, and mailing list archives can be
+    found on <a href="ext:sourceforge/grinder">SourceForge.net</a>.
+    </p>
+
+  <section>
+  <title>Key features</title>
+    <ul>
+    <li><strong>Generic Approach</strong> Load test anything that has a Java API. This
+    includes common cases such as HTTP web servers, SOAP and REST web services,
+    and application servers (CORBA, RMI, JMS, EJBs), as well as custom
+    protocols.</li>
+    <li><strong>Flexible Scripting</strong> Test scripts are written in the powerful <a href="ext:jython">Jython</a> and  <a href="ext:clojure">Clojure</a>
+    languages.</li>
+    <li><strong>Distributed Framework</strong> A graphical console allows multiple
+      load injectors to be monitored and controlled, and provides centralised script editing
+      and distribution.</li>
+    <li><strong>Mature HTTP Support</strong> Automatic management of client
+      connections and cookies. SSL. Proxy aware. Connection throttling.
+      Sophisticated record and replay of the interaction between a browser and
+      a web site.</li>
+
+    </ul>
+
+    <p>See the longer <a href="site:g3/features">features list</a> for further
+    details.</p>
+  </section>
+
+
+  <section>
+    <title>Dynamic Scripting</title>
+
+    <p>Test scripts are written using a dynamic scripting language,
+    and specify the tests to run. The default script language is <a
+    href="ext:jython">Jython</a>, a Java implementation of the popular
+    Python language.</p>
+
+    <p>The script languages provide the following capabilities:</p>
+
+    <dl>
+      <dt><strong>Test any Java code</strong></dt>
+
+      <dd><p>The Grinder 3 allows any code (Java, Jython, or Clojure)
+      code to be encapsulated as a test. Java libraries available for
+      an enormous variety of systems and protocols, and they can all
+      be exercised using The Grinder.</p></dd>
+
+      <dt><strong>Dynamic test scripting</strong></dt>
+
+      <dd>
+        <p>The Grinder 2 worker processes execute tests sequentially
+        in a fixed order, and there is limited support in some of the
+        The Grinder 2 plug-ins for checking test results. The Grinder
+        3 allows arbitrary branching and looping and makes test
+        results directly available to the test script, allowing
+        different test paths to be taken depending on the outcome of
+        each test.</p>
+
+        <p>The Grinder 2 HTTP plug-in's <a
+        href="site:g2/plugins/http-plugin/string-bean">string bean</a>
+        feature provides simple support for requests that contain
+        dynamic data. The Grinder 3 can use the full power of Jython
+        or Clojure to create dynamic requests of arbitrary
+        complexity.</p>
+      </dd>
+    </dl>
+    
+    <p>The powerful scripting removes the need to write custom
+    plug-ins that extend The Grinder engine. Although plug-ins are no
+    longer responsible for performing tests, they can still be useful
+    to manage objects that the tests use. For example, the standard
+    HTTP plug-in manages a pool of connections for each worker thread,
+    and provides an <code>HTTPRequest</code> object that makes use of
+    these connections.</p>
+
+    <p>Kind of dry, huh? If you never seen any Python, take a look at
+    the <a href="site:script-gallery">Script Gallery</a> in the user
+    manual where you can sample the power of The Grinder 3.</p>
+
+  </section>
+
+
+    <section>
+      <title>History</title>
+
+    <p>The Grinder was originally developed for the book
+    <em>Professional Java 2 Enterprise Edition with BEA WebLogic
+    Server</em> by Paco G&#xf3;mez and Peter Zadrozny. Philip Aston
+    took ownership of the code, reworked it to create The Grinder 2,
+    and shortly after began work on The Grinder 3. The Grinder 3
+    provides many new features, the most significant of which is
+    dynamic test scripting.  Philip continues to enhance and maintain
+    The Grinder.</p>
+
+    <p>In 2003, Peter, Philip
+    and Ted Osborne published the book <a href="site:links/book">
+    J2EE Performance Testing</a> which makes extensive use of The Grinder 2.
+    </p>
+
+    <p>Support for <a href="ext:clojure">Clojure</a> as an alternative
+    script language was introduced in 3.6.</p>
+
+    </section>
+    </section>
+
+
+    <section>
+      <title>Authors</title>
+
+      <p>Over the years, <a href="ext:grinder/mvn/team">many
+      individuals</a> have contributed features, bug fixes, and
+      translations to The Grinder.</p>
+    </section>
+
+    <section>
+      <title>Credits</title>
+
+      <p>I thank Paco Gómez and Peter Zadrozny for the
+      key ideas embodied in the original version of The Grinder.</p>
+
+      <p>I am grateful to <a href="ext:sourceforge-inc">SourceForge, Inc.</a>
+      for The Grinder's home on the Internet.</p>
+
+      <p>I thank
+      <a href="ext:atlassian">Atlassian</a> for the free
+      <a href="ext:atlassian/clover">Clover</a> and
+      <a href="ext:fisheye">FishEye</a> licenses, and to
+      <a href="ext:headwaysoftware">Headway Software</a> for the free
+      <a href="ext:headwaysoftware/s101">Structure 101</a> license.</p>
+
+      <p>This site is built with <a
+      href="ext:forrest">Apache Forrest</a>, and uses <a href="ext:syntaxhighlighter">SyntaxHighlighter</a>.</p>
+
+      <p><strong>Philip Aston</strong></p>
+   </section>
+</body>
+</document>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html>
+<body>
+
+<h1>The Grinder User Manual</h1>
+
+<p>This is the user manual for the current stable version of The
+Grinder, <em>The Grinder 2</em>. It is incomplete and much of the
+material is still in note form. It will mature as and when I get time
+to write more.</p>
+
+<p>In the meantime I refer you to the full tutorial on The Grinder
+given in <a href="../commercials.html#book">the book</a>. The book
+contains complete documentation of the console and is currently the
+only source on writing plug-ins for The Grinder.</p>
+
+</body>
+</html>
