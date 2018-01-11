@@ -17,7 +17,7 @@ The Grinder is a framework for running test scripts across a number of machines.
 
 As The Grinder is written in Java, each of these processes is a Java Virtual Machine (JVM).
 
-![The Grinder processe](/images/processes.png)
+![The Grinder Processes](https://github.com/solcyr/grinder/raw/master/documentation/src/documentation/resources/images/processes.png)
 
 For heavy duty testing, you start an agent process on each of several load injector machines. The worker processes they launch can be 
 controlled and monitored using the console. There is little reason to run more than one agent on each load injector, but you can if
