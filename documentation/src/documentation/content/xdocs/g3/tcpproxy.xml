@@ -200,7 +200,7 @@ parameters:
 
 <source class="jython">
 
-# The Grinder 3.11-SNAPSHOT
+# The Grinder 3.13-SNAPSHOT
 # HTTP script recorded by TCPProxy at 05-Jul-2012 09:20:55
 
 from net.grinder.script import Test

@@ -6,7 +6,7 @@
   <groupId>net.sf.grinder</groupId>
   <artifactId>grinder-parent</artifactId>
   <packaging>pom</packaging>
-  <version>3.11</version>
+  <version>3.13</version>
   <name>${project.artifactId}</name>
   <url>http://grinder.sourceforge.net</url>
   <description>Parent Maven project for The Grinder load testing framework.</description>
@@ -35,6 +35,10 @@
     <developer>
       <name>Venelin Mitov</name>
       <email>vmitov at gmail.com</email>
+    </developer>
+    <developer>
+      <name>Olivier Merlin</name>
+      <email>olivier at gmail.com</email>
     </developer>
   </developers>
 
@@ -259,7 +263,7 @@
     <url>http://sourceforge.net/scm/?type=git&amp;group_id=18598</url>
     <connection>git://grinder.git.sourceforge.net/gitroot/grinder/grinder</connection>
     <developerConnection>scm:git:file://${basedir}</developerConnection>
-    <tag>release_3.11_final</tag>
+    <tag>release_3.13_final</tag>
   </scm>
 
   <properties>

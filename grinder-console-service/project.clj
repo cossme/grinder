@@ -1,5 +1,5 @@
-(defproject net.sf.grinder/grinder-console-service "3.11-SNAPSHOT"
-  :parent [net.sf.grinder/grinder-parent "3.11-SNAPSHOT"]
+(defproject net.sf.grinder/grinder-console-service "3.13-SNAPSHOT"
+  :parent [net.sf.grinder/grinder-parent "3.13-SNAPSHOT"]
   :description "REST API to The Grinder console."
   :url "http://grinder.sourceforge.net"
   :dependencies [[org.clojure/clojure "1.4.0"]
@@ -9,7 +9,7 @@
                  [ring-middleware-format "0.2.0"]
                  [compojure "1.0.4"]
                  [clj-stacktrace "0.2.4"]
-                 [net.sf.grinder/grinder-core "3.11-SNAPSHOT" :scope "provided"]]
+                 [net.sf.grinder/grinder-core "3.13-SNAPSHOT" :scope "provided"]]
   :profiles {:dev {:dependencies
                  [[ring/ring-devel "1.1.0"]
                   [org.clojure/tools.trace "0.7.3"]]}}

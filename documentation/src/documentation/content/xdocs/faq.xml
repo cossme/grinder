@@ -1012,7 +1012,7 @@ grinder.jvm.arguments: -Dpython.cachedir=/tmp
   the <code>threading</code> module, and the <code>random</code>
   module. Previously, The Grinder required a separate Jython
   installation in order to use the standard libary. From The Grinder
-  3.11, the Jython standard library is included.</p>
+  3.13, the Jython standard library is included.</p>
       </answer>
     </faq>
 

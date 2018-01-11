@@ -15,32 +15,32 @@
   <parent>
     <groupId>net.sf.grinder</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>3.11</version>
+    <version>3.13</version>
   </parent>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-dcr-agent</artifactId>
-      <version>3.11</version>
+      <version>3.13</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-http</artifactId>
-      <version>3.11</version>
+      <version>3.13</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-console-service</artifactId>
-      <version>3.11</version>
+      <version>3.13</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-swing-console</artifactId>
-      <version>3.11</version>
+      <version>3.13</version>
     </dependency>
   </dependencies>
 

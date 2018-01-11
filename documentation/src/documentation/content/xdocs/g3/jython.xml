@@ -37,7 +37,7 @@
   <section id="jython-installation">
     <title>The Jython distribution and installation</title>
 
-    <p>The Grinder 3.11 includes Jython 2.5.3 and the Jython
+    <p>The Grinder 3.13 includes Jython 2.5.3 and the Jython
     implementation of the standard Python library.</p>
 
 

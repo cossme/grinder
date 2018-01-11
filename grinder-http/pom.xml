@@ -12,39 +12,39 @@
   <parent>
     <groupId>net.sf.grinder</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>3.11</version>
+    <version>3.13</version>
   </parent>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-core</artifactId>
-      <version>3.11</version>
+      <version>3.13</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-httpclient</artifactId>
-      <version>3.11</version>
+      <version>3.13</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-xmlbeans</artifactId>
-      <version>3.11</version>
+      <version>3.13</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-dcr-agent</artifactId>
-      <version>3.11</version>
+      <version>3.13</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-test-support</artifactId>
-      <version>3.11</version>
+      <version>3.13</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

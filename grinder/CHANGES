@@ -1,3 +1,29 @@
+The Grinder 3.13
+----------------
+  The Grinder 3.13 bring some update on Grinder 3.11, principally on 
+  HTTP Plugin
+
+  Modification on the Console Communication protocol: 
+  grinder.inactiveClientTimeOut - defaulted to 300 seconds (30s by default)
+
+  Increase the number of console-service max threads (to 1025)
+
+  HTTP Plugin: Implement PATCH Method. 
+               management of the HTTP Status code 205
+               Fix transfer-encoding chunked issue
+               Add Mutual Authe/TrustStore support
+               Disable trail "TE: trailers" by default
+               Removeing obsolete Cookie2 causing trouble to Apache - RFC 6265
+               
+  Avoid perpetuel console reporting message in INFO level
+
+The Grinder 3.12
+----------------
+  This Version doesn't exists, it has been started byt the previous
+  project team on sourceforge but it has never been completed
+  By respect byt the previous team we didn't attribute this release
+  number.
+
 The Grinder 3.11
 ----------------
 
