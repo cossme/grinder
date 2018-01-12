@@ -1,7 +1,7 @@
 
 # The Grinder
 
-The Grinder is a framework for running test scripts across a number of machines. The framework is comprised of three types of _process_
+The Grinder is a framework for running test scripts across a number of machines aimed at running load test. The framework is comprised of three types of _process_
 (or program): _worker processes_, _agent processes_, and the _console_. The responsibilities of each of the process types are:
 
 *   **Worker processes**
