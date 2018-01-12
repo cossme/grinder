@@ -1,4 +1,4 @@
--*- mode:outline; minor-mode:outl-mouse -*-
+# New Document-*- mode:outline; minor-mode:outl-mouse -*-
 
 This is The Grinder TODO list. Its a collection of my thoughts on the
 future of The Grinder.
@@ -14,58 +14,36 @@ against it too :-).
 - Philip Aston
 
 
-* Enhancements
+## Enhancements
 
-** Console Services
+## Console Services
 
-*** Functional
+### Functional
 
-**** Event channel?
+#### Event channel?
 
-**** Process control
+#### Process control
 Start/Stop worker by ID
 
-*** Packaging
-
-How to publish lein module to sonatype OSS?
-
-*** Deprecate Console API
-
-Looks like I can remove:
- BlockingSender
 
 
 
-** Script Distribution
+## Script Distribution
 
 Task: Distribution file filter should be dynamically settable.
 
-** Console
+## Console
 
-*** Stop the recording when last thread terminates
-Requested by Jýrgen Weber
 
-*** Refactoring
+
+### Refactoring
 
 Consider moving overwrite / save before close / ... handling to the
 model. Needs some kind of command pattern to represent choices.
 
-*** Add log panel
 
-Report log messages that currently go to terminal, plus start, stop
-test runs etc. Logs should be time stamped. Use log to replace use of
-System.err for warnings.
 
-*** Future editor features
-
-Revert file.
-Status bar.
-Undo.
-Copy and Paste menu items.
-
-Specialised grinder properties editor.
-
-**** jEdit
+#### jEdit
 
 Replace jEdit-syntax with new jEdit syntax package when available, if
 its license terms are acceptable. Apparently now available.
@@ -87,13 +65,13 @@ its license terms are acceptable. Apparently now available.
     status of all derivatives of our free software and of promoting
     the sharing and reuse of software generally.
 
-** Engine
+## Engine
 
 Support for some sort of "Surrogate task" that is run in a pool of
 threads and has its own statistics context would be good.
 
 
-*** Instrumentation API
+### Instrumentation API
 
 Could we support a procedural "startTest()", "stopTest()" API?
 
@@ -102,11 +80,11 @@ to the average user than "wrapping". OTOH, wrapping is powerful
 and I'm not sure we want to support two mechanisms to instrument
 code.
 
-** Communication
+## Communication
 
 Resolve anomaly that Senders throw exceptions but Receivers return null.
 
-** Statistics
+## Statistics
 
 Should TPS averages be harmonic means?
 http://en.wikipedia.org/wiki/Harmonic_mean
@@ -119,19 +97,12 @@ classes of StatisticsSetImplementation and expose a single, opaque
 StatsiticsSet.Index interface.
 
 
-*** Aligning data files
-
-Requested by Jose Antonio Zapata:
-
-Add an additional "milliseconds since the Epoch" entry to the data
-files.
-
-*** Separate out console statistics views from summary statistics views
+### Separate out console statistics views from summary statistics views
 
 Needed for custom statistics that use 'period' so are valid in the
 console but not in the process logs.
 
-*** max(), min()
+### max(), min()
 
 (Requested by Venelin Mitov).
 
@@ -139,7 +110,7 @@ Should store max, min values against SampleStatistics, and add max(),
 min() to expressions.
 
 
-** TCPProxy
+## TCPProxy
 
 Tim McNerney writes:
  > Obviously, I could edit the scripts by hand. But I'd like to have
@@ -151,8 +122,6 @@ another one of the TCPSniffer/HTTPPlugin bug when recording large
 outputs with posts? Also, consider having a filter instance pair per
 connection.
 
-Internationalise messages.
-
 Support different client certificates for proxied connection.
 
 Allow the filters to optionally parse unknown command line options.
@@ -162,9 +131,7 @@ different filename, and also to specify stdout.
 
 Failed connection events.
 
-** HTTP Plugin
-
-Remove ParseException, ProtocolNotSuppException from public APIs.
+## HTTP Plugin
 
 Script support for HTTP "system property" options.
 
@@ -184,11 +151,6 @@ to be recorded.
 
 Script access to global statistics.
 
-*** Events
-Idea from Nurul Choudhury:
- > Event counting - The Jython code can create a named event and fire
- > the event when some condition was met. When the console polls for
- > statistics the events and their count would be sent to the console.
 
 *** Error reporting
 
@@ -201,18 +163,18 @@ Idea from Nurul Choudhury:
 
 To do this, might have to behave differently with 1 thread vs many.
 
-** Reports
+## Reports
 
 Perhaps JasperReports?
 
-** Code
+## Code
 
 Review use of Executor. Probably want to share them.
 
 Remove ThreadLocal from RegisteredPlugin.
 
 
-** Other HTTP/HTML libraries
+## Other HTTP/HTML libraries
 
 DeSouza, Edwin writes:
  > Instead of using:
@@ -276,26 +238,12 @@ Also http://www.nogoop.com/product_16.html#compare
 
 (In addition to those on Sourceforge).
 
-** Console/agent
-Each time L&F changes, the saveAs dialog gets another All Files
-filter!
 
-Add reset console action.
 
-** TCPProxy
-Should listen on all interfaces if -localhost is not specified.
+# Documentation
 
-* Documentation
 
-** Examples
-
-HTTPS.
-
-Basic authentication.
-
-http://thread.gmane.org/gmane.comp.java.grinder.user/186
-
-** Forrest TODO
+## Forrest TODO
 
 Create back links from javadoc. This isn't trivial, e.g. this:
 
