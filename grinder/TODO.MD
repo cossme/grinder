@@ -1,4 +1,4 @@
-# New Document-*- mode:outline; minor-mode:outl-mouse -*-
+# Grinder TODO List
 
 This is The Grinder TODO list. Its a collection of my thoughts on the
 future of The Grinder.
