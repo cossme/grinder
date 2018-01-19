@@ -10,41 +10,41 @@
   <description>The Grinder HTTP plugin.</description>
 
   <parent>
-    <groupId>net.sf.grinder</groupId>
+    <groupId>io.github.cossme</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>3.13</version>
+    <version>3.13-SNAPSHOT</version>
   </parent>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-core</artifactId>
-      <version>3.13</version>
+      <version>3.13-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-httpclient</artifactId>
-      <version>3.13</version>
+      <version>3.13-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-xmlbeans</artifactId>
-      <version>3.13</version>
+      <version>3.13-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-dcr-agent</artifactId>
-      <version>3.13</version>
+      <version>3.13-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-test-support</artifactId>
-      <version>3.13</version>
+      <version>3.13-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -91,6 +91,7 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <skipTests>true</skipTests>
           <argLine>-javaagent:${project.build.directory}/grinder-dcr-agent.jar
             -XX:MaxPermSize=256m</argLine>
         </configuration>

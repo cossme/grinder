@@ -10,9 +10,9 @@
   can be found at http://www.innovation.ch/java/HTTPClient/.</description>
 
   <parent>
-    <groupId>net.sf.grinder</groupId>
+    <groupId>io.github.cossme</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>3.13</version>
+    <version>3.13-SNAPSHOT</version>
   </parent>
 
   <licenses>

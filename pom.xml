@@ -3,10 +3,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sf.grinder</groupId>
+  <groupId>io.github.cossme</groupId>
   <artifactId>grinder-parent</artifactId>
   <packaging>pom</packaging>
-  <version>3.14-SNAPSHOT</version>
+  <version>3.13-SNAPSHOT</version>
   <name>${project.artifactId}</name>
   <url>http://grinder.sourceforge.net</url>
   <description>Parent Maven project for The Grinder load testing framework.</description>
@@ -272,8 +272,8 @@
   <scm>
     <connection>scm:git:git://github.com/cossme/grinder.git</connection>
     <developerConnection>scm:git:git@github.com:cossme/grinder.git</developerConnection>
-    <url>http://github.com/cossme/grinder</url>
-    <!--tag>release_3.13_final</tag-->
+    <url>https://github.com/cossme/grinder</url>
+    <tag>@{project.version}</tag>
   </scm>
 
   <profiles>
@@ -413,7 +413,7 @@
         <version>2.2.2</version>
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
-          <tagNameFormat>release_@{project.version}</tagNameFormat>
+          <tagNameFormat>@{project.version}</tagNameFormat>
           <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
         </configuration>
       </plugin>

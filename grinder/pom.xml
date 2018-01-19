@@ -13,34 +13,34 @@
   scripts can be recorded easily from a browser session. </description>
 
   <parent>
-    <groupId>net.sf.grinder</groupId>
+    <groupId>io.github.cossme</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>3.13</version>
+    <version>3.13-SNAPSHOT</version>
   </parent>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-dcr-agent</artifactId>
-      <version>3.13</version>
+      <version>3.13-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-http</artifactId>
-      <version>3.13</version>
+      <version>3.13-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-console-service</artifactId>
-      <version>3.13</version>
+      <version>3.13-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-swing-console</artifactId>
-      <version>3.13</version>
+      <version>3.13-SNAPSHOT</version>
     </dependency>
   </dependencies>
 

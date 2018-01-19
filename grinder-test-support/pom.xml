@@ -10,16 +10,16 @@
   <description>Common test classes used by The Grinder unit tests.</description>
 
   <parent>
-    <groupId>net.sf.grinder</groupId>
+    <groupId>io.github.cossme</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>3.13</version>
+    <version>3.13-SNAPSHOT</version>
   </parent>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-dcr-agent</artifactId>
-      <version>3.13</version>
+      <version>3.13-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 

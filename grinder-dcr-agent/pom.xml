@@ -10,9 +10,9 @@
   <description>A Java agent that exposes the byte code instrumentation API.</description>
 
   <parent>
-    <groupId>net.sf.grinder</groupId>
+    <groupId>io.github.cossme</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>3.13</version>
+    <version>3.13-SNAPSHOT</version>
   </parent>
 
   <build>
