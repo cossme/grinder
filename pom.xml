@@ -263,10 +263,10 @@
       <name>Sonatype Nexus release repository</name>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
-    <site>
+    <!--site>
       <id>blah</id>
       <url>file:///tmp/bah</url>
-    </site>
+    </site-->
   </distributionManagement>
 
   <scm>
