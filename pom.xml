@@ -277,7 +277,7 @@
   </scm>
 
   <profiles>
-    <profile>
+    <!--profile>
       <id>disable-java8-doclint</id>
       <activation>
         <jdk>[1.8,)</jdk>
@@ -285,7 +285,7 @@
       <properties>
         <additionalparam>-Xdoclint:none</additionalparam>
       </properties>
-    </profile>
+    </profile-->
     <profile>
       <id>release-sign-artifacts</id>
       <activation>
@@ -296,23 +296,6 @@
       </activation>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.4</version>
-            <configuration>
-              <passphrase>${gpg.passphrase}</passphrase>
-            </configuration>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
         </plugins>
       </build>
     </profile>
@@ -320,6 +303,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
   </properties>
 
   <dependencies>
@@ -418,6 +402,46 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin> 
+        <artifactId>maven-javadoc-plugin</artifactId> 
+        <version>3.0.0</version>
+        <executions> 
+          <execution> 
+            <id>attach-javadocs</id>
+            <goals><goal>jar-no-fork</goal></goals> 
+          </execution> 
+        </executions> 
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.4</version>
+        <configuration>
+          <passphrase>${gpg.passphrase}</passphrase>
+        </configuration>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.4.2</version>
         <dependencies>
@@ -437,29 +461,6 @@
 
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>attach-sources</id>
-              <phase>deploy</phase> 
-              <goals>
-                <goal>jar</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin> 
-          <artifactId>maven-javadoc-plugin</artifactId> 
-          <executions> 
-            <execution> 
-              <id>attach-javadocs</id>
-              <phase>deploy</phase>
-              <goals><goal>jar</goal></goals> 
-            </execution> 
-          </executions> 
-        </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>2.3</version>
