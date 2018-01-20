@@ -8,12 +8,12 @@
   <parent>
     <groupId>io.github.cossme</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>3.13-SNAPSHOT</version>
+    <version>3.13</version>
   </parent>
   <groupId>io.github.cossme</groupId>
   <artifactId>grinder-console-service</artifactId>
   <packaging>clojure</packaging>
-  <version>3.13-SNAPSHOT</version>
+  <version>3.13</version>
   <name>grinder-console-service</name>
   <description>REST API to The Grinder console.</description>
   <url>http://grinder.sourceforge.net</url>
@@ -119,7 +119,7 @@
     <dependency>
       <groupId>io.github.cossme</groupId>
       <artifactId>grinder-core</artifactId>
-      <version>3.13-SNAPSHOT</version>
+      <version>3.13</version>
       <scope>provided</scope>
     </dependency>
     <!--dependency>
