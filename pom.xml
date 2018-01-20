@@ -277,7 +277,7 @@
   </scm>
 
   <profiles>
-    <profile>
+    <!--profile>
       <id>disable-java8-doclint</id>
       <activation>
         <jdk>[1.8,)</jdk>
@@ -285,7 +285,7 @@
       <properties>
         <additionalparam>-Xdoclint:none</additionalparam>
       </properties>
-    </profile>
+    </profile-->
     <profile>
       <id>release-sign-artifacts</id>
       <activation>
@@ -320,6 +320,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
   </properties>
 
   <dependencies>
