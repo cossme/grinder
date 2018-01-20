@@ -277,7 +277,7 @@
   </scm>
 
   <profiles>
-    <!--profile>
+    <profile>
       <id>disable-java8-doclint</id>
       <activation>
         <jdk>[1.8,)</jdk>
@@ -285,7 +285,7 @@
       <properties>
         <additionalparam>-Xdoclint:none</additionalparam>
       </properties>
-    </profile-->
+    </profile>
     <profile>
       <id>release-sign-artifacts</id>
       <activation>
@@ -320,7 +320,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
   </properties>
 
   <dependencies>
@@ -439,6 +438,29 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>deploy</phase> 
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin> 
+          <artifactId>maven-javadoc-plugin</artifactId> 
+          <executions> 
+            <execution> 
+              <id>attach-javadocs</id>
+              <phase>deploy</phase>
+              <goals><goal>jar</goal></goals> 
+            </execution> 
+          </executions> 
+        </plugin>
+        <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>2.3</version>
         </plugin>
@@ -467,7 +489,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.7</version>
+          <version>2.8.2</version>
         </plugin>
         <plugin>
           <artifactId>maven-dependency-plugin</artifactId>
@@ -488,13 +510,13 @@
           <artifactId>maven-jar-plugin</artifactId>
           <version>2.4</version>
         </plugin>
-        <plugin>
+        <!--plugin>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>3.0.0</version>
           <configuration>
             <fixTags>author,since,param,return,throws,link</fixTags>
           </configuration>
-        </plugin>
+        </plugin-->
         <plugin>
           <artifactId>maven-jxr-plugin</artifactId>
           <version>2.3</version>
