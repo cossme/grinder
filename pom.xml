@@ -408,7 +408,7 @@
           <execution>
             <id>attach-sources</id>
             <goals>
-              <goal>jar-no-fork</goal>
+              <goal>jar</goal>
             </goals>
           </execution>
         </executions>
@@ -419,7 +419,7 @@
         <executions> 
           <execution> 
             <id>attach-javadocs</id>
-            <goals><goal>jar-no-fork</goal></goals> 
+            <goals><goal>jar</goal></goals> 
           </execution> 
         </executions> 
       </plugin>
