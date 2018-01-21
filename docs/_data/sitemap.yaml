@@ -4,92 +4,92 @@ levels:
       - title: Project
         children:
         - title: Introduction
-          url: /index.html
+          url: /grinder/index.html
         - title: License
-          url: /license.html
+          url: /grinder/license.html
         - title: Download
-          url: /download.html
+          url: /grinder/download.html
         - title: Support
-          url: /support.html
+          url: /grinder/support.html
         - title: Links
-          url: /links.html
+          url: /grinder/links.html
       - title: Development
         children:
         - title: Contributing
-          url: /development/contributing.html
+          url: /grinder/development/contributing.html
         #- title: Changes
-          #url: /development/changes.html
+          #url: /grinder/development/changes.html
         #- title: To Do
-          #url: /development/todo.html
+          #url: /grinder/development/todo.html
         - title: Maven Reports
-          url: https://mvnrepository.com/artifact/io.github.cossme
+          url: /grinderhttps://mvnrepository.com/artifact/io.github.cossme
   - name: Faq
     children:
       - title: Questions
         children:
         - title: Contents
-          url: /faq.html#
+          url: /grinder/faq.html#
         - title: Common
-          url: /faq.html#common
+          url: /grinder/faq.html#common
         - title: The Grinder 3
-          url: /faq.html#g3
+          url: /grinder/faq.html#g3
         - title: The Grinder 2
-          url: /faq.html#g2
+          url: /grinder/faq.html#g2
   - name: UserGuide
     children:
       - title: Gettting Started
-        url: /guide/getting-started.html
+        url: /grinder/guide/getting-started.html
       - title: Agents and Workers
         children:
         - title: Processes
-          url: /guide/agents-and-workers.html
+          url: /grinder/guide/agents-and-workers.html
         - title: Properties
-          url: /guide/properties.html
+          url: /grinder/guide/properties.html
         - title: Logging
-          url: /guide/logging.html
+          url: /grinder/guide/logging.html
       - title: The Console
         children:
         - title: User Interface
-          url: /guide/console.html
+          url: /grinder/guide/console.html
         - title: Console Service
-          url: /guide/console-service.html
+          url: /grinder/guide/console-service.html
       - title: The TCP Proxy
-        url: /guide/tcpproxy.html
+        url: /grinder/guide/tcpproxy.html
       - title: Scripts
         children:
         - title: Introduction
-          url: /guide/scripts.html
+          url: /grinder/guide/scripts.html
         - title: Jython
-          url: /guide/jython.html
+          url: /grinder/guide/jython.html
         - title: Clojure
-          url: /guide/clojure.html
+          url: /grinder/guide/clojure.html
         - title: Instrumentation
-          url: /guide/instrumentation.html
+          url: /grinder/guide/instrumentation.html
         - title: Coordination
-          url: /guide/coordination.html
+          url: /grinder/guide/coordination.html
         - title: Script Gallery
-          url: /guide/script-gallery.html
+          url: /grinder/guide/script-gallery.html
         #- title: Script API
-          #url: /guide/script-javadoc/index.html
+          #url: /grinder/guide/script-javadoc/index.html
       - title: Plugins
         children:
         - title: HTTP plug-in
-          url: /guide/http-plugin.html
+          url: /grinder/guide/http-plugin.html
       - title: Statistics
-        url: /guide/statistics.html
+        url: /grinder/guide/statistics.html
       - title: SSL support
-        url: /guide/ssl-support.html
+        url: /grinder/guide/ssl-support.html
       - title: Advice
         children:
         - title: Setting up a project
-          url: /guide/setting-up-a-project.html
+          url: /grinder/guide/setting-up-a-project.html
         - title: Tutorial
-          url: /guide/tutorial-perks.html
+          url: /grinder/guide/tutorial-perks.html
         - title: Weighted Distribution
-          url: /guide/tutorial-weight-distribution.html
+          url: /grinder/guide/tutorial-weight-distribution.html
         - title: Garbage Collection
-          url: /guide/garbage-collection.html
+          url: /grinder/guide/garbage-collection.html
       - title: Features
-        url: /guide/features.html
+        url: /grinder/guide/features.html
       #- title: Complete User Guide
-        #url: /guide/manual.html
+        #url: /grinder/guide/manual.html

@@ -2,10 +2,10 @@ docs_list_title: ACME Documentation
 entries:
 
 - title: Project
-  url: /index.html
+  url: /grinder/index.html
 
 - title: User Guide
-  url: /guide/getting-started.html
+  url: /grinder/guide/getting-started.html
 
 - title: FAQ
-  url: /faq.html
+  url: /grinder/faq.html
