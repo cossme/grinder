@@ -61,10 +61,8 @@
    
 
 	<div class="sidemenu">
-           {{ page.level }}
 	   {% for level in site.data.sitemap.levels %}
              {% if level.name == page.level %}
-           {{ level.name }}
 	     <ul>
 	      {% for item in level.children %}
 		 <li>
