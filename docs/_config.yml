@@ -1,4 +1,5 @@
 theme: jekyll-theme-midnight
 title: The Grinder
+description: A Java Load Testing Framework
 show_downloads: true
 download_url: https://github.com/cossme/grinder/releases/download/3.13/grinder-3.13-binary.zip
