@@ -1,0 +1,11 @@
+docs_list_title: ACME Documentation
+entries:
+
+- title: Project
+  url: /index.html
+
+- title: User Guide
+  url: /guide/getting-started.html
+
+- title: FAQ
+  url: /faq.html

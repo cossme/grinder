@@ -1,0 +1,95 @@
+levels:
+  - name: Index
+    children:
+      - title: Project
+        children:
+        - title: Introduction
+          url: /index.html
+        - title: License
+          url: /license.html
+        - title: Download
+          url: /download.html
+        - title: Support
+          url: /support.html
+        - title: Links
+          url: /links.html
+      - title: Development
+        children:
+        - title: Contributing
+          url: /development/contributing.html
+        #- title: Changes
+          #url: /development/changes.html
+        #- title: To Do
+          #url: /development/todo.html
+        - title: Maven Reports
+          url: https://mvnrepository.com/artifact/io.github.cossme
+  - name: Faq
+    children:
+      - title: Questions
+        children:
+        - title: Contents
+          url: /faq.html#
+        - title: Common
+          url: /faq.html#common
+        - title: The Grinder 3
+          url: /faq.html#g3
+        - title: The Grinder 2
+          url: /faq.html#g2
+  - name: UserGuide
+    children:
+      - title: Gettting Started
+        url: /guide/getting-started.html
+      - title: Agents and Workers
+        children:
+        - title: Processes
+          url: /guide/agents-and-workers.html
+        - title: Properties
+          url: /guide/properties.html
+        - title: Logging
+          url: /guide/logging.html
+      - title: The Console
+        children:
+        - title: User Interface
+          url: /guide/console.html
+        - title: Console Service
+          url: /guide/console-service.html
+      - title: The TCP Proxy
+        url: /guide/tcpproxy.html
+      - title: Scripts
+        children:
+        - title: Introduction
+          url: /guide/scripts.html
+        - title: Jython
+          url: /guide/jython.html
+        - title: Clojure
+          url: /guide/clojure.html
+        - title: Instrumentation
+          url: /guide/instrumentation.html
+        - title: Coordination
+          url: /guide/coordination.html
+        - title: Script Gallery
+          url: /guide/script-gallery.html
+        #- title: Script API
+          #url: /guide/script-javadoc/index.html
+      - title: Plugins
+        children:
+        - title: HTTP plug-in
+          url: /guide/http-plugin.html
+      - title: Statistics
+        url: /guide/statistics.html
+      - title: SSL support
+        url: /guide/ssl-support.html
+      - title: Advice
+        children:
+        - title: Setting up a project
+          url: /guide/setting-up-a-project.html
+        - title: Tutorial
+          url: /guide/tutorial-perks.html
+        - title: Weighted Distribution
+          url: /guide/tutorial-weight-distribution.html
+        - title: Garbage Collection
+          url: /guide/garbage-collection.html
+      - title: Features
+        url: /guide/features.html
+      #- title: Complete User Guide
+        #url: /guide/manual.html

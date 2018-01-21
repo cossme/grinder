@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+{% seo %}
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="{{ '/assets/js/respond.js' | relative_url }}"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="{{ '/assets/css/ie.css' | relative_url }}">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <style media="screen" type="text/css">
+
+    #header nav { max-width: 95%; }
+    .wrapper { max-width: 95%; }
+    .sidemenu { float:left; width: 25%; }
+    .content { float:right; width: 75%; }
+    section { max-width: 95%; margin-top: 0px; padding: 0px 0px 20px 0px; }
+    section #title { margin-top: 70px; padding: 30px 0px 50px 0px; }
+    note { margin-left: 50px; margin-bottom: 20px; font-style: italic; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+    title { color:red; }
+
+    </style>
+
+  </head>
+  <body>
+
+    <div class="wrapper">
+
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="{{ site.github.repository_url }}">View on GitHub</a></li>
+          <!-- TODO: Create a separator class -->
+          <li class="fork">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+	  {% for item in site.data.menuHeader.entries %}
+            <li class="fork"><a href="{{ item.url }}" lt="{{ item.title }}">{{ item.title }}</a></li>
+            <li class="fork">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+	  {% endfor %}
+          {% if site.show_downloads %}
+            <li class="downloads"><a href="{{ site.download_url }}">ZIP</a></li>
+            <!--li class="downloads"><a href="{{ site.github.tar_url }}">TAR</a></li-->
+            <li class="title">DOWNLOADS</li>
+          {% endif %}
+        </nav>
+      </div><!-- end header -->
+
+      <section>
+	<div id="title">
+	  <h1>{{ site.title | default: site.github.repository_name }}</h1>
+          <p>{{ site.description | default: site.github.project_tagline }}</p>
+          <hr>
+          <!--span class="credits left">Project maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></span-->
+          <!--span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span-->
+        </div>
+   
+
+	<div class="sidemenu">
+           {{ page.level }}
+	   {% for level in site.data.sitemap.levels %}
+             {% if level.name == page.level %}
+           {{ level.name }}
+	     <ul>
+	      {% for item in level.children %}
+		 <li>
+                     {% if item.url %}
+                       <a href="{{ item.url }}" alt="{{ item.title }}">
+                     {% endif %}
+                     {{ item.title }}
+                     {% if item.url %}
+                       </a>
+                     {% endif %}
+                     {% if item.children %}
+	               <ul>
+	               {% for subitem in item.children %}
+		         <li>
+                           {% if subitem.url %}
+                             <a href="{{ subitem.url }}" alt="{{ subitem.title }}">
+                           {% endif %}
+                           {{ subitem.title }}
+                           {% if subitem.url %}
+                             </a>
+                           {% endif %}
+                         </li>
+	               {% endfor %}
+	               </ul>
+                     {% endif %}
+	      {% endfor %}
+	     </ul>
+             {% endif %}
+	   {% endfor %}
+	</div>
+
+	<div class="content">
+	  {{ content }}
+	</div>
+
+      </section>
+
+    </div>
+
+    {% if site.google_analytics %}
+      <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', '{{ site.google_analytics }}', 'auto');
+        ga('send', 'pageview');
+      </script>
+    {% endif %}
+  </body>
+</html>
