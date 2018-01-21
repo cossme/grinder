@@ -22,9 +22,9 @@
     .sidemenu { float:left; width: 25%; }
     .content { float:right; width: 75%; }
     section { max-width: 95%; margin-top: 0px; padding: 0px 0px 20px 0px; }
-    section #title { margin-top: 70px; padding: 30px 0px 50px 0px; }
+    section #title { margin-top: 70px; padding: 0px 0px 0px 0px; }
+    section #title img { height: 150px; }
     note { margin-left: 50px; margin-bottom: 20px; font-style: italic; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-    title { color:red; }
 
     </style>
 
@@ -52,8 +52,9 @@
 
       <section>
 	<div id="title">
-	  <h1>{{ site.title | default: site.github.repository_name }}</h1>
-          <p>{{ site.description | default: site.github.project_tagline }}</p>
+          <p><img src="img/banner.png"/></p>
+	  <!--h1>{{ site.title | default: site.github.repository_name }}</h1-->
+          <!--p>{{ site.description | default: site.github.project_tagline }}</p-->
           <hr>
           <!--span class="credits left">Project maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></span-->
           <!--span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span-->
