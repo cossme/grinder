@@ -39,11 +39,11 @@ The script is executed many times in a typical testing scenario. Each worker pro
 and each worker thread calls the script a number of times. A single execution of a test script is called a _run_.
 
 You can write scripts for use with the Grinder by hand. There are a number of examples of how to do this in the
-[Script Gallery](http://grinder.sourceforge.net/g3/script-gallery.html). 
-See the [Scripts](http://grinder.sourceforge.net/g3/scripts.html) section for more details on how to create scripts.
+[Script Gallery](https://cossme.github.io/grinder/guide/script-gallery.html). 
+See the [Scripts](https://cossme.github.io/grinder/guide/scripts.html) section for more details on how to create scripts.
 
 If you are creating a script to test a web site or web application, you can use the 
-[TCPProxy](http://grinder.sourceforge.net/g3/tcpproxy.html) to record a browser session as a script.
+[TCPProxy](https://cossme.github.io/grinder/guide/tcpproxy.html) to record a browser session as a script.
 
 # Network communication
 
@@ -58,7 +58,7 @@ The worker processes will run to completion and not report to the console. This 
 out a test script without bothering to start the console.
 
 > To change the console addresses, set the `grinder.consoleHost` and `grinder.consolePort` properties in the 
-> [`grinder.properties`](http://grinder.sourceforge.net/g3/properties.html) file before starting The Grinder agents.
+> [`grinder.properties`](https://cossme.github.io/grinder/guide/properties.html) file before starting The Grinder agents.
 > The values should match those specified in the console options dialog.
 
 # Output
