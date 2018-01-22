@@ -156,8 +156,7 @@ public class TestWorkerProcessCommandLine extends AbstractJUnit4FileTestCase {
   @Test public void testIsAgentJarValidNames() {
 
     for (final String s : asList("grinder-dcr-agent-1.jar",
-                                 "grinder-dcr-agent-"+ GrinderBuild.getVersionString() + ".jar",
-                                 "grinder-dcr-agent-"+ GrinderBuild.getVersionString() + "-SNAPSHOT.jar")) {
+                                 "grinder-dcr-agent-"+ GrinderBuild.getVersionString() + ".jar")) {
       assertTrue(s, WorkerProcessCommandLine.isAgentJar(s));
     }
   }
