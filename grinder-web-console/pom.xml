@@ -12,20 +12,20 @@
   <parent>
     <groupId>net.sf.grinder</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.0-SNAPSHOT</version>
   </parent>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-core</artifactId>
-      <version>4.0.0</version>
+      <version>4.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-test-support</artifactId>
-      <version>4.0.0</version>
+      <version>4.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
@@ -33,7 +33,7 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-core</artifactId>
       <type>test-jar</type>
-      <version>4.0.0</version>
+      <version>4.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
