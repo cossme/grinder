@@ -61,6 +61,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.python</groupId>
+      <artifactId>jython-standalone</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
     </dependency>
@@ -128,7 +133,6 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <skipTests>true</skipTests>
           <argLine>-javaagent:${project.build.directory}/grinder-dcr-agent.jar
             -XX:MaxPermSize=256m</argLine>
           <systemPropertyVariables>
@@ -144,6 +148,7 @@
             <jython2_5_0.dir>/opt/jython/jython2.5.0</jython2_5_0.dir>
             <jython2_5_1.dir>/opt/jython/jython2.5.1</jython2_5_1.dir>
             <jython2_5_2.dir>/opt/jython/jython2.5.2</jython2_5_2.dir>
+            <jython2_7_0.dir>/opt/jython/jython2.5.2</jython2_7_0.dir>
           </systemPropertyVariables>
         </configuration>
       </plugin>

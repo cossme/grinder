@@ -40,6 +40,10 @@
       <name>Olivier Merlin</name>
       <email>olivier at gmail.com</email>
     </developer>
+    <developer>
+      <name>Cyril Solé</name>
+      <email>cyrilsole at gmail.com</email>
+    </developer>
   </developers>
 
   <contributors>
@@ -307,6 +311,28 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>1.5.9.RELEASE</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.8.0</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.0</version>
+    </dependency>
+
     <!-- Sigh - needed for surefire-report. -->
     <dependency>
       <groupId>junit</groupId>
@@ -370,7 +396,7 @@
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.3</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.janino</groupId>
@@ -378,9 +404,9 @@
         <version>2.5.16</version>
       </dependency>
       <dependency>
-      	<groupId>org.apache.xmlbeans</groupId>
-	      <artifactId>xmlbeans</artifactId>
-	      <version>2.5.0</version>
+        <groupId>org.apache.xmlbeans</groupId>
+        <artifactId>xmlbeans</artifactId>
+        <version>2.5.0</version>
       </dependency>
 
       <dependency>
@@ -481,8 +507,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>2.5.1</version>
           <configuration>
-            <source>1.6</source>
-            <target>1.6</target>
+            <source>1.8</source>
+            <target>1.8</target>
             <optimize>true</optimize>
             <showDeprecation>true</showDeprecation>
             <showWarnings>true</showWarnings>
@@ -511,13 +537,6 @@
           <artifactId>maven-jar-plugin</artifactId>
           <version>2.4</version>
         </plugin>
-        <!--plugin>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.0.0</version>
-          <configuration>
-            <fixTags>author,since,param,return,throws,link</fixTags>
-          </configuration>
-        </plugin-->
         <plugin>
           <artifactId>maven-jxr-plugin</artifactId>
           <version>2.3</version>
@@ -647,6 +666,7 @@
     <module>grinder-dcr-agent</module>
     <module>grinder-http</module>
     <module>grinder-httpclient</module>
+    <module>grinder-web-console</module>
     <module>grinder-swing-console</module>
     <module>grinder-test-support</module>
     <module>grinder-xmlbeans</module>

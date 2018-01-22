@@ -28,6 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import net.grinder.common.processidentity.ProcessReport;
 import net.grinder.common.processidentity.WorkerProcessReport;
@@ -39,6 +40,7 @@ import net.grinder.console.common.processidentity.StubWorkerProcessReport;
 import net.grinder.console.communication.ProcessControl;
 import net.grinder.console.communication.ProcessControl.ProcessReports;
 import net.grinder.console.communication.StubProcessReports;
+import net.grinder.console.model.ModelTestIndex;
 import net.grinder.console.model.SampleModel;
 import net.grinder.engine.agent.StubAgentIdentity;
 import net.grinder.testutility.CallData;
@@ -227,14 +229,12 @@ public class TestTextUI {
           }
         } );
 
-
     listener.newSample();
     listener.newTests(null, null);
     listener.resetTests();
 
-
     listener.stateChanged();
-    verify(m_logger).info("no pressure son");
+    verify(m_logger).debug("no pressure son");
 
     verifyNoMoreInteractions(m_logger);
   }

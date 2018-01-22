@@ -281,7 +281,12 @@ public class TestTCPProxy {
     catch (GrinderException e) {
     }
 
-    verify(m_logger).error(contains("No such file or directory"));
+    if (System.getProperty("os.name").startsWith("Win")) {
+      verify(m_logger).error(contains("The system cannot find the file specified"));
+    }
+    else {
+      verify(m_logger).error(contains("No such file or directory"));
+    }
   }
 
   @Test public void testBadOption4() throws Exception {

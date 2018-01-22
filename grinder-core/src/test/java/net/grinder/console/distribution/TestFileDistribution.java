@@ -219,7 +219,7 @@ public class TestFileDistribution extends AbstractFileTestCase {
     // If the cache has been reset, we scan the lot.
     fileDistribution.setDirectory(directory);
     fileDistribution.scanDistributionFiles();
-    assertEquals(0, agentCacheStateStubFactory.getEarliestOutOfDateTime());
+    assertTrue(System.currentTimeMillis() - agentCacheStateStubFactory.getEarliestOutOfDateTime() < 1000);
     fileListenerStubFactory.resetCallHistory();
 
     // Test with r/o directory, just for coverage's sake.
@@ -234,8 +234,7 @@ public class TestFileDistribution extends AbstractFileTestCase {
     fileDistribution.setDirectory(subdirectory);
     fileDistribution.scanDistributionFiles();
 
-    assertEquals(f1.lastModified(),
-                 agentCacheStateStubFactory.getEarliestOutOfDateTime());
+    assertTrue(f1.lastModified() - agentCacheStateStubFactory.getEarliestOutOfDateTime() < 1000);
 
     FileUtilities.setCanAccess(subdirectory.getFile(), true);
   }
@@ -256,7 +255,7 @@ public class TestFileDistribution extends AbstractFileTestCase {
     }
 
     public void override_setNewFileTime(Object proxy, long t) {
-      if (t < m_earliestOutOfDateTime) {
+      if (t> 0 && t < m_earliestOutOfDateTime) {
         m_earliestOutOfDateTime = t;
       }
     }

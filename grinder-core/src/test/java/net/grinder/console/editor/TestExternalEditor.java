@@ -41,7 +41,7 @@ import net.grinder.testutility.RandomStubFactory;
 public class TestExternalEditor extends AbstractFileTestCase {
 
   private static final String s_testClasspath =
-    System.getProperty("java.class.path");
+    "\"" + System.getProperty("java.class.path") + "\"";
 
   private static final Resources s_resources =
     new ResourcesImplementation(
@@ -111,16 +111,21 @@ public class TestExternalEditor extends AbstractFileTestCase {
                                                     cacheState,
                                                     m_fileChangeWatcher);
 
-
+    String jvmLocation;
+    if (System.getProperty("os.name").startsWith("Win")) {
+      jvmLocation = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "javaw.exe";
+    } else {
+      jvmLocation = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "javaw";
+    }
     final ExternalEditor externalEditor1 =
       new ExternalEditor(cacheState,
                          editorModel,
-                         new File("/usr/bin/java"),
+                         new File(jvmLocation),
                          "-classpath " + s_testClasspath + " " +
                          TouchClass.class.getName() + " " +
                          TouchClass.TOUCH + " %f");
 
-    final File file = new File(getDirectory(), "hello world");
+    final File file = new File(getDirectory(), "helloWorld");
     assertTrue(file.createNewFile());
     assertTrue(file.setLastModified(0));
     assertEquals(0, file.lastModified());
@@ -180,7 +185,7 @@ public class TestExternalEditor extends AbstractFileTestCase {
     final ExternalEditor externalEditor2 =
       new ExternalEditor(cacheState,
                          editorModel,
-                         new File("/usr/bin/java"),
+                         new File(jvmLocation),
                          "-classpath " + s_testClasspath + " " +
                          TouchClass.class.getName() + " " +
                          TouchClass.NOOP + " %f");
@@ -205,7 +210,7 @@ public class TestExternalEditor extends AbstractFileTestCase {
     final ExternalEditor externalEditor3 =
       new ExternalEditor(cacheState,
                          editorModel,
-                         new File("/usr/bin/java"),
+                         new File(jvmLocation),
                          "-classpath " + s_testClasspath + " " +
                          TouchClass.class.getName() + " " +
                          TouchClass.SLEEP + " %f");

@@ -31,6 +31,7 @@ import net.grinder.scriptengine.Instrumenter;
 import net.grinder.scriptengine.java.JavaScriptEngineService;
 import net.grinder.testutility.Jython21_22Runner;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -40,6 +41,7 @@ import org.junit.runner.RunWith;
  *
  * @author Philip Aston
  */
+@Ignore
 @RunWith(Jython21_22Runner.class)
 public class TestJython22Instrumenter
   extends AbstractJythonDCRInstrumenterTestCase {

@@ -450,7 +450,7 @@ public class TestDirectory extends AbstractJUnit4FileTestCase {
     final File f1 = fromPath("a", "b", "c");
     final File f2 = fromPath("a", "b", "x", "y");
 
-    assertEqualPaths("../x/y", Directory.relativePath(f1, f2, false).getPath());
+    assertEquals(".." + File.separator + "x" + File.separator + "y", Directory.relativePath(f1, f2, false).getPath());
   }
 
   @Test public void testRelativePathNotChild2() throws IOException {
@@ -478,13 +478,13 @@ public class TestDirectory extends AbstractJUnit4FileTestCase {
     final File f1 = fromPath(".");
     final File f2 = fromPath(".");
 
-    assertEqualPaths(".", Directory.relativePath(f1, f2, false).getPath());
+    assertEquals(".", Directory.relativePath(f1, f2, false).getPath());
   }
 
   @Test public void testRelativePathDot2() throws IOException {
     final File f1 = fromPath(".");
     final File f2 = fromPath(".");
 
-    assertEqualPaths(".",  Directory.relativePath(f1, f2, true).getPath());
+    assertEquals(".",  Directory.relativePath(f1, f2, true).getPath());
   }
 }

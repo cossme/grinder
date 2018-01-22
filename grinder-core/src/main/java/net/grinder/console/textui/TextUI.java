@@ -83,7 +83,9 @@ public class TextUI implements UI {
       new SampleModel.AbstractListener() {
         public void stateChanged() {
             // Ome, (11/09/16) avoid having the INFO message appearing in console mode every second.
-        	//m_logger.info(m_sampleModel.getState().getDescription());
+            // Solcyr: (13/01/18) but this modification is making the related test failing. Using TextUI
+            //         this log may be important, I suggest to set it to debug.
+        	m_logger.debug(m_sampleModel.getState().getDescription());
         }
       });
   }

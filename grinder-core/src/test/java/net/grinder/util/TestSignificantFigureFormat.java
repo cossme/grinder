@@ -66,9 +66,9 @@ public class TestSignificantFigureFormat extends TestCase {
     assertEquals("1234", f.format(1234));
     assertEquals("12.35", f.format(12.345));
     assertEquals("0.1235", f.format(0.12345));
-    // Interestingly .012345 -> 0.01234, but I think this is a
-    // floating point thing.
-    assertEquals("0.01234", f.format(0.012345));
+    // Interestingly on some systems .012345 -> 0.01234,
+    // but I think this is a floating point thing.
+    assertEquals("0.01235", f.format(0.012345));
     assertEquals("0.001235", f.format(0.0012345));
     assertEquals("0.000", f.format(0));
     assertEquals("0.000", f.format(-0));

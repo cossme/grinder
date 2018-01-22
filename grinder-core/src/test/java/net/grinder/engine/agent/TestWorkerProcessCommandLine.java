@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import net.grinder.Grinder;
+import net.grinder.common.GrinderBuild;
 import net.grinder.common.GrinderProperties;
 import net.grinder.testutility.AbstractJUnit4FileTestCase;
 import net.grinder.util.Directory;
@@ -154,8 +156,8 @@ public class TestWorkerProcessCommandLine extends AbstractJUnit4FileTestCase {
   @Test public void testIsAgentJarValidNames() {
 
     for (final String s : asList("grinder-dcr-agent-1.jar",
-                                 "grinder-dcr-agent-3.13.jar",
-                                 "grinder-dcr-agent-3.13-SNAPSHOT.jar")) {
+                                 "grinder-dcr-agent-"+ GrinderBuild.getVersionString() + ".jar",
+                                 "grinder-dcr-agent-"+ GrinderBuild.getVersionString() + "-SNAPSHOT.jar")) {
       assertTrue(s, WorkerProcessCommandLine.isAgentJar(s));
     }
   }
@@ -163,9 +165,9 @@ public class TestWorkerProcessCommandLine extends AbstractJUnit4FileTestCase {
   @Test public void testIsAgentJarInvalidNames() {
 
     for (final String s : asList("grinder-dcr-agent.jar",
-                                 "grinder-dcr-agent-3.13.jar.asc",
-                                 "grinder-dcr-agent-3.13-sources.jar",
-                                 "xgrinder-dcr-agent-3.13.jar")) {
+                                 "grinder-dcr-agent-"+ GrinderBuild.getVersionString() + ".jar.asc",
+                                 "grinder-dcr-agent-" + GrinderBuild.getVersionString() + "-sources.jar",
+                                 "xgrinder-dcr-agent-" + GrinderBuild.getVersionString() + ".jar")) {
       assertFalse(s, WorkerProcessCommandLine.isAgentJar(s));
     }
   }

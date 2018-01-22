@@ -123,7 +123,7 @@ public class TestJythonScriptEngine extends AbstractJUnit4FileTestCase {
                          new File(getDirectory(), "script"));
 
     createFile(script.getFile(),
-               "import foo",
+               "import foo" + System.currentTimeMillis(),
                "class TestRunner:pass");
 
     try {

@@ -472,7 +472,17 @@ public final class EditorModel {
     // We don't constrain selection to have a .py extension. If the
     // user really wants to use something else, so be it.
     synchronized (this) {
-      return f != null && f.equals(m_selectedFile);
+      if (f == null && m_selectedFile == null) {
+        return true;
+      }
+      else {
+        try {
+          return f != null && m_selectedFile != null &&
+                 f.getCanonicalPath().equals(m_selectedFile.getCanonicalPath());
+        } catch (IOException e) {
+          return false;
+        }
+      }
     }
   }
 

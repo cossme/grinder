@@ -33,6 +33,7 @@ import net.grinder.scriptengine.java.JavaScriptEngineService;
 import net.grinder.testutility.Jython25Runner;
 import net.grinder.testutility.RandomStubFactory;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.python.core.PyObject;
@@ -45,6 +46,7 @@ import org.python.core.PyProxy;
  * @author Philip Aston
  */
 @RunWith(Jython25Runner.class)
+@Ignore
 public class TestJython25Instrumenter
   extends AbstractJythonDCRInstrumenterTestCase {
 

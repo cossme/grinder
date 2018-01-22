@@ -124,7 +124,7 @@ final class BufferImplementation implements Buffer {
         }
 
         stringWriter.write(line);
-        stringWriter.write('\n');
+        stringWriter.write(System.lineSeparator());
       }
     }
     catch (IOException e) {

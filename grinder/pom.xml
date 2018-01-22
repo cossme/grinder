@@ -21,6 +21,12 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>grinder-web-console</artifactId>
+      <version>4.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>grinder-dcr-agent</artifactId>
       <version>3.14-SNAPSHOT</version>
     </dependency>

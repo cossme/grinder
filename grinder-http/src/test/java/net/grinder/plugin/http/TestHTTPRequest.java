@@ -697,7 +697,7 @@ public class TestHTTPRequest {
     assertArraysEqual(data5, m_handler.getLastRequestBody());
 
     final NVPair[] headers6 = {
-      new NVPair("key", "value"),
+            new NVPair("key", "value"),
     };
 
     request.setHeaders(headers6);
@@ -709,9 +709,75 @@ public class TestHTTPRequest {
     final byte[] data7 = randomBytes(10000);
 
     final HTTPResponse response7 = request.PUT("/bhhh",
-                                               new ByteArrayInputStream(data7));
+            new ByteArrayInputStream(data7));
     assertEquals(200, response7.getStatusCode());
     assertEquals("PUT /bhhh HTTP/1.1", m_handler.getRequestFirstHeader());
+    assertArraysEqual(data7, m_handler.getLastRequestBody());
+  }
+
+
+  @Test public void testPATCH() throws Exception {
+    final HTTPRequest request = new HTTPRequest();
+
+    try {
+      request.PATCH();
+      fail("Expected URLException");
+    }
+    catch (final URLException e) {
+    }
+
+    try {
+      request.PATCH("?:/partial");
+      fail("Expected URLException");
+    }
+    catch (final URLException e) {
+    }
+
+    final HTTPResponse response = request.PATCH(m_handler.getURL());
+    assertEquals(200, response.getStatusCode());
+    assertEquals("PATCH / HTTP/1.1", m_handler.getRequestFirstHeader());
+
+    request.setUrl(m_handler.getURL());
+    final HTTPResponse response2 = request.PATCH("/foo");
+    assertEquals(200, response2.getStatusCode());
+    assertEquals("PATCH /foo HTTP/1.1", m_handler.getRequestFirstHeader());
+
+    final HTTPResponse response3 = request.PATCH();
+    assertEquals(200, response3.getStatusCode());
+    assertEquals("PATCH / HTTP/1.1", m_handler.getRequestFirstHeader());
+
+    final byte[] data4 = randomBytes(10);
+
+    final HTTPResponse response4 = request.PATCH("/blah", data4);
+    assertEquals(200, response4.getStatusCode());
+    assertEquals("PATCH /blah HTTP/1.1", m_handler.getRequestFirstHeader());
+    assertArraysEqual(data4, m_handler.getLastRequestBody());
+
+    final byte[] data5 = randomBytes(100);
+
+    request.setUrl(m_handler.getURL() + "/lah/");
+    request.setData(data5);
+    final HTTPResponse response5 = request.PATCH("/blah");
+    assertEquals(200, response5.getStatusCode());
+    assertEquals("PATCH /blah HTTP/1.1", m_handler.getRequestFirstHeader());
+    assertArraysEqual(data5, m_handler.getLastRequestBody());
+
+    final NVPair[] headers6 = {
+            new NVPair("key", "value"),
+    };
+
+    request.setHeaders(headers6);
+    final HTTPResponse response6 = request.PATCH();
+    assertEquals(200, response6.getStatusCode());
+    assertEquals("PATCH /lah/ HTTP/1.1", m_handler.getRequestFirstHeader());
+    m_handler.assertRequestContainsHeader("key: value");
+
+    final byte[] data7 = randomBytes(10000);
+
+    final HTTPResponse response7 = request.PATCH("/bhhh",
+            new ByteArrayInputStream(data7));
+    assertEquals(200, response7.getStatusCode());
+    assertEquals("PATCH /bhhh HTTP/1.1", m_handler.getRequestFirstHeader());
     assertArraysEqual(data7, m_handler.getLastRequestBody());
   }
 

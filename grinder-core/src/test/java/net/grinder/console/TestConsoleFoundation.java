@@ -157,7 +157,7 @@ public class TestConsoleFoundation extends AbstractJUnit4FileTestCase {
 
     foundation.shutdown();
 
-    runTask.get(1, TimeUnit.SECONDS);
+    runTask.get(5, TimeUnit.SECONDS);
 
     verifyNoMoreInteractions(m_logger);
   }
@@ -182,7 +182,7 @@ public class TestConsoleFoundation extends AbstractJUnit4FileTestCase {
       final Future<Void> task = m_executor.submit(connect);
 
       try {
-        task.get(1, TimeUnit.SECONDS);
+        task.get(5, TimeUnit.SECONDS);
       }
       catch (ExecutionException e) {
         if (i == retries - 1) {

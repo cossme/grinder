@@ -72,7 +72,7 @@ class ExternalEditor {
       while (tokenizer.hasMoreElements()) {
         final String token = tokenizer.nextToken();
 
-        final String argument = token.replaceAll("%f", file.getAbsolutePath());
+        final String argument = token.replaceAll("%f", file.getAbsolutePath().replace("\\", "\\\\"));
         result.add(argument);
 
         fileTemplateFound |= !argument.equals(token);

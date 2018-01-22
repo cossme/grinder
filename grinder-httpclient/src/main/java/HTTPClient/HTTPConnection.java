@@ -36,6 +36,8 @@
 
 package HTTPClient;
 
+import sun.security.ssl.SSLContextImpl;
+
 import java.io.OutputStream;
 import java.io.DataOutputStream;
 import java.io.FilterOutputStream;
@@ -49,13 +51,13 @@ import java.net.SocketException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.net.NoRouteToHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
 import java.applet.Applet;
 
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
 
 /**
@@ -595,14 +597,8 @@ public class HTTPConnection implements GlobalConstants, HTTPClientModuleConstant
         sslProtocols = protocolProperty.split(",");
       }
       else {
-        try {
-          final SSLSocket socket = (SSLSocket)defaultSSLFactory.createSocket();
-          sslProtocols = socket.getSupportedProtocols();
-          socket.close();
-        }
-        catch (IOException e) {
-          throw new ExceptionInInitializerError(e);
-        }
+          /** csolesala Modification **/
+          sslProtocols = new String[] {"TLSv1","TLSv1.1","TLSv1.2"};
       }
     }
 
@@ -3214,36 +3210,40 @@ public class HTTPConnection implements GlobalConstants, HTTPClientModuleConstant
 
 		    if (Protocol == HTTPS)
 		    {
-			if (Proxy_Host != null)
-			{
-			    Socket[] sarr = { sock };
-			    resp = enableSSLTunneling(sarr, req, con_timeout);
-			    if (resp != null)
-			    {
-				resp.final_resp = true;
-				return resp;
-			    }
-			    sock = sarr[0];
-			}
+                if (Proxy_Host != null)
+                {
+                    Socket[] sarr = { sock };
+                    resp = enableSSLTunneling(sarr, req, con_timeout);
+                    if (resp != null)
+                    {
+                    resp.final_resp = true;
+                    return resp;
+                    }
+                    sock = sarr[0];
+                }
 
-                        sock.setSoTimeout(con_timeout);
-			sock = sslFactory.createSocket(sock, Host, Port, true);
+                sock.setSoTimeout(con_timeout);
+                sock = sslFactory.createSocket(sock, Host, Port, true);
 
-			/** GRINDER MODIFICATION++ **/
-			final SSLSocket sslSocket = (SSLSocket)sock;
+                /** GRINDER MODIFICATION++ **/
+                final SSLSocket sslSocket = (SSLSocket)sock;
 
-			sslSocket.setEnabledCipherSuites(getSSLCipherSuites());
-			sslSocket.setEnabledProtocols(getSSLProtocols());
+                /** solcyr: SNI Support: **/
+                /*List<SNIServerName> sniHostNames = new ArrayList<>(1);
+                sniHostNames.add(new SNIHostName(Host));
+                sslSocket.getSSLParameters().setServerNames(sniHostNames);*/
 
-			if (getCheckCertificates()) {
-                        /** --GRINDER MODIFICATION **/
+                sslSocket.setEnabledCipherSuites(getSSLCipherSuites());
+                sslSocket.setEnabledProtocols(getSSLProtocols());
 
-			checkCert(((SSLSocket) sock).getSession().
-					getPeerCertificateChain()[0], Host);
+                if (getCheckCertificates()) {
+                    /** --GRINDER MODIFICATION **/
+                    checkCert(((SSLSocket) sock).getSession().
+                        getPeerCertificateChain()[0], Host);
 
-			/** GRINDER MODIFICATION++ **/
-			}
-                        /** --GRINDER MODIFICATION **/
+                /** GRINDER MODIFICATION++ **/
+                }
+                /** --GRINDER MODIFICATION **/
 		    }
 		    /** GRINDER MODIFICATION++ **/
 		    else {

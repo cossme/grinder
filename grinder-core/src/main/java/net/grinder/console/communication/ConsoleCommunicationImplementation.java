@@ -52,12 +52,12 @@ import net.grinder.util.thread.BooleanCondition;
 public final class ConsoleCommunicationImplementation
   implements ConsoleCommunication {
 
-  private final Resources m_resources;
-  private final ConsoleProperties m_properties;
-  private final ErrorHandler m_errorHandler;
-  private final TimeAuthority m_timeAuthority;
-  private final long m_idlePollDelay;
-  private long m_inactiveClientTimeOut;
+	private final Resources m_resources;
+	private final ConsoleProperties m_properties;
+	private final ErrorHandler m_errorHandler;
+	private final TimeAuthority m_timeAuthority;
+	private final long m_idlePollDelay;
+	private final long m_inactiveClientTimeOut;
 
   private final MessageDispatchSender m_messageDispatcher =
     new MessageDispatchSender();
@@ -69,27 +69,26 @@ public final class ConsoleCommunicationImplementation
   private ServerReceiver m_receiver = null;
   private FanOutServerSender m_sender = null;
 
-  /**
-   * Constructor that uses a default idlePollDelay.
-   *
-   * @param resources
-   *          Resources.
-   * @param properties
-   *          Console properties.
-   * @param errorHandler
-   *          Error handler.
-   * @param timeAuthority
-   *          Knows the time
-   * @throws DisplayMessageConsoleException
-   *           If properties are invalid.
-   */
-  public ConsoleCommunicationImplementation(Resources resources,
-                                            ConsoleProperties properties,
-                                            ErrorHandler errorHandler,
-                                            TimeAuthority timeAuthority)
-    throws DisplayMessageConsoleException {
-    this(resources, properties, errorHandler, timeAuthority, 500, 30000);
-  }
+	/**
+	 * Constructor that uses a default idlePollDelay.
+	 *
+	 * @param resources
+	 *            Resources.
+	 * @param properties
+	 *            Console properties.
+	 * @param errorHandler
+	 *            Error handler.
+	 * @param timeAuthority
+	 *            Knows the time
+	 * @throws DisplayMessageConsoleException
+	 *             If properties are invalid.
+	 */
+	public ConsoleCommunicationImplementation(Resources resources,
+			ConsoleProperties properties, ErrorHandler errorHandler,
+			TimeAuthority timeAuthority) throws DisplayMessageConsoleException {
+		this(resources, properties, errorHandler, timeAuthority, 500,
+				Integer.parseInt(System.getProperty("grinder.inactiveClientTimeOut", "300000")));
+	}
 
   /**
    * Constructor.
@@ -119,26 +118,16 @@ public final class ConsoleCommunicationImplementation
                                             long inactiveClientTimeOut)
     throws DisplayMessageConsoleException {
 
-    m_resources = resources;
-    m_properties = properties;
-    m_errorHandler = errorHandler;
-    m_timeAuthority = timeAuthority;
-    m_idlePollDelay = idlePollDelay;
-    m_inactiveClientTimeOut = inactiveClientTimeOut;
-
-    String s_inactiveClientTimeOut = System.getProperty("grinder.inactiveClientTimeOut");
-    if (s_inactiveClientTimeOut == null ) {
-      // 5 minutes by default instead of 30 seconds
-      m_inactiveClientTimeOut = 300000;
-    }
-    else {
-      m_inactiveClientTimeOut = Integer.parseInt(s_inactiveClientTimeOut);
-    }
-    System.out.println("grinder.inactiveClientTimeOut set to " + m_inactiveClientTimeOut);
-    
-    properties.addPropertyChangeListener(new PropertyChangeListener() {
-      public void propertyChange(PropertyChangeEvent event) {
-        final String property = event.getPropertyName();
+		m_resources = resources;
+		m_properties = properties;
+		m_errorHandler = errorHandler;
+		m_timeAuthority = timeAuthority;
+		m_idlePollDelay = idlePollDelay;
+		m_inactiveClientTimeOut = inactiveClientTimeOut;
+		
+		properties.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				final String property = event.getPropertyName();
 
           if (property.equals(ConsoleProperties.CONSOLE_HOST_PROPERTY) ||
               property.equals(ConsoleProperties.CONSOLE_PORT_PROPERTY)) {

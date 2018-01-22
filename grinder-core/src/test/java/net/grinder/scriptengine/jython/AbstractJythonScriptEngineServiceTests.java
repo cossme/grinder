@@ -75,7 +75,7 @@ public abstract class AbstractJythonScriptEngineServiceTests
 
   @Test
   public void testInitialisationWithEmptyClasspath() throws Exception {
-    System.clearProperty("python.cachedir");
+    System.setProperty("python.cachedir", "");
     final String originalClasspath = System.getProperty("java.class.path");
 
     System.setProperty("java.class.path", "");
@@ -84,11 +84,11 @@ public abstract class AbstractJythonScriptEngineServiceTests
       m_jythonScriptEngineService.createScriptEngine(m_pyScript);
 
       assertNotNull(System.getProperty("python.cachedir"));
-      System.clearProperty("python.cachedir");
+      System.setProperty("python.cachedir", "");
     }
     finally {
       System.setProperty("java.class.path", originalClasspath);
-      System.clearProperty("python.cachedir");
+      System.setProperty("python.cachedir", "");
     }
   }
 
