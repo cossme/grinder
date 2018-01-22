@@ -17,9 +17,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <style media="screen" type="text/css">
 
-    #header nav { max-width: 95%; }
+    #header nav { max-width: 95% }
+    #header nav li.separator { float: left; margin: 10px 10px 10px 10px; }
     .wrapper { max-width: 95%; }
-    .sidemenu { float:left; width: 25%; }
+    .sidemenu { float:left; min-width: 100px; max-width: 200px; }
     .content { float:right; width: 75%; }
     section { max-width: 95%; margin-top: 0px; padding: 0px 0px 20px 0px; }
     section #title { margin-top: 70px; padding: 0px 0px 0px 0px; }
@@ -36,11 +37,12 @@
       <div id="header">
         <nav>
           <li class="fork"><a href="{{ site.github.repository_url }}">View on GitHub</a></li>
-          <!-- TODO: Create a separator class -->
-          <li class="fork">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+          <li class="separator"/>
+          <li class="separator"/>
+          <li class="separator"/>
 	  {% for item in site.data.menuHeader.entries %}
             <li class="fork"><a href="{{ item.url }}" lt="{{ item.title }}">{{ item.title }}</a></li>
-            <li class="fork">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+            <li class="separator"/>
 	  {% endfor %}
           {% if site.show_downloads %}
             <li class="downloads"><a href="{{ site.download_url }}">ZIP</a></li>
