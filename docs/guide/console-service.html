@@ -56,7 +56,7 @@ level: UserGuide
       <section id="headless">
 	<h2>Running without a GUI</h2>
 
-	<p>If you don't use the graphical <a href="site:console/ui">user
+	<p>If you don't use the graphical <a href="console.html">user
 	interface</a>, you can start the console in in a terminal mode
 	by passing a <code>-headless</code> option as follows.</p>
     
@@ -174,7 +174,7 @@ level: UserGuide
 	  <td><code>/agents/start-workers</code></td>
 	  <td>Send a start signal to the agents to start worker processes.
 	  Equivalent to the <a
-	  href="site:console/ui/process-controls">start processes</a>
+	  href="console.html#process-controls">start processes</a>
 	  button.</td>
 	</tr>
 
@@ -196,7 +196,7 @@ level: UserGuide
 	  <td><code>/agents/stop-workers</code></td>
 	  <td>Send a stop signal to connected worker processes.
 	  Equivalent to the <a
-	  href="site:console/ui/process-controls">reset processes</a>
+	  href="console.html#process-controls">reset processes</a>
 	  button.</td>
 	</tr>
 
@@ -251,7 +251,7 @@ level: UserGuide
 	  <td><code>GET</code></td>
 	  <td><code>/recording/data</code></td>
 	  <td>Return the current recorded data. Equivalent to the data
-	  in the <a href="site:console/ui/results">results
+	  in the <a href="console.html#results">results
 	  tab</a>.</td>
 	</tr>
 
@@ -259,7 +259,7 @@ level: UserGuide
 	  <td><code>GET</code></td>
 	  <td><code>/recording/data-latest</code></td>
 	  <td>Return the latest sample of recorded data. Equivalent to 
-	  the data in the lower pane of the <a href="site:console/ui/results">results
+	  the data in the lower pane of the <a href="console.html#results">results
 	  tab</a>.</td>
 	</tr>
 
@@ -315,12 +315,12 @@ level: UserGuide
 
       <p>Let's have a look at an example terminal session that
       exercises the REST interface. We'll use <a
-      href="ext:curl">curl</a> as a client, but other HTTP clients
+      href="{{ site.data.links.curl.href }}">curl</a> as a client, but other HTTP clients
       will work will as well.</p>
 
 
 	<note>A web cast of a similar example session is <a
-	href="ext:youtube/grinder-console-service">available on YouTube</a>.
+	href="{{ site.data.links.youtube.grinder-console-service.href }}">available on YouTube</a>.
 	</note>
 
       <section>
@@ -467,7 +467,7 @@ The Grinder 3.10-SNAPSHOT
 
 	<p>We're going to have The Grinder start some worker processes
 	and run the <a
-	href="site:script-gallery/helloworld.py">helloworld.py</a>
+	href="script-gallery.html#helloworld.py">helloworld.py</a>
 	script, which is one of the files we've just sent.</p>
 
         <p>We previously set the console option

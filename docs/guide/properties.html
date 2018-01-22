@@ -124,7 +124,7 @@ level: UserGuide
           </td>
 
           <td>The file name of the Jython <a
-          href="site:scripts-intro">script</a> to run.</td>
+          href="scripts.html">script</a> to run.</td>
 
           <td>grinder.py</td>
         </tr>
@@ -150,7 +150,7 @@ level: UserGuide
           JVMs. Anything specified here will be prepended to the
           classpath used to start the Grinder processes. <p>Relative
           paths are evaluated based on the worker process <a
-          href="site:scripts-intro/cwd">working directory</a>.
+          href="scripts.html#cwd">working directory</a>.
           Scripts distributed using the console can refer to libraries
           in the distribution directory by using relative
           paths in this property.</p></td>
@@ -283,7 +283,7 @@ level: UserGuide
           </td>
 
           <td>Set to <code>false</code> to disable reporting of <a
-          href="site:faq/timing">timing information</a> to the
+          href="faq.html#timing">timing information</a> to the
           console; other statistics are still reported.</td>
 
           <td>true</td>
@@ -299,7 +299,7 @@ level: UserGuide
           the engines. This allows the engine to be easily run in a debugger.
           This is primarily a tool for debugging The Grinder engine, but it
           might also be useful to advanced users.
-          <a href="site:grinderstone">GrinderStone</a> uses this property to
+          <a href="{{ site.data.links.grinderstone.href }}">GrinderStone</a> uses this property to
           allow interactive debugging.
 
           <p>If you want instrumentation to work, you must specify
@@ -323,7 +323,7 @@ level: UserGuide
           names of classes that should be shared between the worker engines when
           <code>grinder.debug.singleprocess</code> is <code>true</code>.
           Class names can end with a <code>*</code> wildcard. See
-          <a href="site:sourceforge/bugs/shared-classes">bug 134</a> for more details.
+          <a href="{{ site.data.links.sourceforge.bugs.shared-classes.href }}">bug 134</a> for more details.
           </td>
 
           <td></td>

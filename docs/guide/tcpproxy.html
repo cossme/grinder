@@ -87,7 +87,7 @@ Engine initialised, listening on port 8001
   <p>It might also be a good idea to clear out any cache/temporary Internet files that
     might be on your workstation. On the other hand, you might decide not to do
     this if you want to record a script representing a frequent user to your
-    site who has images are <a href="site:gfaq/common/http-caching">resources in
+    site who has images are <a href="../faq.html/common.html#http-caching">resources in
     their browser cache</a>. Also for IE users,
     changing the temporary Internet files settings to check for a newer version
     on every visit to a page can be useful.</p>
@@ -103,7 +103,7 @@ Engine initialised, listening on port 8001
     <p>The EchoFilter is the default filter used by the TCPProxy if no options are specified
   in the startup command. The EchoFilter outputs the stream activity to the terminal. It
     can be very useful for debugging as described in <a
-    href="site:use-the-tcpproxy">this FAQ</a>.</p>
+    href="../faq.html#use-the-tcpproxy">this FAQ</a>.</p>
 
     <p>Bytes that do not have a printable ASCII representation are
     displayed in hexadecimal between square brackets. Here's some
@@ -183,7 +183,7 @@ parameters:
   <figure src="../images/tcpproxy-console.png" width="503" height="60"
     alt="TCPProxy Console"/>
 
-  <p>The TCPProxy console will be incorporated into the main <a href="site:console">console</a> in
+  <p>The TCPProxy console will be incorporated into the main <a href="console.html">console</a> in
   a future release.</p>
 
   <p>Set your browser to use the TCPProxy as
@@ -333,16 +333,16 @@ Test(200, 'Page 2').record(TestRunner.page2)
   <ol>
 
   <li>You can create a simple
-    <a href="site:properties"><code>grinder.properties</code></a>
+    <a href="properties.html"><code>grinder.properties</code></a>
     file and you can replay the recorded scenario with The Grinder.
     Your properties file should at least set <code>grinder.script</code> to
     <code>grinder.py</code>.</li>
 
   <li>Alternately you can use the console to <a
-  href="site:g3/console/ui/script-tab">distribute your script to an
+  href="console.html#Script+tab">distribute your script to an
   agent and set it as the script to run</a>. Each agent will still
   need a simple <a
-  href="site:properties"><code>grinder.properties</code></a> file
+  href="properties.html"><code>grinder.properties</code></a> file
   containing the console address, though you will not need to set the
   <code>grinder.script</code> property.</li>
 
@@ -389,8 +389,8 @@ Test(200, 'Page 2').record(TestRunner.page2)
    <p>
    If sometimes useful to offset test numbers for a test script when
 running several different scripts together, perhaps using the
-<a href="site:script-gallery/sequence">sequence</a>, or
-<a href="site:script-gallery/parallel">parallel</a> examples
+<a href="script-gallery.html#sequence">sequence</a>, or
+<a href="script-gallery.html#parallel">parallel</a> examples
 from the script gallery. This gives the tests contributed by each script
 a distinct range of test numbers, which is important because the test
 number uniquely identifies the test in the console and the data logs.</p>
@@ -464,7 +464,7 @@ stylesheet</a>.</p>
     <h2>SSL and HTTPS support</h2>
 
     <p>The TCPProxy has SSL support based on Java's <a
-    href="ext:oracle/java/jsse">JSSE</a> framework.</p>
+    href="{{ site.data.links.oracle.java.jsse.href }}">JSSE</a> framework.</p>
 
     <p>SSL relationships are necessarily point to point. When you
     interpose the TCPProxy in SSL communications between a browser and
@@ -515,7 +515,7 @@ stylesheet</a>.</p>
     the TCPProxy will report "SSL peer shut down incorrectly. The
     browser will just spin away until it times out. The easiest way to
     provide a server certificate is to copy the <em>testkeys</em> file
-    from the <a href="ext:oracle/java/jsse-archive">JSSE samples
+    from the <a href="{{ site.data.links.oracle.java.jsse-archive.href }}">JSSE samples
     distribution</a> and start the proxy using:</p>
 
 <pre class="sh">

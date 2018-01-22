@@ -7,7 +7,7 @@ level: UserGuide
 <h1>Agents and Workers</h1>
 </section>
 
-  <p>Refer to <a href="site:getting-started/processes">
+  <p>Refer to <a href="getting-started.html#processes">
   The Grinder processes</a> for an overview of the various
   processes. This page provides some further details.</p>
 
@@ -17,11 +17,11 @@ level: UserGuide
     <p>It is typical to run a single agent process on each load injector
        machine. </p>
     <p>When an agent is started, it attempts to connect to
-       the <a href="site:console">console</a>. If it can connect, it will
+       the <a href="console.html">console</a>. If it can connect, it will
        wait for a signal from the console before starting worker processes.
        Otherwise, the agent process will start a number of worker processes
        as specified by its local
-       <a href="site:properties">grinder.properties</a> file.
+       <a href=properties.html">grinder.properties</a> file.
     </p>
 
     <p>If the network connection between the agent and the console is
@@ -35,8 +35,8 @@ level: UserGuide
 	    <h2>Summary of agent process options</h2>
 
 	    <p>Most agent options are controlled by the
-	    <a href="site:properties">grinder.properties</a> file. You can
-	    <a href="site:properties/commandline">set properties on the command line</a>.</p>
+	    <a href="properties.html">grinder.properties</a> file. You can
+	    <a href="properties.html#commandline">set properties on the command line</a>.</p>
 
 	    <table>
 	     <tr>
@@ -58,7 +58,7 @@ level: UserGuide
     <h2>Worker processes</h2>
 
     <p>Worker processes are started by a controlling agent process. The agent
-    process passes each worker a set of <a href="site:properties">properties</a>
+    process passes each worker a set of <a href="properties.html">properties</a>
     that control its behaviour.</p>
   </section>
 

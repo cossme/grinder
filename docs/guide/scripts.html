@@ -18,30 +18,30 @@ level: UserGuide
     <p>The default scripting engine is Jython - the Java
     implementation of Python. Python is powerful, popular and easy on
     the eye. If you've not seen any Python before, take a look at the
-    <a href="site:script-gallery">script gallery</a> and Richard
-    Perks' <a href="site:tutorial">tutorial</a> to get a taste of what
+    <a href="script-gallery.html">script gallery</a> and Richard
+    Perks' <a href="tutorial-perks.html">tutorial</a> to get a taste of what
     its like. There are plenty of resources on the web, here are a few
     of them to get you started:</p>
 
     <ul>
-      <li><a href="ext:jython">The Jython home page</a></li>
-      <li><a href="ext:python">The Python language web site</a></li>
-      <li><a href="ext:pythonpitfalls">Ten Python pitfalls</a></li>
+      <li><a href="{{ site.data.links.jython.href }}">The Jython home page</a></li>
+      <li><a href="{{ site.data.links.python.href }}">The Python language web site</a></li>
+      <li><a href="{{ site.data.links.pythonpitfalls.href }}">Ten Python pitfalls</a></li>
     </ul>
 
-    <p>I recommend the <a href="ext:amazon/jython-essentials">Jython
+    <p>I recommend the <a href="{{ site.data.links.amazon.jython-essentials.href }}">Jython
     Essentials</a> book; you can read the <a
-    href="ext:oreilly/jython-essentials-c1">introductory chapter</a>
+    href="{{ site.data.links.oreilly.jython-essentials-c1.href }}">introductory chapter</a>
     for free.</p>
 
     <section>
       <h2>Alternative languages</h2>
 
       <p>The Grinder 3.6 and later support test scripts written in <a
-      href="site:clojure">Clojure</a>.</p>
+      href="clojure.html">Clojure</a>.</p>
 
       <p>Ryan Gardner has written an add-on <a
-      href="ext:grinder-groovy">script engine for Groovy</a>.</p>
+      href="{{ site.data.links.grinder-groovy.href }}">script engine for Groovy</a>.</p>
     </section>
   </section>
 
@@ -71,7 +71,7 @@ level: UserGuide
 
           <note>Although recommended, strictly <code>TestRunner</code>
           doesn't need to be a class. See the <a
-          href="site:script-gallery/helloworldfunctions">Hello World
+          href="script-gallery.html#helloworldfunctions">Hello World
           with Functions</a> example.</note>
         </li>
 
@@ -96,7 +96,7 @@ level: UserGuide
           available for the script to import. It can also be imported
           by any modules that the script calls. This is an instance of
           the <a
-          href="site:api/ScriptContext">Grinder.ScriptContext</a>
+          href="{{ site.data.links.grinder.g3.api.ScriptContext.href }}">Grinder.ScriptContext</a>
           class and provides access to context information (such as
           the worker thread ID) and services (such as logging and
           statistics).</p>
@@ -131,7 +131,7 @@ class TestRunner:
     </section>
   <section>
       <h2>Automatically generating scripts</h2>
-    <p>If you are creating a script for a website or web application, you can use the <a href="site:g3/tcpproxy/HTTPPluginTCPProxyFilter">TCPProxy</a> to generate an HTTPPlugin script
+    <p>If you are creating a script for a website or web application, you can use the <a href="tcpproxy.html#HTTPPluginTCPProxyFilter">TCPProxy</a> to generate an HTTPPlugin script
       suitable for use with The Grinder.</p>
   </section>
   </section>
@@ -143,9 +143,9 @@ class TestRunner:
     framework and can easily be started in many times in many worker
     processes on many machines, it doesn't report any statistics. For
     this we need to create some tests. A <a
-    href="site:api/Test">Test</a> has a unique test number and
+    href="{{ site.data.links.grinder.g3.api.Test.href }}">Test</a> has a unique test number and
     description. If you are using the <a
-    href="site:console">console</a>, it will update automatically to
+    href="console.html">console</a>, it will update automatically to
     display new <code>Test</code>s as they are created.</p>
 
     <p>Let's add a <code>Test</code> to our script.</p>
@@ -194,7 +194,7 @@ class TestRunner:
 
     <p>You're not restricted to instrument method calls. In fact, it's
     more common to instrument objects. Here's an example using The Grinder's
-    <a href="site:g3/plugins/http-plugin">HTTP plug-in</a>.</p>
+    <a href="http-plugin.html">HTTP plug-in</a>.</p>
 
 <pre class="jython">
 # A simple example using the HTTP plugin that shows the retrieval of a
@@ -223,22 +223,22 @@ class TestRunner:
     Python code in your test scripts.</p>
 
     <p>The Grinder script API can be used to access services from The
-    Grinder. The <a href="site:api/index">Javadoc</a> contains full
+    Grinder. The <a href="{{ site.data.links.grinder.g3.api.index.href }}">Javadoc</a> contains full
     information on all the packages, classes and interfaces that make
     up the core API, as well as additional packages added by the
     shipped plug-ins. This section provides overview information on
     various areas of the API. See also the <a
-    href="site:g3/plugins/http-plugin">HTTP plugin
+    href="http-plugin.html">HTTP plugin
     documentation</a>.</p>
 
     <dl>
       <dt><strong>The <a
-      href="site:api/script-package">net.grinder.script</a>
+      href="{{ site.data.links.grinder.g3.api.script-package.href }}">net.grinder.script</a>
       package</strong></dt>
 
       <dd>
         <p>An instance of <a
-        href="site:api/ScriptContext">Grinder.ScriptContext</a> called
+        href="{{ site.data.links.grinder.g3.api.ScriptContext.href }}">Grinder.ScriptContext</a> called
         <code>grinder</code> is automatically available to all
         scripts. This object provides access to context information
         and acts a starting point for accessing other services. The
@@ -246,19 +246,19 @@ class TestRunner:
         as <code>net.grinder.script.Grinder.grinder</code>.</p>
 
         <p>We have described the use of the <a
-        href="site:api/Test">Test</a> class <a
+        href="{{ site.data.links.grinder.g3.api.Test.href }}">Test</a> class <a
         href="#tests">above</a>.</p>
 
-        <p>The <a href="site:api/Statistics">Statistics</a> interface
+        <p>The <a href="{{ site.data.links.grinder.g3.api.Statistics.href }}">Statistics</a> interface
         allows scripts to query and modify <a
-        href="site:g3/statistics">statistics</a>, provide custom
+        href="statistics.html">statistics</a>, provide custom
         statistics, and register additional views of standard and
         custom statistics.</p>
 
       </dd>
 
       <dt><strong>The <a
-      href="site:api/common-package">net.grinder.common</a>
+      href="{{ site.data.links.grinder.g3.api.common-package.href }}">net.grinder.common</a>
       package</strong></dt>
 
       <dd>

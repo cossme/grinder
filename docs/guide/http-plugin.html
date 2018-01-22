@@ -11,11 +11,11 @@ level: UserGuide
   <h2>What's it for?</h2>
   <p>The HTTPPlugin is a mature plug-in for testing HTTP services.
   It has a number of utilities useful for HTTP scripts as well as a
-  tool, the  <a href="site:g3/tcpproxy/HTTPPluginTCPProxyFilter">TCPProxy</a>,
+  tool, the  <a href="tcpproxy.html#HTTPPluginTCPProxyFilter">TCPProxy</a>,
   which allows HTTP scripts to be automatically recorded. Recorded scripts
   are often customised, for example to simulate multiple users. This requires
   you to know a little about writing  <a
-  href="site:g3/scripts/scripts-intro">scripts</a>.
+  href="scripts.html">scripts</a>.
   </p>
 
   <p>The HTTPPlugin is built into The Grinder and is automatically initialised
@@ -26,7 +26,7 @@ from net.grinder.plugin.http import HTTPRequest
 </pre>
 
   <p>The key class provided by the plug-in is
-  <a href="site:api/HTTPRequest">HTTPRequest</a>.
+  <a href="{{ site.data.links.grinder.g3.api.HTTPRequest.href }}">HTTPRequest</a>.
   The best way to see how to use this class is to record a script with the
   TCPProxy.</p>
 
@@ -57,7 +57,7 @@ from net.grinder.plugin.http import HTTPRequest
   <section>
   <h2>Controlling the HTTPPlugin</h2>
   <p>The behaviour of the plug-in can be controlled from within scripts run by
-  The Grinder through the use of the <a href="site:api/HTTPPluginControl">
+  The Grinder through the use of the <a href="{{ site.data.links.grinder.g3.api.HTTPPluginControl.href }}">
   HTTPPluginControl</a> facade.</p>
 
   <section>
@@ -117,10 +117,10 @@ control.setUseAuthorizationModule(1)
 </pre>
 
      <p>The authentication details can be set using the <a
-     href="site:api/AuthorizationInfo">AuthorizationInfo</a>
+     href="{{ site.data.links.grinder.g3.api.AuthorizationInfo.href }}">AuthorizationInfo</a>
      API. HTTPClient maintains authentication information separately
      in each context, so the API must be called by each worker thread.
-     See the <a href="site:script-gallery/digestauthentication">
+     See the <a href="script-gallery.html#digestauthentication">
      Digest Authentication sample</a> in the script gallery, as well
      as the example in the next section.</p>
 
@@ -148,7 +148,7 @@ proxyURL1.setProxyServer("localhost", 8001)
 proxyURL2.setProxyServer("localhost", 8002)
 </pre>
 
-    <p>If the HTTP proxy requires authentication, enable the HTTPClient Authorization Module, as described in the previous section. Having so, each worker thread can set up the appropriate authentication details using the <a href="site:api/AuthorizationInfo">AuthorizationInfo</a> API. For example:</p>
+    <p>If the HTTP proxy requires authentication, enable the HTTPClient Authorization Module, as described in the previous section. Having so, each worker thread can set up the appropriate authentication details using the <a href="{{ site.data.links.grinder.g3.api.AuthorizationInfo.href }}">AuthorizationInfo</a> API. For example:</p>
 
 <pre class="jython">
 from net.grinder.plugin.http import HTTPRequest, HTTPPluginControl
@@ -279,19 +279,19 @@ decompression libraries from your script.</p>
   <section>
 	 <h2>Streaming requests and response</h2>
 
-	 <p>The <a href="site:api/HTTPRequest">HTTPRequest</a>
+	 <p>The <a href="{{ site.data.links.grinder.g3.api.HTTPRequest.href }}">HTTPRequest</a>
 	 class has support for sending request data from a stream. This allows an
 	 arbitrarily large amount of data to be sent without requiring a corresponding
 	 amount of memory. To do this, use these versions of the
-    <a href="site:api/HTTPRequest/POSTStream">POST</a>,
-    <a href="site:api/HTTPRequest/PUTStream">PUT</a>,
-    <a href="site:api/HTTPRequest/OPTIONSStream">OPTIONS</a>,
+    <a href="{{ site.data.links.grinder.g3.api.HTTPRequest.POSTStream.href }}">POST</a>,
+    <a href="{{ site.data.links.grinder.g3.api.HTTPRequest.PUTStream.href }}">PUT</a>,
+    <a href="{{ site.data.links.grinder.g3.api.HTTPRequest.OPTIONSStream.href }}">OPTIONS</a>,
     methods.
    </p>
 
    <p><code>HTTPRequest</code> allows the response body to be handled as a
    stream. Refer to the Javadoc for the
-   <a href="site:api/HTTPRequest/setReadResponseBody">
+   <a href="{{ site.data.links.grinder.g3.api.HTTPRequest.setReadResponseBody.href }}">
    setReadResponseBody</a> method for more details.</p>
 
   </section>

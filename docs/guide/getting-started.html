@@ -10,7 +10,7 @@ level: UserGuide
   are happy figuring things out for yourself and want to get your
   hands dirty, you might like to read <a href="#howtostart">How do I
   start The Grinder?</a> and then jump to the <a
-  href="site:script-gallery">Script Gallery</a>.</note>
+  href="script-gallery.html">Script Gallery</a>.</note>
   </section>
 
   <section>
@@ -19,9 +19,9 @@ level: UserGuide
     <p>The Grinder is a framework for running test scripts across a
     number of machines. The framework is comprised of three types of
     <em>process</em> (or program):
-    <em><a href="site:processes/workers">worker processes</a></em>,
-    <em><a href="site:processes/agents">agent processes</a></em>,
-    and the <em> <a href="site:console">console</a></em>.
+    <em><a href="processes.html#workers">worker processes</a></em>,
+    <em><a href="processes.html#agents">agent processes</a></em>,
+    and the <em> <a href="console.html">console</a></em>.
     The responsibilities of each of the process types are:</p>
 
     <ul>
@@ -71,7 +71,7 @@ level: UserGuide
     recorded. Tests are uniquely defined by
     a <em>test number</em> and also have a <em>description</em>.
     Users specify which tests to run using a <a
-    href="site:scripts-intro">test script</a>.
+    href="scripts.html">test script</a>.
     If you wish your scripts can report many different actions (e.g.
     different web page requests) against the same test, The Grinder
     will aggregate the results.</p>
@@ -83,13 +83,13 @@ level: UserGuide
 
     <p>You can write scripts for use with the Grinder by hand. There are a
     number of examples of how to do this in the
-    <a href="site:script-gallery">Script Gallery</a>. See the
-    <a href="site:scripts/scripts-intro">Scripts</a> section for more details
+    <a href="script-gallery.html">Script Gallery</a>. See the
+    <a href="scripts.html">Scripts</a> section for more details
     on how to create scripts.</p>
 
     <p>If you are creating a script to test a web site or web application, you
     can use the
-    <a href="site:g3/tcpproxy/HTTPPluginTCPProxyFilter">
+    <a href="tcpproxy.html#HTTPPluginTCPProxyFilter">
     TCPProxy</a> to record a browser session as a script.</p>
   </section>
 
@@ -115,7 +115,7 @@ level: UserGuide
     <note>To change the console addresses, set the
     <code>grinder.consoleHost</code> and
     <code>grinder.consolePort</code> properties in the <a
-    href="site:properties"><code>grinder.properties</code></a>
+    href="properties.html"><code>grinder.properties</code></a>
     file before starting The Grinder agents. The values should match those specified
     in the console options dialog.</note>
   </section>
@@ -188,7 +188,7 @@ Totals        250           0             156.70       23.32
 
     <ol>
       <li>Create a <a
-      href="site:properties"><code>grinder.properties</code></a> file.
+      href="properties.html"><code>grinder.properties</code></a> file.
       This file specifies general control information (how the worker
       processes should contact the console, how many worker processes
       to use, ..), as well as the name of the test script that will
@@ -198,7 +198,7 @@ Totals        250           0             156.70       23.32
       <code>grinder.jar</code> file which can be found in the
       <code>lib</code> directory.<p/></li>
 
-      <li>Start the <a href="site:console">console</a> on one of the test machines:
+      <li>Start the <a href="console.html">console</a> on one of the test machines:
 <pre class="sh">
 java net.grinder.Console
 </pre></li>
@@ -225,13 +225,13 @@ java net.grinder.Grinder myproperties
     <em>File/Options</em> menu option) which you should use to set the
     communication addresses and ports to match those in the
     <code>grinder.properties</code> files. The console <a
-    href="site:console/ui/process-controls">process controls</a> can
+    href="console.html#process-controls">process controls</a> can
     be used to trigger The Grinder test scenario. Each agent process
     then creates child worker processes to do the work.</p>
 
     <note>
     When you know a little more about the console, you can use it to
-    <a href="site:console/ui/script-tab">edit and distribute
+    <a href="console.html#Script+tab">edit and distribute
     properties files and scripts</a> instead of copying them to each
     agent machine.
     </note>
@@ -246,7 +246,7 @@ java net.grinder.Grinder myproperties
 
     <p>Included below are some sample scripts, for both Unix/Linux and
     Windows, for starting grinder agents, the console, and the
-    <a href="site:tcpproxy">TCPProxy</a> for recording HTTP scripts.</p>
+    <a href="tcpproxy.html">TCPProxy</a> for recording HTTP scripts.</p>
 
     <p><strong>Windows</strong></p>
     <ul>

@@ -11,8 +11,8 @@ layout: grinder
   <h2>The Source</h2>
 
   <p>From September 2011, The Grinder source code and documentation is
-  hosted in a <a href="ext:git">Git</a> repository. You can obtain a
-  copy from <a href="ext:sourceforge/git">Sourceforge</a>.
+  hosted in a <a href="{{ site.data.links.git.href }}">Git</a> repository. You can obtain a
+  copy from <a href="{{ site.data.links.sourceforge.git.href }}">Sourceforge</a>.
   </p>
 
   <p>Note, the documentation branch (<em>docs</em>) refers to the latest
@@ -28,11 +28,11 @@ layout: grinder
 
   <table class="noborder">
     <tr>
-      <td><a href="ext:oracle/java/javase">Java Standard Edition 6 ("Java 6") or higher</a></td>
+      <td><a href="{{ site.data.links.oracle.java.javase.href }}">Java Standard Edition 6 ("Java 6") or higher</a></td>
       <td></td>
     </tr>
     <tr>
-      <td><a href="ext:mvn">Apache Maven 3.0.3</a></td>
+      <td><a href="{{ site.data.links.mvn.href }}">Apache Maven 3.0.3</a></td>
       <td></td>
     </tr>
   </table>
@@ -49,7 +49,7 @@ tests.</p>
 
   <table class="noborder">
     <tr>
-      <td><a href="ext:jython">Jython 2.1, 2.5.0, 2.5.1, 2.5.2</a></td>
+      <td><a href="{{ site.data.links.jython.href }}">Jython 2.1, 2.5.0, 2.5.1, 2.5.2</a></td>
       <td>to verify The Grinder works with alternative Jython versions</td>
     </tr>
   </table>
@@ -61,7 +61,7 @@ tests.</p>
 
   <p>If you feel you have something worth sharing, please first
   discuss your ideas on the <a
-  href="ext:mail/grinder-development">grinder-development list</a>. If
+  href="{{ site.data.links.mail.grinder-development.href }}">grinder-development list</a>. If
   your ideas develop into code, you can submit patches to this list.
   Patches should be generated using <code>git format-patch -M -B</code>
   against either the latest released version of The Grinder 3, or the
@@ -75,23 +75,23 @@ tests.</p>
   <h2>Coding Standards</h2>
 
   <p>Contributions of Java code should be checked with the
-  <a href="ext:findbugs">FindBugs</a> static analysis tool, and pass with no
+  <a href="{{ site.data.links.findbugs.href }}">FindBugs</a> static analysis tool, and pass with no
   warnings. A FindBugs filter file for The Grinder can be found in the
   <code>etc</code> directory.</p>
 
   <p>I actively track code coverage, and expect full JUnit tests for
-  new code. I use <a href="ext:atlassian/clover">Clover</a>; you can get a
+  new code. I use <a href="{{ site.data.links.atlassian.clover.href }}">Clover</a>; you can get a
   free Clover license for development of The Grinder.</p>
 
   <p>I have a strong preference for classes that take all the things
   they need as parameters to their constructors (like <a
-  href="ext:fowler/constructor-injection">constructor injection</a>),
+  href="{{ site.data.links.fowler.constructor-injection.href }}">constructor injection</a>),
   and for contracts to be specified in terms of Java interfaces. This
   makes unit testing easier, and forces the developer to think
   about the purpose and contract of each class.</p>
 
   <p>Please pay attention to the existing coding style of The Grinder.
-  There is a <a href="ext:checkstyle">Checkstyle</a> configuration
+  There is a <a href="{{ site.data.links.checkstyle.href }}">Checkstyle</a> configuration
   file for The Grinder in <code>etc</code> which you should use to
   check the formatting of your code. You can do this using the
   <code>checkstyle:checkstyle</code> Maven goal. Checkstyle helps to
@@ -108,12 +108,12 @@ tests.</p>
 
     <p>Documentation can always be improved. Tutorials and examples from
     users of The Grinder are always welcome. Please mail suggestions,
-    corrections, and improvements to the <a href="ext:mail/grinder-development">
+    corrections, and improvements to the <a href="{{ site.data.links.mail.grinder-development.href }}">
     grinder-development@lists.sourceforge.net</a> mailing list.</p>
 
     <p>The Subversion repository for The Grinder documentation is public. Authors who
     have made valuable contributions can ask for check-in rights via the
-    <a href="ext:mail/grinder-development">grinder-development@lists.sourceforge.net</a>
+    <a href="{{ site.data.links.mail.grinder-development.href }}">grinder-development@lists.sourceforge.net</a>
     mailing list.</p>
   </section>
 
@@ -145,14 +145,14 @@ java -Duser.language="es" net.grinder.Console
       <h2>How to provide or update a translation</h2>
 
       <p>The translation properties files are stored in
-      <a href="ext:sourceforge/git/console-resources">
+      <a href="{{ site.data.links.sourceforge.git.console-resources.href }}">
       the source repository</a>. Getting the file directly from the
       repository will make your translation is as up to date as
       possible, and avoid duplicating effort.  The definition of all
       English text used by the console is contained in the
       <code>Console.properties</code> file. Individual translations
       are contained in <code>Console_XX.properties</code> where XX is
-      the two letter <a href="ext:iso-639">ISO 639 language
+      the two letter <a href="{{ site.data.links.iso-639.href }}">ISO 639 language
       code</a>. For example, the Spanish translation is contained in
       <code>Console_es.properties</code>. If you want to update an
       existing translation, make a copy of the file. If you want to
@@ -178,7 +178,7 @@ java -Duser.language="es" net.grinder.Console
       than no translation.</p>
 
       <p>Post your translation to the <a
-      href="ext:mail/grinder-development">grinder-development
+      href="{{ site.data.links.mail.grinder-development.href }}">grinder-development
       list</a>, stating the git hash of the revision upon which it was
       based. Please also include a statement that you are happy for
       your work to be distributed under the terms of <a
@@ -195,8 +195,8 @@ java -Duser.language="es" net.grinder.Console
     </p>
 
     <p>On release, The Grinder jar files are deployed to the <a
-    href="ext:sonatype/oss">Sonatype</a> OSS Nexus repository, and
-    will be synchronised to <a href="ext:mvn/central">Maven
+    href="{{ site.data.links.sonatype.oss.href }}">Sonatype</a> OSS Nexus repository, and
+    will be synchronised to <a href="{{ site.data.links.mvn.central.href }}">Maven
     Central</a> soon afterwards.</p>
 
   </section>

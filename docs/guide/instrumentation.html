@@ -14,14 +14,14 @@ level: UserGuide
   that should be recorded. This is called <em>instrumentation</em>.
   </p>
 
-  <p>Code is instrumented for a <a href="site:scripts-intro/tests">Test</a>.
+  <p>Code is instrumented for a <a href="scripts.html#tests">Test</a>.
   When instrumented code is called, the test's statistics are updated.
   The standard statistics record the time taken, number of calls, and number
   of errors. Advanced scripts can add additional
-  <a href="site:g3/statistics">custom statistics</a>.</p>
+  <a href="statistics.html">custom statistics</a>.</p>
 
     <p>We've seen an example of using instrumentation in the <a
-    href="site:scripts-intro/tests">introduction</a>.  To recap, you
+    href="scripts.html#tests">introduction</a>.  To recap, you
     instrument an object by using a <code>Test</code> to modify the
     Java byte code of the object.  Here's the example code again.</p>
 
@@ -105,11 +105,11 @@ class TestRunner:
       <h2>Selective instrumentation</h2>
 
       <p>The Grinder 3.7 adds an overloaded version of <a
-      href="site:api/Test/record-filter">record</a> that allows the
+      href="{{ site.data.links.grinder.g3.api.Test.record-filter.href }}">record</a> that allows the
       target object to be instrumented selectively.</p>
 
       <p>Selective instrumentation is useful for instrumenting
-      instances of the <a href="site:api/HTTPRequest">HTTPRequest</a>
+      instances of the <a href="{{ site.data.links.grinder.g3.api.HTTPRequest.href }}">HTTPRequest</a>
       class, which has ancillary methods that typically need to be
       called without affecting test statistics. Here's an example of
       how to use selective instrumentation.
@@ -146,7 +146,7 @@ class TestRunner:
     Java 6 feature.</p>
 
     <p>When you start an agent process, you will normally see a line
-    like this in the <a href="site:getting-started/output">worker
+    like this in the <a href="getting-started.html#output">worker
     process log file</a>.</p>
 
     <pre class="text">

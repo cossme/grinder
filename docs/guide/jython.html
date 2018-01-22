@@ -11,21 +11,21 @@ level: UserGuide
     <h2>Scripts</h2>
 
     <p>The core requirements for Jython scripts can be found in the <a
-    href="site:scripts-intro/jython-scripts/">introduction</a>. </p>
+    href="scripts.html#jython-scripts">introduction</a>. </p>
 
     <section>
       <h2>Importing modules</h2>
 
       <p>Scripts can use code packaged in Jython <a
-      href="site:python/modules>modules"> modules</a>. The Grinder
+      href="python.html#modules"> modules</a>. The Grinder
       adds both the directory containing the script and the <a
-      href="site:scripts-intro/cwd">working directory</a> of the worker
+      href="scripts.html#cwd">working directory</a> of the worker
       process (which may be the same) to the Python path, allowing
       modules to be imported from these locations.</p>
 
       <p>If you want to load modules from other locations, you should
       adjust the Python path. One way to do this is to set the <a
-      href="site:jython/environment">JYTHONPATH</a> environment
+      href="jython.html#environment">JYTHONPATH</a> environment
       variable.</p>
 
     </section>
@@ -58,7 +58,7 @@ level: UserGuide
     <code>python.home</code> as described below (in which case the
     directory will that specified in the Python registry), or by
     setting the Java property <code>python.cachedir</code> in your <a
-    href="site:properties">properties</a> file:
+    href="properties.html">properties</a> file:
     </p>
 
     <pre class="sh">
@@ -93,7 +93,7 @@ grinder.jvm.arguments = -Dpython.home=/opt/jython/jython2.5.3 -Dpython.cachedir=
       library modules, examples, and documentation. To use the
       standard library modules, you need to tell The Grinder the
       location of this directory. You can do this either by adding the
-      following to your <a href="site:properties">properties</a>
+      following to your <a href="properties.html">properties</a>
       file:</p>
 
       <pre class="sh">
@@ -115,7 +115,7 @@ java -Dgrinder.jvm.arguments=-Dpython.home=/opt/jython/jython2.5.3 net.grinder.G
 
       <p>Jython picks up user and site preferences from several
       sources (see <a
-      href="ext:jython/registry">http://www.jython.org/docs/registry.html</a>).
+      href="{{ site.data.links.jython.registry.href }}">http://www.jython.org/docs/registry.html</a>).
       A side effect of setting <code>python.home</code> is that the
       installed registry file will be used.</p>
       </section>

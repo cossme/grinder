@@ -12,7 +12,7 @@ level: UserGuide
 
     <p>Details of the statistics provided by The Grinder can be found in
       the documentation of the <a
-      href="site:api/Statistics">Statistics</a>
+      href="{{ site.data.links.grinder.g3.api.Statistics.href }}">Statistics</a>
       interface. Scripts can use this interface to:
     </p>
 
@@ -44,18 +44,18 @@ level: UserGuide
     <h2>Querying and updating statistics</h2>
 
     <p>A script can query the statistics about the last completed test
-    using <a href="site:api/Statistics/getForLastTest">
+    using <a href="{{ site.data.links.grinder.g3.api.Statistics.getForLastTest.href }}">
     grinder.statistics.forLastTest</a>. Script code instrumented by a test can access
     information about the statistics for the test (which may be incomplete) using
-    <a href="site:api/Statistics/getForCurrentTest">
+    <a href="{{ site.data.links.grinder.g3.api.Statistics.getForCurrentTest.href }}">
     grinder.statistics.forCurrentTest</a>. For details of the query
     and update methods, see
-    <a href="site:api/StatisticsForTest">
+    <a href="{{ site.data.links.grinder.g3.api.StatisticsForTest.href }}">
     StatisticsForTest</a>. Refer to the documentation of the <a
-    href="site:api/Statistics">Statistics</a> interface for other
+    href="{{ site.data.links.grinder.g3.api.Statistics.href }}">Statistics</a> interface for other
     details.</p>
 
-    <p>An <a href="site:script-gallery/statistics">example script</a>
+    <p>An <a href="script-gallery.html#statistics">example script</a>
     demonstrating these APIs can be found in the Script Gallery.</p>
 
   </section>
@@ -66,12 +66,12 @@ level: UserGuide
     <p>Custom statistic expressions can be added to console views and
     the worker process summary tables (found in the <code>out_*</code>
     log files) using the <a
-    href="site:api/Statistics/registerSummaryExpression">registerSummaryExpression</a>
+    href="{{ site.data.links.grinder.g3.api.Statistics.registerSummaryExpression.href }}">registerSummaryExpression</a>
     method.</p>
 
     <p>Custom expressions can be added to worker process
     <code>data_*</code> using the <a
-    href="site:api/Statistics/registerDataLogExpression">registerDataLogExpression</a>
+    href="{{ site.data.links.grinder.g3.api.Statistics.registerDataLogExpression.href }}">registerDataLogExpression</a>
     method.</p>
 
     <p>Both methods take a <em>displayName</em> and an <em>expression</em> as
@@ -84,7 +84,7 @@ level: UserGuide
     no value for the key exists, the raw display name string is used.</p>
 
     <p>Expressions are composed of statistic names (see <a
-    href="site:api/Statistics">Statistics</a>) in a simple post-fix
+    href="{{ site.data.links.grinder.g3.api.Statistics.href }}">Statistics</a>) in a simple post-fix
     format using the symbols +, -, / and *, which have their usual
     meanings, in conjunction with simple statistic names or
     sub-expressions. Precedence is controlled by grouping expressions

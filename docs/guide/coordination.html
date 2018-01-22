@@ -11,9 +11,9 @@ level: UserGuide
   independently of each other. For web load generation, a worker
   thread corresponds to the actions of a single, independent user.
   Worker threads can generate unique data using methods such as <a
-  href="site:api/ScriptContext/getProcessNumber">getProcessNumber()</a>
+  href="{{ site.data.links.grinder.g3.api.ScriptContext.getProcessNumber.href }}">getProcessNumber()</a>
   and <a
-  href="site:api/ScriptContext/getThreadNumber">getThreadNumber()</a>.
+  href="{{ site.data.links.grinder.g3.api.ScriptContext.getThreadNumber.href }}">getThreadNumber()</a>.
   Coordination of activity within a worker process can use standard
   Java or Jython synchronisation APIs.
   </p>
@@ -26,7 +26,7 @@ level: UserGuide
   <section>
     <h2>Barriers</h2>
 
-    <p>A <a href="site:api/Barrier">barrier</a> is a pre-arranged
+    <p>A <a href="{{ site.data.links.grinder.g3.api.Barrier.href }}">barrier</a> is a pre-arranged
     synchronisation point at which worker threads will wait for each
     other. There can be many synchronisation points; each uses a
     unique barrier name.
@@ -34,10 +34,10 @@ level: UserGuide
 
     <p>Each worker thread that wants to participate in a
     synchronisation point should create a barrier with the given name
-    using the <a href="site:ScriptContext/barrier">ScriptContext</a>. The
+    using the <a href="{{ site.data.links.grinder.g3.api.ScriptContext.Barrier.href }}">ScriptContext</a>. The
     worker thread can wait for all other threads that have created
     barriers with a particular name by calling <a
-    href="site:api/Barrier/await">await</a>.
+    href="{{ site.data.links.grinder.g3.api.Barrier.await.href }}">await</a>.
     </p>
 
     <p>Barriers are usually created in the
@@ -85,7 +85,7 @@ level: UserGuide
       <h2>Barrier life cycle</h2>
 
       <p>A worker thread can reuse a barrier by calling <a
-      href="site:api/Barrier/await">await</a> again. The call will
+      href="{{ site.data.links.grinder.g3.api.Barrier.await.href }}">await</a> again. The call will
       block until the other workers using barriers with the same name
       all call <code>await</code>.</p>
 
@@ -97,7 +97,7 @@ level: UserGuide
      required.</p>
 
      <p>Worker threads can remove themselves from a synchronisation
-     point by <a href="site:api/Barrier/cancel">cancelling</a> a
+     point by <a href="{{ site.data.links.grinder.g3.api.Barrier.cancel.href }}">cancelling</a> a
      barrier directly.</p>
     </section>
   </section>
