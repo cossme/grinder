@@ -64,9 +64,12 @@ function loadLogs(data) {
 }
 
 function openLogFile(e) {
-    var idLogs = document.getElementById("adressLog").innerText;
-    document.getElementById("downloadfile").href = "/_downloadFile?logFile="+encodeURI(idLogs);
-    var log = idLogs + '/' + e.text;
+    var logFolder = document.getElementById("adressLog").innerText;
+    var log = logFolder + '/' + e.text;
+    downloadButton = document.getElementById("downloadfile");
+    downloadButton.href = "/_downloadFile?logFile="+encodeURIComponent(log);
+    downloadButton.download = e.text;
+
     $.getJSON('/_getLog', {
         doclo: log
     }, function(data) {
@@ -100,40 +103,6 @@ $(document).ready(function() {
        $("#versionGrinder").text("The Grinder v"+data.versionG);
     });
 
-    var elementlog = document.getElementById('idLog');
-
-    elementlog.addEventListener('dblclick', function() {
-
-        if (alertfirefox == false) {
-            ua = navigator.userAgent;
-            nav=ua.indexOf("Firefox");
-
-            if (nav > 0) {
-                alert("You can download only one Logfile cause of Firefox, please use Chrome for a best usage or refresh your cache everytime")
-                alertfirefox=true
-            }
-        }
-
-        log = document.getElementById("idLog").value;
-
-        document.getElementById("downloadfile").href = "/_downloadFile?logFile="+log;
-
-        if (log == "") {
-
-            alert("please choose a file")
-
-        } else {
-            $.getJSON('/_traitelog', {
-                doclo: log
-            }, function(data) {
-
-                document.getElementById("loglog").value = (data.doc);
-            });
-        }
-    });
-
-
-    document.getElementById("workerr").disabled = true;
     editor = CodeMirror.fromTextArea(document.getElementById("demotext"), {
         lineNumbers: true,
     });
@@ -751,20 +720,17 @@ $(function() {
 
 $(function() {
     $('#saveas').bind('click', function() {
-
         var nomSave = prompt("Choose the name of your file", "");
-
         if (nomSave != null) {
-
             $.getJSON('/_saveAs', {
                 newname: nomSave,
                 ajaa: editor.getValue()
             }, function(data) {
-
-            });
-
+                $.getJSON('/_listFiles', {}, function(data) {
+                    loadFiles(data);
+                });
+             });
         }
-
         return false;
     });
 });
@@ -1328,7 +1294,7 @@ function changeTempo() {
 function setPropertiesFile() {
     var tess = document.getElementById("currentFile").innerText;
     if (tess != "") {
-        document.getElementById("selectedPropertiesFile").innerHTML = "<a onClick='openFile(this)' href='#'>" + data.etoilefile + "</a>";
+        document.getElementById("selectedPropertiesFile").innerHTML = "<a onClick='openFile(this)' href='#'>" + tess + "</a>";
         $.getJSON('/_setPropertiesFileLocation', {
             a: tess
         }, function(data) {});
