@@ -82,7 +82,7 @@ public class SpringBootApp {
         File[] listOfFiles = folder.listFiles();
         String output = "{\n";
         output += " \"logPath\": \"" + folder.getAbsolutePath().replaceAll("\\\\", "/") + "\",\n" ;
-        output += " \"doclog\": {";
+        output += " \"doclog\": { ";
         if (listOfFiles != null) {
             for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile()) {
@@ -438,7 +438,7 @@ public class SpringBootApp {
     }
 
     @RequestMapping(value="/_downloadFile", method = RequestMethod.GET)
-    ResponseEntity<Resource> downloadFile() throws IOException {
+    ResponseEntity<Resource> downloadFile(@RequestParam(value="logFile", required=false) String logFile) throws IOException{
         File file = new File(logFile);
         Path path = Paths.get(file.getAbsolutePath());
         Resource resource = new ByteArrayResource(Files.readAllBytes(path));

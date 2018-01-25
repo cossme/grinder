@@ -65,6 +65,7 @@ function loadLogs(data) {
 
 function openLogFile(e) {
     var idLogs = document.getElementById("adressLog").innerText;
+    document.getElementById("downloadfile").href = "/_downloadFile?logFile="+encodeURI(idLogs);
     var log = idLogs + '/' + e.text;
     $.getJSON('/_getLog', {
         doclo: log
@@ -115,7 +116,8 @@ $(document).ready(function() {
 
         log = document.getElementById("idLog").value;
 
-        document.getElementById("downfile").download = log + ".txt";
+        document.getElementById("downloadfile").href = "/_downloadFile?logFile="+log;
+
         if (log == "") {
 
             alert("please choose a file")
@@ -151,7 +153,7 @@ $(document).ready(function() {
     $("#changeTime").attr("value", tempo);
 
     canvas1 = document.getElementById('myChart8');
-    canvas1.height = 110;
+    canvas1.height = 100;
     data1 = {
         labels: ["Average time"],
         datasets: []

@@ -368,6 +368,12 @@ img.starButton {
    vertical-align: middle;
 }
 
+input {
+    background-color: #4E4E4E;
+    color: #efe6d4;
+    width: 90%;
+    border: 1px solid #d0d0d0;
+}
 
 @media print, screen and (max-width: 720px) { #title .credits { display: block; width: 100%; line-height: 30px; text-align: center; }
   #title .credits .left { float: none; display: block; }
