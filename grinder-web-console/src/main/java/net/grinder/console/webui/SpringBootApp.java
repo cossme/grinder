@@ -81,6 +81,7 @@ public class SpringBootApp {
         File folder = new File(properties.getProperty("grinder.logDirectory", "log"));
         File[] listOfFiles = folder.listFiles();
         String output = "{\n";
+        output += " \"logPath\": \"" + folder.getAbsolutePath().replaceAll("\\\\", "/") + "\",\n" ;
         output += " \"doclog\": {";
         if (listOfFiles != null) {
             for (int i = 0; i < listOfFiles.length; i++) {
@@ -138,11 +139,12 @@ public class SpringBootApp {
         }
     }
 
-    @RequestMapping("/_traitelog")
+    @RequestMapping("/_getLog")
     @ResponseBody
-    String traiteLog(@RequestParam(value="doclo", required=true) String logFile){
+    String getLog(@RequestParam(value="doclo", required=true) String logFile){
         String contentFile = "";
-        String filePath = properties.getProperty("grinder.logDirectory") + "/" + logFile;
+        //String filePath = properties.getProperty("grinder.logDirectory") + "/" + logFile;
+        String filePath = logFile;
         try {
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(filePath));
             StringWriter out = new StringWriter();
@@ -383,7 +385,7 @@ public class SpringBootApp {
         return output;
     }
 
-    @RequestMapping(value="/_changeChem2", produces={"application/json"})
+    @RequestMapping(value="/_changeDir", produces={"application/json"})
     @ResponseBody
     String changeChem2(@RequestParam(value="newPath2", required=true) String newPath){
         currentPath = newPath.replace('\\', '/');

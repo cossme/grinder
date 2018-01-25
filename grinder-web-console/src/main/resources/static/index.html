@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
    <head>
-      <title>GrinderGui</title>
+      <title>The Grinder - web console</title>
       <meta charset="utf-8">
        <meta http-equiv="pragma" content="no-cache" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
       <link rel="stylesheet" href="/css/bootstrap.min.css">
-      <link rel="stylesheet" href="/css/index.css">
+      <!--link rel="stylesheet" href="/css/index.css"-->
 
       <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
           <script src="/js/jquery.min.js"></script>
@@ -25,278 +25,182 @@
 
    </head>
    <body onunload="">
+   <div class="wrapper">
 
-      <nav class="navbar navbar-inverse">
-         <div class="container-fluid">
-            <div class="navbar-header">
-               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-               <span class="icon-bar"></span>
-               <span class="icon-bar"></span>
-               <span class="icon-bar"></span>                        
-               </button>
-                <a href="http://grinder.sourceforge.net/g3/getting-started.html" target = "_blank"><img src="/grinder-logo.png" height="55"></a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-               <ul class="nav navbar-nav">
-                  <li class="active"><a onclick="showElem();" data-toggle="tab" href="#home">Test</a></li>
-                  
-                  <li><a data-toggle="tab" onclick="hideElem();" href="#menu2">Results</a></li>
-                  <li><a data-toggle="tab" onclick="hideElem();" href="#menu3">Graphs</a></li>
-                  <li><a data-toggle="tab" onclick="hideElem();" href="#menu4">Settings</a></li> 
-                  <li><a data-toggle="tab" id="loclog" onclick="logElem();" href="#menu5">Local logs</a></li>
-               </ul>
-            </div>
-         </div>
-      </nav>
-      <div class="container-fluid text-center">
-         <div class="row content">
-            <div id="barre" style="font-size: 14px;" class="col-sm-5 sidenav" >
-               <br>
-               
-               
-               <div id="advan" style="  height: 67%">
-               <center>
-                  <h4 style="color:#8297D7">File Settings</h4>
-               </center>
-                  <p style="color:#000000">Server's files</p>
-                   <img src="/back.png"    id="changePath2" height="38" width="38" style="cursor:pointer;" />&nbsp;&nbsp;
-                   <img src="/setPath.png" id="setPath"     height="38" width="38" style="cursor:pointer;" />
-                   <br/>
-                  <input id="msgPath2" type="text" class="form-control" name="msg" placeholder="" disabled>
-                  <SELECT  multiple class="form-control" id="idListAdvan" name="GFAP" style="height:70%">
-                     <OPTION></OPTION>
-                  </SELECT>
-                  <!-- <button type="boutton" style="background-color: #f7f1fc; color: black" class="btn btn-sm btn-success" name="submit" id="loadfile">  Select </button>  -->
+       <div id="header">
+           <nav>
+               <li class="fork"><a onclick="showElem(this);" href="#results">Results</a></li>
+               <li class="separator"/>
+               <li class="fork"><a onclick="showElem(this);" href="#editor">Editor</a></li>
+               <li class="separator"/>
+               <li class="fork"><a onclick="showElem(this);" href="#graphs">Reporting</a></li>
+               <li class="separator"/>
+               <li class="fork"><a onclick="showElem(this);" href="#processes">Agents</a></li>
+               <li class="separator"/>
+               <li class="fork"><a onclick="showElem(this);" href="#logs">Local Logs</a></li>
+               <li class="separator"/>
+               <li class="fork"><a onclick="showElem(this);" href="#settings">Settings</a></li>
+               <li class="separator"/>
+               <li class="image"><a style="all: unset;" target="_blank" href="https://cossme.github.io/grinder/guide/getting-started.html"><img src="/img/grinder-logo.png" style="height: 50px"></a></li>
+           </nav>
+       </div><!-- end header -->
 
+       <div id="control-panel">
+           <nav>
+               <li class="image"><a style="all: unset;" href="#" id="workerr"><img alt="Start or stop" onclick="switchIcon(this);" src="/img/start_grinder.png" style="height: 50px"></a></li>
+               <li class="separator"/>
+               <li class="image"><a style="all: unset;" href="#" id="restartrecord"><img alt="Reset statistics" src="/img/reset_grinder.png" style="height: 50px"></a></li>
+               <li class="separator"/>
+               <li class="image"><a style="all: unset;" href="#" id="startAgent"><img alt="Start an agent" src="/img/agent_grinder.png" style="height: 50px"></a></li>
+               <li class="separator"/>
+               <li class="stat"><span id="dashboard_agents">0</span> agents</li>
+               <li class="double_separator"/>
+               <li class="stat"><span id="dashboard_error_rate">0</span>% error</li>
+               <li class="double_separator"/>
+               <li class="stat"><span id="dashboard_tps">0</span> TPS</span></li>
+               <li class="double_separator"/>
+           </nav>
+       </div><!-- end header -->
 
-
-               <br><br> </td>
-               <button type="boutton" class="btn btn-sm btn-success" name="submit"  style="background-color: #f7f1fc; color: black" id="testdistribution">Distribute files</button>
+       <section>
+            <div id="mainpanel">
+              <div id="#results" class="tab-pane active">
+                 <h2>Results</h2>
+                 <div class="container">
+                    <table class="table">
+                       <thead>
+                          <tr>
+                             <th class="result">Test(s)</th>
+                             <th class="result">Tests</th>
+                             <th class="result">Errors</th>
+                             <th class="result">average time(ms)</th>
+                             <th class="result">Test Time Standard Deviation(ms)</th>
+                             <th class="result">TPS</th>
+                             <th class="result">Peak TPS</th>
+                          </tr>
+                       </thead>
+                       <tbody id="datakid">
+                       </tbody>
+                    </table>
+                 </div>
+              </div>
+              <div id="#editor" class="tab-pane">
+                  <div class="sidemenu">
+                      <h2>Server files</h2>
+                      <span id="currentPath"></span>
+                      <ul class="treeview" id="listFile" >
+                          <li class="folder"><a id="changePath2" href="#">..</a></li>
+                          <li class="folder"><a href="#">folder</a></li>
+                          <li class="file"><a href="#">file.txt</a></li>
+                      </ul>
+                      <button type="boutton" name="submit" id="setPath">Set Distribution Folder</button>
+                      <button type="boutton" name="submit" id="testdistribution">Distribute files</button>
+                      <br>
                   </div>
-
-                 <div id="LogMode" style="height: 67%; display:none">
-               <center>
-                  <h4 style="color:#8297D7">Log Files</h4>
-                  <br>
-               </center>
-                  <p style="color:#000000"></p>
-              
-                  <img src="/refresh.png" id="refreshlog"   height="40" width="40" style="cursor:pointer;" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                   <img src="/delete.png" id="deletelog"   height="53" width="53" style="cursor:pointer;" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                 
-
-
-      
-
-                  <br><br>
-
-
-               
-                  <SELECT  multiple class="form-control" id="idLog" name="GFAP" style="height:98%">
-                     <OPTION></OPTION>
-                  </SELECT>
-                  
-                
-               
-                  <br>
-               <br><br> </td>
-
+                  <div class="content">
+                    <h2>Edit file: </h2>
+                    <span id="currentFile"></span>
+                    <textarea id="demotext" rows="20" cols="90"></textarea>
+                    <button type="boutton" name="submit" id="te">Save</button>
+                    <button type="boutton" name="submit" id="saveas">Save as... </button>
+                    <img id="starButton" class="starButton" width="28px" src="/img/select-properties-rollover.png" onclick="setPropertiesFile();"/>
+                    <span id="selectedPropertiesFile">No properties selected...</span>
                   </div>
+              </div>
+              <div id="#graphs" class="tab-pane">
+                  <h2>Reporting</h2>
+                  <div style="height: 100%">
+                    <canvas id="myChart8"  style="display:none;height: 50px" ></canvas>
+                    <canvas id="myChart9"  style="display:none;height: 50px" ></canvas>
+                    <canvas id="myChart10" style="height: 50px" ></canvas>
+                  </div>
+                  <div>
+                      <a class="button" href="#" onclick="courbe3()" class="btn btn-default">TPS</a>
+                      <a class="button" href="#" onclick="courbe1()" class="btn btn-default">Average time(ms)</a>
+                      <a class="button" href="#" onclick="courbe2()" class="btn btn-default">Test Time Standard Deviation(ms)</a>
+                  </div>
+              </div>
+              <div id="#processes" class="tab-pane">
+                  <h3>Agent Status</h3>
+                  <table class="table" id="kids">
+                      <thead>
+                      <tr>
+                          <th style="text-align: center">Name</th>
+                          <th style="text-align: center">State</th>
+                          <th style="text-align: center">Workers</th>
+                      </tr>
+                      </thead>
+                      <tbody id="kids-body">
+                      </tbody>
+                  </table>
+              </div>
+              <div id="#settings" class="tab-pane">
+                 <div class="container">
+                   <h2>Change settings</h2>
+                   <table class="table">
+                   <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Current Value</th>
+                        <th>Action</th>
 
-               
+                      </tr>
+                   </thead>
+                   <tbody>
+                      <tr class="active">
+                        <td>Refresh time </td>
+                        <td><input type="number" id="changeTime"></td>
+                        <td><button type="boutton" name="submit"  onclick="changeTempo()">Change</button></td>
+                      </tr>
+
+                      <tr class="active">
+                        <td>Grinder Base Path</td>
+                        <td><input type="text" id="basePath"></td>
+                        <td><button type="boutton" name="submit" onclick="setBasePath()">Change</button></td>
+                      </tr>
+
+                      <td>Kind of reported data</td>
+                      <td>
+                          <span id="fromThe" style="color: #f6803f"> From the beginning  &nbsp; &nbsp; &nbsp; &nbsp; </span>
+                          <label class="switch">
+                              <input type="checkbox" id="checkboxD" checked>
+                              <span class="slider round"> </span>
+                          </label>
+                          <span id="fromThe2" style="color: #2196F3">  &nbsp; &nbsp;  &nbsp; &nbsp; latest </span>
+                      </td>
+                      <td></td>
+                      </tr> <tr class="active">
+
+
+
+                    </tbody>
+                 </table>
+              </div>
             </div>
-            <div id="mainpanel" class="col-sm-9 text-left" >
-               <div class="tab-content" >
-                  <div id="home" class="tab-pane fade in active">
-                     <span>
-                       <span style="color:#8297D7; margin-left: 0%; font-size:200%">Edit your scenario: </span> <span  id="adressFile" style="color:#8297D7; margin-left: 2%; font-size:200%"></span>
-                       <textarea style="background-color: #e0e0e0" id="demotext" rows="20" cols="90"></textarea>
-                     </span>
-                     <button type="boutton" class="btn btn-sm btn-success" name="submit" id="te" style="background-color: #8297D7">  Save </button>  &nbsp;
-                     
-                     <button type="boutton" class="btn btn-sm btn-success" name="submit" id="saveas" style="background-color: #8297D7"> Save as .. </button>
-                     
-                     <button type="boutton" class="btn btn-sm btn-success" name="submit" id="workerr" style="background-color: #8297D7">  Launch Test  </button>&nbsp;&nbsp;&nbsp;&nbsp;
-                     <img id="saveEtoil" src="/select-properties-rollover.png" onclick="javascript:saveEtoile();"  height="32" width="32" style="cursor:pointer;" />
-                    
-                     <b><span id="filesaved">No properties selected...</span></b>
-
-
+              <div id="#logs" class="tab-pane">
+                    <div id="LogMode" class="sidemenu">
+                        <h3>Log Files</h3>
+                        <span style="display: none" id="adressLog"></span>
+                        <ul class="treeview" id="idLog" >
+                            <li class="file"><a href="#">file.txt</a></li>
+                        </ul>
+                        <button type="boutton" name="submit" id="refreshlog">Refresh</button>
+                        <button type="boutton" name="submit" id="deletelog">Clear All</button>
+                    </div>
+                  <div class="content">
+                      <div class="logEditor">
+                        <h2>Local logs</h2>
+                        <textarea class="form-control" id="loglog" rows="18" cols="40" readonly></textarea>
+                      </div>
+                      <a class="button" id="downloadfile" href="/_downloadFile" download="GuiGrinder.log">Download</a>
                   </div>
-
-                    
-     
-
-                  
-
-                  <div id="menu2" class="tab-pane fade">
-
-                     <CENTER>
-                        <h3 style="color: #8297D7">Results</h3>
-                     </CENTER>
-                     <div class="container" style="width: 100%;">
-                        <table class="table">
-                           <thead>
-                              <tr>
-                                 <th style="color: #8297D7">Test(s)</th>
-                                 <th style="color: #8297D7">Tests</th>
-                                 <th style="color: #8297D7">Errors</th>
-                                 <th style="color: #8297D7">average time(ms)</th>
-                                 <th style="color: #8297D7">Test Time Standard Deviation(ms)</th>
-                                 <th style="color: #8297D7">TPS</th>
-                                 <th style="color: #8297D7">Peak TPS</th>
-                              </tr>
-                           </thead>
-                           <tbody id="datakid">
-                           </tbody>
-                        </table>
-                        <!--button type="boutton" style="background-color: #8297D7" class="btn btn-sm btn-success"  id="stoprecord">  Stop recording Datas </button-->
-                        <button type="boutton" style="background-color: #8297D7" class="btn btn-sm btn-success"  id="restartrecord">  Reset </button> 
-                     </div>
-                  </div>
-
-                  <div id="menu3" class="tab-pane fade">
-<br>
-<div class="btn-group btn-group-justified">
-  <a href="#" onclick="courbe1()" class="btn btn-default">Average time(ms)</a>
-  <a href="#" onclick="courbe2()" class="btn btn-default">Test Time Standard Deviation(ms)</a>
-  <a href="#" onclick="courbe3()" class="btn btn-default">TPS</a>
-</div>
-
-               <canvas id="myChart8"  style=" width: 100px " ></canvas>
-               <canvas id="myChart9"  style="display:none;   width: 100px " ></canvas>
-               <canvas id="myChart10"  style="display:none;  width: 100px " ></canvas>
-
-
-                  </div>
-                 <div id="menu4" class="tab-pane fade">
-                     <br>
-
-                     <div class="container">
-  
-  <center> <p>Change settings</p></center>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Current Value</th>
-        <th>Action</th>
-       
-      </tr>
-    </thead>
-    <tbody>
-         
-
-      <tr class="active">
-        <td>Refresh time </td>
-        <td><input type="number" id="changeTime" class="form-control"></td>
-        <td><button type="boutton" class="btn btn-sm btn-success" name="submit"  onclick="changeTempo()"  style="background-color: #f7f1fc; color: black">Change</button></td>
-      </tr>
-
-      <tr class="active">
-        <td> Initial Path to your folders</td>
-
-        <td><input type="text" id="setmsg2" class="form-control"></td>
-
-        <td><button type="boutton" class="btn btn-sm btn-success" name="submit"  id="setPath2"  style="background-color: #f7f1fc; color: black">Change</button></td>
-
-
-
-
-        
-      </tr>
-
-        <tr class="active">
-            <td>Kind of reported data</td>
-            
-
-
-        <td>
-      <center>  <span id="fromThe" style="color: #f6803f"> From the beginning  &nbsp; &nbsp; &nbsp; &nbsp; </span> 
-<label class="switch">
-  <input type="checkbox" id="checkboxD" checked>
-  <span class="slider round"> </span>
-</label> 
-<span id="fromThe2" style="color: #2196F3">  &nbsp; &nbsp;  &nbsp; &nbsp; latest </span> </center>
-
-         
-        </td>
-
-        <td>
-
-      
-        </td>
-         
-
-         
-        
-      </tr>
-
-            
-    </tbody>
-  </table>
-</div>
-
-                  </div> 
-
-
-        <div id="menu5" class="tab-pane fade">
-                     <br>
-
-                     <div class="container">
-  
-  <center> <p>Local logs</p></center>
-  <span id="adressLog"></span>&nbsp;&nbsp; 
-
-
-<a onunload="" id="downfile" href="/_downloadFile" download="GuiGrinder.log">
-<img border="0" src="/download.png"  width="32" id="downloadfile" height="32"></a>
-
-
-
-<p id="demo"></p>
-
-
-  <td>
-  <div style="width: 90%">
-      <textarea class="form-control" id="loglog" rows="18" cols="40" readonly></textarea>
-  </div>
-</div>
-
-
-                  </div> 
-               </div>
+                </div>
             </div>
-         </div>
-      </div>
-      <footer class="container-fluid text-center">
-         <div class="container">
-            <div class="container">
-               <h4>Agent Control</h4>
-			   <button type="boutton" class="btn btn-sm btn-success" name="submit"  id="startAgent" style="background-color: #f7f1fc; color: black">Start Embedded Agent</button>
-			   <button type="boutton" class="btn btn-sm btn-success" name="submit"  id="stopAgents" style="background-color: #f7f1fc; color: black">Stop All Agents</button>
-               <table class="table" id="kids">
-                  <thead>
-                     <tr >
-                        <center>
-                           
-                            <th style="text-align: center">Name</th>
-                        </center>
-                        <th style="text-align: center">State</th>
-                        <th style="text-align: center">Workers</th>
 
-                     </tr>
-                  </thead>
-                  <tbody id="kids-body">     
-                  </tbody>
-               </table>
-            </div>
-            <br><br><br><br><br><br><br><br><br>
+          <div id="footer">
             <div id="versionGrinder"></div>
-            <!--div id="msgVersion"></div>
-            <div>Gui Version 1.0.7</div>         
-            <div>Made by Dylan Breugne & Olivier Merlin</div->
-         </div>
-      </footer>
+          </div>
+       </section>
+   </div>
    </body>
 </html>
