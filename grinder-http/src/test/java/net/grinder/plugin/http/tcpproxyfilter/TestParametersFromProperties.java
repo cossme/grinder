@@ -38,6 +38,8 @@ public class TestParametersFromProperties {
 
     final HTTPRecordingParameters parameters = new ParametersFromProperties();
 
+    System.setProperty("HTTPPlugin.additionalHeaders", "");
+
     assertTrue(parameters.isCommonHeader("Accept"));
     assertTrue(parameters.isCommonHeader("User-Agent"));
     assertTrue(parameters.isCommonHeader("faces-request"));
