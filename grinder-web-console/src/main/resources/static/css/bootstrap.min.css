@@ -232,6 +232,7 @@ strong { font-family: 'OpenSansBold', "Helvetica Neue", Helvetica, Arial, sans-s
 .wrapper { max-width: 95%; margin: 0 auto; position: relative; padding-right: 20px; padding-left: 20px; }
 .sidemenu { float:left; min-width: 100px; max-width: 200px; }
 .content { float:right; width: 75%; }
+.graph { margin: auto; width: 70%; }
 
 section img { max-width: 100%; }
 

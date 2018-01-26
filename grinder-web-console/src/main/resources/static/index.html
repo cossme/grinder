@@ -109,15 +109,13 @@
               </div>
               <div id="#graphs" class="tab-pane">
                   <h2>Reporting</h2>
-                  <div style="height: 100%">
-                    <canvas id="myChart0" style="height: 50px" ></canvas>
-                    <canvas id="myChart1" style="display:none;height: 50px" ></canvas>
-                    <canvas id="myChart2" style="display:none;height: 50px" ></canvas>
-                  </div>
-                  <div>
-                      <a class="button" href="#" onclick="showChart(0)" class="btn btn-default">TPS</a>
-                      <a class="button" href="#" onclick="showChart(1)" class="btn btn-default">Average Time</a>
-                      <a class="button" href="#" onclick="showChart(2)" class="btn btn-default">Standard Deviation</a>
+                  <div class="graph">
+                    <canvas id="myChart0" style="display:block"></canvas>
+                    <canvas id="myChart1" style="display:none" ></canvas>
+                    <canvas id="myChart2" style="display:none" ></canvas>
+                    <a class="button" href="#" onclick="showChart(0)" class="btn btn-default">TPS</a>
+                    <a class="button" href="#" onclick="showChart(1)" class="btn btn-default">Average Time</a>
+                    <a class="button" href="#" onclick="showChart(2)" class="btn btn-default">Standard Deviation</a>
                   </div>
               </div>
               <div id="#processes" class="tab-pane">

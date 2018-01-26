@@ -121,7 +121,7 @@ function resetCharts() {
     charts = [];
     for (chartId = 0; chartId < chartTitles.length; ++chartId) {
         canvas = document.getElementById('myChart' + chartId).getContext("2d");
-        //canvas.height = 100;
+        canvas.height = 100;
         var option = {
             showLines: true,
             scales: {
@@ -184,6 +184,7 @@ $(document).ready(function() {
         lineNumbers: true,
     });
 
+    // The following section is certainly to be cleaned
     i = 0;
     initialize = 0
     nombreTest = 0;
@@ -235,8 +236,8 @@ function interv(tempo) {
                               runningTest=1;
                             }
 
-                            mesWorkers = data.textagent[j].workers
-                            nombreWorkers = mesWorkers.length
+                            mesWorkers = data.textagent[j].workers;
+                            nombreWorkers = mesWorkers.length;
 
                             newRow.innerHTML = newRow.innerHTML + '<td class="result" id="workers' + j +
                                                 '"> workers received:' + data.allWorker[j] + '</td><br>';
@@ -258,7 +259,7 @@ function interv(tempo) {
             });
 
             $.getJSON('/_gatherData', { statCheckbox : statCheckbox }, function(data) {
-                nombreTest = data.tailla
+                nombreTest = data.tailla;
                 $("#dataProperties").text(data.pathsSend);
                 document.getElementById("selectedPropertiesFile").innerHTML = "<a onClick='openFile(this)' href='#'>" + data.etoilefile + "</a>";
                 document.getElementById("currentPath").innerText = data.chem2;
