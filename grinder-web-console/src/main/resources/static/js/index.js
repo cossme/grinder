@@ -205,7 +205,6 @@ $(document).ready(function() {
 function interv(tempo) {
      runningTest=0;
         intervalle = setInterval(function() {
-            // logarea();
             statuscheck()
             chemSave = document.getElementById("currentFile").innerText;
 
@@ -227,7 +226,8 @@ function interv(tempo) {
                         }
 
                         var newRow = document.createElement('tr');
-                        newRow.innerHTML = ' </td> <td id="agent' + j + '">' + data.textagent[j].name + ' </td><td id="states' + j + '">' + data.textagent[j].state + '<br>';
+                        newRow.innerHTML = ' <td class="result" id="agent' + j + '">' + data.textagent[j].name +
+                                           ' </td><td class="result" id="states' + j + '">' + data.textagent[j].state + '<br>';
                         ale = data.textagent[j].workers[0].name;
                         if (ale) {
                             if (runningTest == 0) {
@@ -238,12 +238,14 @@ function interv(tempo) {
                             mesWorkers = data.textagent[j].workers
                             nombreWorkers = mesWorkers.length
 
-                            newRow.innerHTML = newRow.innerHTML + '<td id="workers' + j + '"> workers received:' + data.allWorker[j] + '</td><br>';
+                            newRow.innerHTML = newRow.innerHTML + '<td class="result" id="workers' + j +
+                                                '"> workers received:' + data.allWorker[j] + '</td><br>';
 
                             document.getElementById('kids-body').appendChild(newRow);
                         }
                         else {
-                            newRow.innerHTML = newRow.innerHTML + '<td id="workers' + j + '">' + data.textagent[j].workers + '</td><br>';
+                            newRow.innerHTML = newRow.innerHTML + '<td class="result" id="workers' + j + '">'
+                                                                + data.textagent[j].workers + '</td><br>';
                             document.getElementById('kids-body').appendChild(newRow);
                         }
                     }
@@ -264,7 +266,7 @@ function interv(tempo) {
                 $("#datakid").empty();
                 for (j = 0; j < nombreTest; j++) {
                     var newRow = document.createElement('tr');
-                    newRow.innerHTML = '<tr><td class="result" id="tabtest' + j + '"> ' + data.resu[j].description +
+                    newRow.innerHTML = '<tr> <td class="result" id="tabtest' + j + '"> ' + data.resu[j].description +
                                        '</td><td class="result" id="tabtests ' + j + '">' + data.resu[j].statistics[0] +
                                        '</td><td class="result" id="taberrors' + j + '">' + data.resu[j].statistics[1] +
                                        '</td><td class="result" id="tabaverage' + j + '">' + (Math.round((data.resu[j].statistics[2]) * 100) / 100) +
@@ -278,7 +280,7 @@ function interv(tempo) {
                 totalNbErrors = data.glob[1];
                 totalTps      = (Math.round((data.glob[4]) * 100) / 100);
                 var newRow = document.createElement('tr');
-                newRow.innerHTML = '<tr><td class="result">Total</td><td class="result">' + totalNbTests +
+                newRow.innerHTML = '<tr> <td class="result">Total</td><td class="result">' + totalNbTests +
                                    '</td><td class="result">' + totalNbErrors +
                                    '</td><td class="result">' + (Math.round((data.glob[2]) * 100) / 100) +
                                    '</td><td class="result">' + (Math.round((data.glob[3]) * 100) / 100) +
@@ -417,112 +419,6 @@ $(function() {
 
 
 $(function() {
-    $('#changePath2').bind('click', function() {
-        chemValback2 = document.getElementById("currentPath").innerText;
-        if (chemValback2 == "") {
-            alert("Path empty");
-        } else {
-            lettr2 = (chemValback2.length) - 1;
-            lettreSortie = chemValback2[0]
-            while (chemValback2[lettr2] != ('/')) {
-                if (chemValback2[lettr2] == "\\") {
-                    chemValback2 = chemValback2.substring(0, lettr2 + 1)
-                    break;
-                }
-                chemValback2 = chemValback2.substring(0, lettr2)
-                lettr2 = lettr2 - 1
-
-                if (chemValback2 == "C:") {
-                    chemValback2 = "C:\\"
-                }
-
-                if (chemValback2 == "c:") {
-                    chemValback2 = "C:\\"
-                }
-
-                if (lettr2 < 1) {
-                    if (chemValback2 == "C:") {
-                        chemValback2 = "C:\\"
-                    }
-                    if (chemValback2 == "c:") {
-                        chemValback2 = "C:\\"
-                    }
-                    break;
-                }
-            }
-
-            lettr2 = (chemValback2.length) - 1;
-            chemValback2 = chemValback2.substring(0, lettr2)
-            if (chemValback2 == "C:") {
-                chemValback2 = "C:\\"
-            }
-
-            if (chemValback2 == "c:") {
-                chemValback2 = "C:\\"
-            }
-        }
-
-
-        if (chemValback2 != "") {
-            $.getJSON('/_changeDir', {
-                newPath2: chemValback2
-            }, function(data) {
-                $.getJSON('/_listFiles', {}, function(data) {
-                    $("#idListAdvan").empty();
-                    fich1 = data.docss2
-                    var Listd1 = document.getElementById("idListAdvan");
-                    ilil = 0
-                    for (var files2 in fich1) {
-                        if (fich1[files2] == true) {
-                            Listd1.options[ilil] = new Option(files2)
-                            Listd1.options[ilil].style.color = "darkblue"
-                        } else {
-                            Listd1.options[ilil] = new Option(files2)
-                            Listd1.options[ilil].style.color = "darkgrey"
-                        }
-                        ilil = ilil + 1
-                    }
-
-                    document.getElementById("currentPath").innerText = data.chemfile
-                });
-
-            });
-        } else {
-            if (lettreSortie == "C") {
-                chemValback2 = "C:\\"
-            }
-
-            if (lettreSortie == "c") {
-                chemValback2 = "C:\\"
-            } else {
-
-                chemValback2 = "/"
-            }
-            $.getJSON('/_changeDir', {newPath2: chemValback2}, function(data) {
-                $.getJSON('/_listFiles', {}, function(data) {
-                    $("#idListAdvan").empty();
-                    fich1 = data.docss2
-                    var Listd1 = document.getElementById("idListAdvan");
-                    ilil = 0
-                    for (var files2 in fich1) {
-                        if (fich1[files2] == true) {
-                            Listd1.options[ilil] = new Option(files2)
-                            Listd1.options[ilil].style.color = "darkblue"
-                        } else {
-                            Listd1.options[ilil] = new Option(files2)
-                            Listd1.options[ilil].style.color = "darkgrey"
-                        }
-                        ilil = ilil + 1
-                    }
-                    document.getElementById("currentPath").innerText = data.chemfile
-                });
-            });
-        }
-        return false;
-    });
-});
-
-$(function() {
     $('#processCtrl').bind('click', function() {
         running = document.getElementById("processState").src.indexOf("stop") >= 0
         if (running) {
@@ -555,37 +451,11 @@ $(function() {
             } else {
                 alert("Files not distributed")
             }
-
         });
         }
     });
 });
 
-
-
-$(function() {
-    $('#sworkerr').bind('click', function() {
-        $.getJSON('/_stoworker', {}, function(data) {
-            if (data.statusstop == "200") {
-              notify('Test stopped');
-            }
-        });
-        return false;
-    });
-});
-
-$(function() {
-    $('#stoprecord').bind('click', function() {
-        $.getJSON('/_stopGathering', {}, function(data) {
-            if (data.stopre != 200) {
-                alert("Recording stopped not correctly");
-            } else {
-                alert("Recording stopped correctly");
-            }
-        });
-        return false;
-    });
-});
 
 $(function() {
     $('#restartrecord').bind('click', function() {
@@ -602,27 +472,6 @@ $(function() {
 });
 
 $(function() {
-    $('#Browseproperties').bind('click', function() {
-        rapido = document.getElementById("idList").value;
-        if (rapido == "") {
-            alert("please choose a file")
-        } else {
-            $.getJSON('/_opandtake', {
-                docdoc: rapido
-            }, function(data) {
-                $("#nofilesproperties").text(data.propertiess);
-                $("#nofiles").text(data.fileins);
-                $("#areainfo").text(data.docss);
-                $("#ru").val(data.runss);
-                $("#thr").val(data.threadss);
-                $("#pro").val(data.processess);
-            });
-        }
-    });
-});
-
-
-$(function() {
     $('#startAgent').bind('click', function() {
         $.getJSON('/_newAgent', {}, function(data) {
             if (data.erreur != "ok") {
@@ -631,8 +480,6 @@ $(function() {
         });
     });
 });
-
-
 
 $(function() {
     $('#deletelog').bind('click', function() {
@@ -645,18 +492,10 @@ $(function() {
                 alert("Error: " + data.erreur);
             }
         });
-        $.getJSON('/_resetLogServ', { resetlog:""}, function(data) {
-        });
+        $.getJSON('/_resetLogServ', { resetlog:""}, function(data) { });
         $.getJSON('/_logServ', {}, function(data) {
            loadLogs(data)
         });
-    });
-});
-
-
-$(function() {
-    $('#stopAgents').bind('click', function() {
-        $.getJSON('/_stopAgents', {}, function(data) {});
     });
 });
 
@@ -684,25 +523,6 @@ function setProcessState(e, state) {
     }
 }
 
-function logElem() {
-    document.getElementById("barre").style.width = "23%";
-    document.getElementById("mainpanel").style.width = "75%";
-    document.getElementById("barre").style.visibility = "visible";
-    document.getElementById("advan").style.display = "none";
-    document.getElementById("LogMode").style.display = "block";
-}
-
-function graphideElem() {
-    document.getElementById("barre").style.visibility = "hidden";
-}
-
-function changeElem() {
-    document.getElementById("barre").style.width = "23%";
-    document.getElementById("mainpanel").style.width = "75%";
-    document.getElementById("barre").style.visibility = "visible";
-    document.getElementById("advan").style.display = "block";
-}
-
 
 function showChart(index) {
     for (chartId = 0; chartId < charts.length; chartId++) {
@@ -714,7 +534,7 @@ function showChart(index) {
     }
 }
 
-function updateRefreshTimero() {
+function changeTempo() {
     tempo = document.getElementById("changeTime").value;
     clearInterval(intervalle);
     interv(tempo);
@@ -741,11 +561,4 @@ function statuscheck() {
     else {
         statCheckbox=false
     }
-}
-
-
-function logarea() {
-    $.getJSON('/_log', { }, function(data) {
-        $("#loglog").text(data.loglog);
-    });
 }
