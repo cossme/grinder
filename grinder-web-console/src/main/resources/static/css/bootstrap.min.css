@@ -375,6 +375,11 @@ input {
     border: 1px solid #d0d0d0;
 }
 
+span.oneLine {
+    background-color: #252525;
+    white-space:nowrap;
+}
+
 @media print, screen and (max-width: 720px) { #title .credits { display: block; width: 100%; line-height: 30px; text-align: center; }
   #title .credits .left { float: none; display: block; }
   #title .credits .right { float: none; display: block; } }

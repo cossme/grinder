@@ -37,7 +37,6 @@ import java.nio.file.Paths;
 @EnableAutoConfiguration
 public class SpringBootApp {
 
-    private String system;
     private String currentPath;
     private String logFile;
     private String propertiesFile;
@@ -51,10 +50,6 @@ public class SpringBootApp {
         }
         else {
             currentPath = System.getProperty("user.dir").replace('\\', '/');
-        }
-        system = System.getProperty("os.name");
-        if (system.contains(" ")) {
-            system = system.substring(0, system.indexOf(' '));
         }
         try {
             properties = new GrinderProperties(WebConsoleUI.getInstance().consoleProperties.getPropertiesFile());
@@ -318,7 +313,6 @@ public class SpringBootApp {
         else {
             output += "\"0\",\"0\",\"0\",\"0\",\"0\",\"0\"],\n";
         }
-        output += "\"systeme\": \"" + system + "\",\n";
         output += "\"tailla\": " + tailla + "\n";
         output += "}";
         return output;
@@ -454,7 +448,6 @@ public class SpringBootApp {
     @ResponseBody
     String startWorkers(){
         try {
-            //setPropertiesFileLocation(WebConsoleUI.getInstance().consoleProperties.getPropertiesFile().getAbsolutePath());
             properties.setAssociatedFile(new File(
                     WebConsoleUI.getInstance().consoleProperties.getPropertiesFile().getAbsolutePath().substring(currentPath.length()+1)));
             WebConsoleUI.getInstance().processControl.startWorkerProcesses(properties);
@@ -469,28 +462,8 @@ public class SpringBootApp {
     @RequestMapping(value="/_stopAgents", produces={"application/json"})
     @ResponseBody
     String stopAgents(){
-        WebConsoleUI.getInstance().processControl.stopAgentAndWorkerProcesses();
-        return "{\"rep\": \"success\"}";
-    }
-
-
-    @RequestMapping(value="/_statusTest", produces={"application/json"})
-    @ResponseBody
-    String statusTest(){
-        testFinish = 1;
-        return "{ \"testFinish\": " + testFinish + " }";
-    }
-
-    @RequestMapping(value="/_statusNotif", produces={"application/json"})
-    @ResponseBody
-    String statusNotif(){
-        short notif = 0;
-
-        if (testFinish == 1) {
-            notif = 1;
-            testFinish = 0;
-        }
-        return "{ \"testNotif\": " + notif + " }";
+        WebConsoleUI.getInstance().processControl.resetWorkerProcesses();
+        return "{\"response\": \"success\"}";
     }
 
     @RequestMapping(value="/_grinderVersion", produces={"application/json"})
@@ -534,7 +507,7 @@ public class SpringBootApp {
     @RequestMapping(value="/_newAgent", produces={"application/json"})
     @ResponseBody
     String newAgent() {
-        new Thread() {
+        /*new Thread() {
             public void run() {
                 WebConsoleUI.getInstance().logger.info("Starting an embedded agent...");
                 String separator = System.getProperty("file.separator");
@@ -549,7 +522,8 @@ public class SpringBootApp {
                     e.printStackTrace();
                 }
             }
-        }.start();
+        }.start();*/
+        Grinder.main(new String[] {});
         return "{ \"erreur\":\"ok\"}";
     }
 

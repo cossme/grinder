@@ -47,13 +47,13 @@
 
        <div id="control-panel">
            <nav>
-               <li class="image"><a style="all: unset;" href="#" id="workerr"><img alt="Start or stop" onclick="switchIcon(this);" src="/img/start_grinder.png" style="height: 50px"></a></li>
+               <li class="image"><a style="all: unset;" href="#" id="processCtrl"><img id="processState" alt="Start or stop" src="/img/start_grinder.png" style="height: 50px"></a></li>
                <li class="separator"/>
                <li class="image"><a style="all: unset;" href="#" id="restartrecord"><img alt="Reset statistics" src="/img/reset_grinder.png" style="height: 50px"></a></li>
                <li class="separator"/>
                <li class="image"><a style="all: unset;" href="#" id="startAgent"><img alt="Start an agent" src="/img/agent_grinder.png" style="height: 50px"></a></li>
                <li class="separator"/>
-               <li class="stat"><span id="dashboard_agents">0</span> agents</li>
+               <li class="stat"><span id="dashboard_agents">0</span> agent(s)</li>
                <li class="double_separator"/>
                <li class="stat"><span id="dashboard_error_rate">0</span>% error</li>
                <li class="double_separator"/>
@@ -73,10 +73,10 @@
                              <th class="result">Test(s)</th>
                              <th class="result">Tests</th>
                              <th class="result">Errors</th>
-                             <th class="result">average time(ms)</th>
-                             <th class="result">Test Time Standard Deviation(ms)</th>
-                             <th class="result">TPS</th>
-                             <th class="result">Peak TPS</th>
+                             <th class="result">Average Resp Time(ms)</th>
+                             <th class="result">Resp Time Standard Deviation(ms)</th>
+                             <th class="result">Transactions per Second</th>
+                             <th class="result">Peak Transactions per Second</th>
                           </tr>
                        </thead>
                        <tbody id="datakid">
@@ -87,37 +87,37 @@
               <div id="#editor" class="tab-pane">
                   <div class="sidemenu">
                       <h2>Server files</h2>
-                      <span id="currentPath"></span>
+                      <span class="oneLine" id="currentPath"></span>
                       <ul class="treeview" id="listFile" >
                           <li class="folder"><a id="changePath2" href="#">..</a></li>
                           <li class="folder"><a href="#">folder</a></li>
                           <li class="file"><a href="#">file.txt</a></li>
                       </ul>
-                      <button type="boutton" name="submit" id="setPath">Set Distribution Folder</button>
-                      <button type="boutton" name="submit" id="testdistribution">Distribute files</button>
+                      <a class="button" id="setPath" href="#">Set Distribution Folder</a>
+                      <!--a type="button" class="button" id="testdistribution">Distribute files</a-->
                       <br>
                   </div>
                   <div class="content">
                     <h2>Edit file: </h2>
-                    <span id="currentFile"></span>
+                    <span class="oneLine" id="currentFile"></span>
                     <textarea id="demotext" rows="20" cols="90"></textarea>
-                    <button type="boutton" name="submit" id="te">Save</button>
-                    <button type="boutton" name="submit" id="saveas">Save as... </button>
+                    <a class="button" id="te" href="#">Save</a>
+                    <a class="button" id="saveas" href="#">Save as... </a>
                     <img id="starButton" class="starButton" width="28px" src="/img/select-properties-rollover.png" onclick="setPropertiesFile();"/>
-                    <span id="selectedPropertiesFile">No properties selected...</span>
+                    <span id="selectedPropertiesFile" class="oneLine">No properties selected...</span>
                   </div>
               </div>
               <div id="#graphs" class="tab-pane">
                   <h2>Reporting</h2>
                   <div style="height: 100%">
-                    <canvas id="myChart8"  style="display:none;height: 50px" ></canvas>
-                    <canvas id="myChart9"  style="display:none;height: 50px" ></canvas>
-                    <canvas id="myChart10" style="height: 50px" ></canvas>
+                    <canvas id="myChart0" style="height: 50px" ></canvas>
+                    <canvas id="myChart1" style="display:none;height: 50px" ></canvas>
+                    <canvas id="myChart2" style="display:none;height: 50px" ></canvas>
                   </div>
                   <div>
-                      <a class="button" href="#" onclick="courbe3()" class="btn btn-default">TPS</a>
-                      <a class="button" href="#" onclick="courbe1()" class="btn btn-default">Average time(ms)</a>
-                      <a class="button" href="#" onclick="courbe2()" class="btn btn-default">Test Time Standard Deviation(ms)</a>
+                      <a class="button" href="#" onclick="showChart(0)" class="btn btn-default">TPS</a>
+                      <a class="button" href="#" onclick="showChart(1)" class="btn btn-default">Average Time</a>
+                      <a class="button" href="#" onclick="showChart(2)" class="btn btn-default">Standard Deviation</a>
                   </div>
               </div>
               <div id="#processes" class="tab-pane">
@@ -150,13 +150,13 @@
                       <tr class="active">
                         <td>Refresh time </td>
                         <td><input type="number" id="changeTime"></td>
-                        <td><button type="boutton" name="submit"  onclick="changeTempo()">Change</button></td>
+                        <td><a class="button" onclick="changeTempo()" href="#">Change</a></td>
                       </tr>
 
                       <tr class="active">
                         <td>Grinder Base Path</td>
                         <td><input type="text" id="basePath"></td>
-                        <td><button type="boutton" name="submit" onclick="setBasePath()">Change</button></td>
+                        <td><a class="button" onclick="setBasePath()" href="#">Change</a></td>
                       </tr>
 
                       <td>Kind of reported data</td>
@@ -184,14 +184,14 @@
                         <ul class="treeview" id="idLog" >
                             <li class="file"><a href="#">file.txt</a></li>
                         </ul>
-                        <button type="boutton" name="submit" id="refreshlog">Refresh</button>
-                        <button type="boutton" name="submit" id="deletelog">Clear All</button>
                     </div>
                   <div class="content">
                       <div class="logEditor">
                         <h2>Local logs</h2>
                         <textarea class="form-control" id="loglog" rows="18" cols="40" readonly></textarea>
                       </div>
+                      <a class="button" id="refreshlog" href="#">Refresh</a>
+                      <a class="button" id="deletelog"  href="#">Clear All</a>
                       <a class="button" id="downloadfile" href="/_downloadFile?logFile=GuiGrinder.log">Download</a>
                   </div>
                 </div>
