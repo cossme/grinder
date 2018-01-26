@@ -338,16 +338,17 @@ public class SpringBootApp {
                 output += "  \"name\": \"" + aIdentity.getName() + "\",\n";
                 output += "  \"number\": " + aIdentity.getNumber() + ",\n";
                 output += "  \"state\": \"" + agentState + "\",\n";
-                output += "  \"workers\": [\n";
+                output += "  \"workers\": [ ";
                 for (int j = 0; j < WebConsoleUI.getInstance().m_processReports[i].getWorkerProcessReports().length; ++j) {
                     WorkerProcessReport report = WebConsoleUI.getInstance().m_processReports[i].getWorkerProcessReports()[j];
                     WorkerIdentity wIdentity = report.getWorkerIdentity();
-                    output += " {\n";
+                    output += "\n {\n";
                     output += "  \"id\": \"" + wIdentity.getUniqueID() + "\",\n";
                     output += "  \"name\": \"" + wIdentity.getName() + "\",\n";
                     output += "  \"number\": " + wIdentity.getNumber() + "\n";
-                    output += " }\n";
+                    output += " },";
                 }
+                output = output.substring(0, output.length() - 1);
                 output += "  ]\n";
                 output += " }\n";
             }
