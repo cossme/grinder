@@ -118,7 +118,11 @@ function notify(message) {
 
 
 function resetCharts() {
-    charts = [];
+    for (chartId = 0; chartId < charts.length; ++chartId) {
+        charts[chartId].data.datasets.splice(0, charts[chartId].data.datasets.length)
+        charts[chartId].data.labels.splice(0, charts[chartId].data.labels.length)
+    }
+    charts.splice(0, charts.length);
     for (chartId = 0; chartId < chartTitles.length; ++chartId) {
         canvas = document.getElementById('myChart' + chartId).getContext("2d");
         canvas.height = 100;
