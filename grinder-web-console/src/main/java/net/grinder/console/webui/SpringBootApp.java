@@ -10,9 +10,7 @@ import net.grinder.common.processidentity.WorkerIdentity;
 import net.grinder.common.processidentity.WorkerProcessReport;
 import net.grinder.console.common.ConsoleException;
 import net.grinder.console.distribution.FileDistributionHandler;
-import net.grinder.statistics.StatisticExpression;
-import net.grinder.statistics.StatisticsSet;
-import net.grinder.statistics.TestStatisticsQueries;
+import net.grinder.statistics.*;
 import net.grinder.util.Directory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.io.ByteArrayResource;
@@ -31,7 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Created by csolesala on 15/12/2017.
+ * Created by solcyr on 15/12/2017.
  */
 @Controller
 @EnableAutoConfiguration
@@ -243,12 +241,6 @@ public class SpringBootApp {
     String gatherData(@RequestParam(value="statCheckbox", required=false) String statusCheckbox){
         WebConsoleUI.getInstance().logger.info("recover Data");
         String propertiesFile = WebConsoleUI.getInstance().consoleProperties.getPropertiesFile().getAbsolutePath().replace('\\', '/');
-
-        long   totalNumberOfTests = 0;
-        long   totalNumberOfErrors = 0;
-        double totalAverageTestTime = 0;
-        double totalVariance = 0;
-        double totalTps = 0;
         double totalPeakTps = 0;
 
         String output = "{\n";
@@ -260,61 +252,76 @@ public class SpringBootApp {
         output += "\"pathsSend\": \"" + propertiesFile + "\",\n";
         output += "\"resu\": [ ";
 
-        int tailla = 0;
+        int nbOfTest = 0;
+        StatisticsServices statisticsServices = StatisticsServicesImplementation.getInstance();
+        StatisticsView view = statisticsServices.getSummaryStatisticsView();
+        Number[] totalStats = new Number[view.getExpressionViews().length];
+
+        PeakStatisticExpression peakTPSExpression =
+                statisticsServices.getStatisticExpressionFactory().createPeak(
+                        statisticsServices.getStatisticsIndexMap().getDoubleIndex("peakTPS"),
+                        statisticsServices.getTPSExpression());
+
+        for (int j = 0; j < view.getExpressionViews().length; ++j) {
+            final StatisticExpression expression = view.getExpressionViews()[j].getExpression();
+            if (expression.isDouble()) {
+                totalStats[j] = new Double(0);
+            }
+            else {
+                totalStats[j] = new Long(0);
+            }
+        }
         if (WebConsoleUI.getInstance().testIndex != null) {
-            tailla = WebConsoleUI.getInstance().testIndex.getNumberOfTests();
-            //Iterator<Test> iterator = WebConsoleUI.getInstance().testSet.iterator();
-            //while (iterator.hasNext()) {
+            nbOfTest = WebConsoleUI.getInstance().testIndex.getNumberOfTests();
+
             for (int  i = 0; i < WebConsoleUI.getInstance().testIndex.getNumberOfTests(); ++i) {
                 Test test = WebConsoleUI.getInstance().testIndex.getTest(i);
+                StatisticsSet cumulativeStats = WebConsoleUI.getInstance().testIndex.getCumulativeStatistics(i);
                 StatisticsSet stats;
                 if ("true".equalsIgnoreCase(statusCheckbox)) {
                     stats = WebConsoleUI.getInstance().testIndex.getLastSampleStatistics(i);
                 } else {
-                    stats = WebConsoleUI.getInstance().testIndex.getCumulativeStatistics(i);
+                    stats = cumulativeStats;
                 }
-                TestStatisticsQueries testStatisticsQueries = WebConsoleUI.getInstance().sampleModelViews.getTestStatisticsQueries();
-                StatisticExpression tpsExpression = WebConsoleUI.getInstance().model.getTPSExpression();
-                StatisticExpression tpsPeakExpression = WebConsoleUI.getInstance().model.getTPSExpression();
-                long numberOfTests = testStatisticsQueries.getNumberOfTests(stats);
-                long numberOfErrors = testStatisticsQueries.getNumberOfErrors(stats);
-                double averageTestTime = testStatisticsQueries.getAverageTestTime(stats);
-                double variance = averageTestTime;
-                double tps = tpsExpression.getDoubleValue(stats);
-                double peakTps = tpsPeakExpression.getDoubleValue(stats);
+
                 output += "\n{\"test\":" + test.getNumber() +
                         ",\"description\":\"" + test.getDescription() +
-                        "\",\"statistics\":[\"" + numberOfTests + "\"" +
-                        ",\"" + numberOfErrors + "\"" +
-                        ",\"" + averageTestTime + "\"" +
-                        ",\"" + variance + "\"" +
-                        ",\"" + String.format("%.2f", tps) + "\"" +
-                        ",\"" + String.format("%.2f", peakTps) + "\"]},";
-                totalNumberOfTests += numberOfTests;
-                totalNumberOfErrors += numberOfErrors;
-                totalAverageTestTime += averageTestTime;
-                totalVariance += variance;
-                totalTps += tps;
+                        "\",\"statistics\":[";
+                for (int j = 0; j < view.getExpressionViews().length; ++j) {
+                    final StatisticExpression expression = view.getExpressionViews()[j].getExpression();
+                    output += "\"";
+                    if (expression.isDouble()) {
+                        double value =  expression.getDoubleValue(stats);
+                        totalStats[j] = totalStats[j].doubleValue() + value;
+                        output += value;
+                    }
+                    else {
+                        long value =  expression.getLongValue(stats);
+                        totalStats[j] = totalStats[j].longValue() + value;
+                        output += value;
+                    }
+                    output += "\",";
+                }
+
+                double peakTps = peakTPSExpression.getLongValue(cumulativeStats);
+                output += "\"" + peakTps  + "\"]},";
                 totalPeakTps += peakTps;
             }
         }
         output = output.substring(0, output.length() - 1);
         output += "\n],\n";
         output += "\"glob\": [\n";
-        if (tailla > 0) {
-            output += "\"" + totalNumberOfTests + "\",\n";
-            output += "\"" + totalNumberOfErrors + "\",\n";
-            output += "\"" + totalAverageTestTime/tailla + "\",\n";
-            output += "\"" + totalVariance/tailla + "\",\n";
-            output += "\"" + String.format("%.2f", totalTps) + "\",\n";
-            output += "\"" + String.format("%.2f", totalPeakTps) + "\"\n";
+        if (nbOfTest > 0) {
+            for (int j = 0; j < totalStats.length; ++j) {
+                output += "\"" + totalStats[j] + "\",\n";
+            }
+            output += "\"" + totalPeakTps + "\"\n";
             output += "],\n";
         }
         else {
             output += "\"0\",\"0\",\"0\",\"0\",\"0\",\"0\"],\n";
         }
-        output += "\"tailla\": " + tailla + "\n";
-        output += "}";
+        output += "\"tailla\": " + nbOfTest + "\n }";
         return output;
     }
 
