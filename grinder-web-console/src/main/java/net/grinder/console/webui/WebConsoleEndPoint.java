@@ -57,7 +57,6 @@ public class WebConsoleEndPoint {
 
     private String currentPath;
     private String propertiesFile;
-    private short testFinish;
     private GrinderProperties properties;
 
     WebConsoleEndPoint() {
@@ -76,7 +75,6 @@ public class WebConsoleEndPoint {
             e.printStackTrace();
             properties = new GrinderProperties();
         }
-        testFinish = 0;
     }
 
     @RequestMapping(value="/logs/list", produces={MediaType.APPLICATION_JSON_VALUE})
@@ -104,7 +102,6 @@ public class WebConsoleEndPoint {
     @ResponseBody
     String getLog(@RequestParam(value="doclo", required=true) String logFile){
         String contentFile = "";
-        //String filePath = properties.getProperty("grinder.logDirectory") + "/" + logFile;
         String filePath = logFile;
         try {
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(filePath));
@@ -231,7 +228,7 @@ public class WebConsoleEndPoint {
         return output;
     }
 
-    @RequestMapping(value="//filesystem/directory/change", produces={MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value="/filesystem/directory/change", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     String changeChem2(@RequestParam(value="newPath2", required=true) String newPath){
         currentPath = newPath.replace('\\', '/');

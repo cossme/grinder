@@ -26,7 +26,7 @@ function browseFolder(e) {
     else {
         chemVal2 = part11 + "/" + part21;
     }
-    $.getJSON('//filesystem/directory/change', {newPath2: chemVal2}, function(data) {
+    $.getJSON('/filesystem/directory/change', {newPath2: chemVal2}, function(data) {
         document.getElementById("currentPath").innerText = data.Pathes2;
         $.getJSON('/filesystem/files/list', {}, function(data) {
                 loadFiles(data);
@@ -37,7 +37,7 @@ function browseFolder(e) {
 function setBasePath() {
     // Set new Path
     chemVal2 = document.getElementById("basePath").value;
-    $.getJSON('//filesystem/directory/change', {newPath2: chemVal2}, function(data) {
+    $.getJSON('/filesystem/directory/change', {newPath2: chemVal2}, function(data) {
         document.getElementById("currentPath").innerText = data.Pathes2;
         $.getJSON('/filesystem/files/list', {}, function(data) {
                 loadFiles(data);
