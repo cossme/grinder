@@ -67,6 +67,17 @@ public class TestHTTPPlugin {
 
     when(m_pluginProcessContext.getScriptContext()).thenReturn(m_scriptContext);
     when(m_scriptContext.getStatistics()).thenReturn(m_statistics);
+
+    new PluginRegistry() {
+      {
+        setInstance(this);
+      }
+
+      @Override
+      public void register(final GrinderPlugin plugin) throws GrinderException {
+        plugin.initialize(m_pluginProcessContext);
+      }
+    };
   }
 
   @Test public void testInitialiseWithBadHTTPClient() throws Exception {

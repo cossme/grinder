@@ -22,12 +22,6 @@
 
 package net.grinder.console;
 
-import static net.grinder.util.ClassLoaderUtilities.loadRegisteredImplementations;
-
-import java.io.File;
-import java.io.PrintWriter;
-import java.util.Timer;
-
 import net.grinder.common.GrinderException;
 import net.grinder.communication.MessageDispatchRegistry;
 import net.grinder.communication.MessageDispatchRegistry.AbstractHandler;
@@ -41,11 +35,7 @@ import net.grinder.console.communication.ProcessControlImplementation;
 import net.grinder.console.communication.server.DispatchClientCommands;
 import net.grinder.console.distribution.FileDistributionImplementation;
 import net.grinder.console.distribution.WireFileDistribution;
-import net.grinder.console.model.ConsoleProperties;
-import net.grinder.console.model.SampleModel;
-import net.grinder.console.model.SampleModelImplementation;
-import net.grinder.console.model.SampleModelViews;
-import net.grinder.console.model.SampleModelViewsImplementation;
+import net.grinder.console.model.*;
 import net.grinder.console.synchronisation.WireDistributedBarriers;
 import net.grinder.console.textui.TextUI;
 import net.grinder.messages.console.RegisterExpressionViewMessage;
@@ -53,12 +43,7 @@ import net.grinder.messages.console.RegisterTestsMessage;
 import net.grinder.messages.console.ReportStatisticsMessage;
 import net.grinder.statistics.StatisticsServicesImplementation;
 import net.grinder.util.StandardTimeAuthority;
-
-import org.picocontainer.ComponentMonitor;
-import org.picocontainer.DefaultPicoContainer;
-import org.picocontainer.LifecycleStrategy;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.Parameter;
+import org.picocontainer.*;
 import org.picocontainer.behaviors.Caching;
 import org.picocontainer.lifecycle.CompositeLifecycleStrategy;
 import org.picocontainer.lifecycle.JavaEE5LifecycleStrategy;
@@ -68,6 +53,12 @@ import org.picocontainer.monitors.WriterComponentMonitor;
 import org.picocontainer.parameters.ComponentParameter;
 import org.picocontainer.parameters.ConstantParameter;
 import org.slf4j.Logger;
+
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.Timer;
+
+import static net.grinder.util.ClassLoaderUtilities.loadRegisteredImplementations;
 
 
 /**
@@ -213,6 +204,7 @@ public final class ConsoleFoundation {
    * appropriately. Blocks until we are {@link #shutdown()}.
    */
   public void run() {
+
     m_container.start();
 
     // Request components, or they won't be instantiated.
@@ -222,6 +214,8 @@ public final class ConsoleFoundation {
 
     final ConsoleCommunication communication =
       m_container.getComponent(ConsoleCommunication.class);
+
+    SpringConsoleFoundation.initSpring();
 
     while (communication.processOneMessage()) {
       // Process until communication is shut down.

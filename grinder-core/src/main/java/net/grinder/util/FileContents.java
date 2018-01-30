@@ -144,8 +144,8 @@ public final class FileContents implements Serializable {
    * Exception that indicates a <code>FileContents</code> related
    * problem.
    */
-  public static final class FileContentsException extends GrinderException {
-    FileContentsException(String message) {
+  public static class FileContentsException extends GrinderException {
+    public FileContentsException(String message) {
       super(message);
     }
 

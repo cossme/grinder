@@ -182,7 +182,7 @@ public class TestConsoleFoundation extends AbstractJUnit4FileTestCase {
       final Future<Void> task = m_executor.submit(connect);
 
       try {
-        task.get(5, TimeUnit.SECONDS);
+        task.get(10, TimeUnit.SECONDS);
       }
       catch (ExecutionException e) {
         if (i == retries - 1) {

@@ -7,11 +7,13 @@ import net.grinder.console.common.ErrorHandler;
 import net.grinder.console.common.Resources;
 import net.grinder.console.communication.ProcessControl;
 import net.grinder.console.distribution.FileDistribution;
-import net.grinder.console.model.*;
+import net.grinder.console.model.ConsoleProperties;
+import net.grinder.console.model.ModelTestIndex;
+import net.grinder.console.model.SampleModel;
+import net.grinder.console.model.SampleModelViews;
 import org.slf4j.Logger;
-import org.springframework.boot.Banner;
-import org.springframework.boot.SpringApplication;
-import java.util.*;
+
+import java.util.Set;
 
 
 public class WebConsoleUI implements ConsoleFoundation.UI {
@@ -25,7 +27,6 @@ public class WebConsoleUI implements ConsoleFoundation.UI {
     protected ProcessControl processControl;
     protected FileDistribution fileDistribution;
     protected ProcessControl.ProcessReports[] m_processReports;
-    //protected Set<Test> testSet = null;
     protected ModelTestIndex testIndex = null;
 
     protected Logger logger;
@@ -61,14 +62,10 @@ public class WebConsoleUI implements ConsoleFoundation.UI {
 
             this.model.addModelListener(new SampleModel.AbstractListener() {
                 public void newTests(Set<Test> newTests, ModelTestIndex modelTestIndex) {
-                    //testSet   = newTests;
                     testIndex = modelTestIndex;
                 }
             });
             INSTANCE=this;
-            SpringApplication app = new SpringApplication(SpringBootApp.class);
-            app.setBannerMode(Banner.Mode.OFF);
-            app.run(new String[]{});
         }
         catch (Exception e) {
             e.printStackTrace();
