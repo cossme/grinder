@@ -26,9 +26,9 @@ function browseFolder(e) {
     else {
         chemVal2 = part11 + "/" + part21;
     }
-    $.getJSON('/_changeDir', {newPath2: chemVal2}, function(data) {
+    $.getJSON('//filesystem/directory/change', {newPath2: chemVal2}, function(data) {
         document.getElementById("currentPath").innerText = data.Pathes2;
-        $.getJSON('/_listFiles', {}, function(data) {
+        $.getJSON('/filesystem/files/list', {}, function(data) {
                 loadFiles(data);
         });
     });
@@ -37,9 +37,9 @@ function browseFolder(e) {
 function setBasePath() {
     // Set new Path
     chemVal2 = document.getElementById("basePath").value;
-    $.getJSON('/_changeDir', {newPath2: chemVal2}, function(data) {
+    $.getJSON('//filesystem/directory/change', {newPath2: chemVal2}, function(data) {
         document.getElementById("currentPath").innerText = data.Pathes2;
-        $.getJSON('/_listFiles', {}, function(data) {
+        $.getJSON('/filesystem/files/list', {}, function(data) {
                 loadFiles(data);
         });
     });
@@ -50,7 +50,7 @@ function openFile(e) {
     if (file.indexOf("/") >= 0) {
         file = file.substring(file.lastIndexOf("/")+1)
     }
-    $.getJSON('/_getFile', {
+    $.getJSON('/filesystem/files', {
         docAdvan: file
     }, function(data) {
         $("#currentFile").text(data.doc1);
@@ -71,10 +71,10 @@ function openLogFile(e) {
     var logFolder = document.getElementById("adressLog").innerText;
     var log = logFolder + '/' + e.text;
     downloadButton = document.getElementById("downloadfile");
-    downloadButton.href = "/_downloadFile?logFile="+encodeURIComponent(log);
+    downloadButton.href = "/filesystem/file/download?logFile="+encodeURIComponent(log);
     downloadButton.download = e.text;
 
-    $.getJSON('/_getLog', {
+    $.getJSON('/logs', {
         doclo: log
     }, function(data) {
         document.getElementById("loglog").value = (data.doc);
@@ -166,7 +166,7 @@ $(document).ready(function() {
     statCheckbox=false
     statuscheck()
 
-    $.getJSON('/_listFiles', {}, function(data) {
+    $.getJSON('/filesystem/files/list', {}, function(data) {
         loadFiles(data);
     });
 
@@ -176,12 +176,12 @@ $(document).ready(function() {
         $("#setmsg2").attr("value", data.initPath2);
     });
 
-    $.getJSON('/_logServ', {}, function(data) {
+    $.getJSON('/logs/list', {}, function(data) {
         loadLogs(data)
     });
 
-    $.getJSON('/_grinderVersion', {}, function(data) {
-       $("#versionGrinder").text("The Grinder v"+data.versionG);
+    $.get('/version', {}, function(data) {
+       $("#versionGrinder").text(data);
     });
 
     editor = CodeMirror.fromTextArea(document.getElementById("demotext"), {
@@ -358,8 +358,8 @@ $(function() {
     $('#setPath').bind('click', function() {
         path = document.getElementById("currentPath").innerText;
             $.getJSON('/_setDistributionPath', { distributionPath: path }, function(data) {
-            if ((data.erreur) != "ok") {
-              alert(data.erreur + "  if the problem persists, please refresh the page ")
+            if ((data.error) != "ok") {
+              alert(data.error + "  if the problem persists, please refresh the page ")
             }
         });
         return false;
@@ -368,7 +368,7 @@ $(function() {
 
 $(function() {
     $('#refreshlog').bind('click', function() {
-        $.getJSON('/_logServ', {}, function(data) {
+        $.getJSON('/logs/list', {}, function(data) {
            loadLogs(data)
         });
     });
@@ -379,11 +379,11 @@ $(function() {
     $('#te').bind('click', function() {
         chemSave = document.getElementById("currentFile").innerText;
         if (confirm("You will change the content of your file, sure ? ")) {
-            $.getJSON('/_writeFile', {
+            $.getJSON('/filesystem/files/write', {
                 ajaa: editor.getValue(),
                 chemup: chemSave
             }, function(data) {
-                alert(data.erreur)
+                alert(data.error)
             });
         }
     });
@@ -395,11 +395,11 @@ $(function() {
     $('#saveas').bind('click', function() {
         var nomSave = prompt("Choose the name of your file", "");
         if (nomSave != null) {
-            $.getJSON('/_saveAs', {
+            $.getJSON('/filesystem/files/save', {
                 newname: nomSave,
                 ajaa: editor.getValue()
             }, function(data) {
-                $.getJSON('/_listFiles', {}, function(data) {
+                $.getJSON('/filesystem/files/list', {}, function(data) {
                     loadFiles(data);
                 });
              });
@@ -408,68 +408,67 @@ $(function() {
     });
 });
 
-$(function() {
-    $('#testdistribution').bind('click', function() {
-        $.getJSON('/_postDistribution', {
-        }, function(data) {
-            if (data.distribute == 200) {
-                alert("Files distributed correctly");
-            } else {
-                alert("files not distributed");
-            }
+function startAfterDistribution(status) {
+    if (status.state == "started" || status.state == "sending") {
+        $.getJSON('/files/status', {}, function(data) {
+            startAfterDistribution(data["last-distribution"]);
         });
-        return false;
-    });
-});
-
+    }
+    else if (status.state == "finished") {
+            $.post('/recording/reset');
+            $.post('/agents/start-workers', {}, function(data) {
+                if (data == "success") {
+                    notify('Starting test...');
+                } else {
+                    // TODO replace by http://jqueryui.com/dialog/
+                    alert("Error: Unable to start worker processes, please check Grinder logs for more information");
+               }
+            });
+            return false;
+        }
+    else {
+        // TODO replace by http://jqueryui.com/dialog/
+        alert("Error: Unable to distribute files, please check Grinder logs for more information");
+    }
+}
 
 $(function() {
     $('#processCtrl').bind('click', function() {
         running = document.getElementById("processState").src.indexOf("stop") >= 0
         if (running) {
-            $.getJSON('/_stopAgents', {}, function(data) {
-                if (data.response == "success") {
+            $.post('/agents/stop-workers', {}, function(data) {
+                if (data == "success") {
                     notify('Test stopped');
                 }
                 else {
-                    alert("Unable to stop the test")
+                    // TODO replace by http://jqueryui.com/dialog/
+                    alert("Error: Unable to stop worker processes, please check Grinder logs for more information");
                 }
             });
         }
         else {
-            $.getJSON('/_postDistribution', {}, function(data) {
-            if (data.distribute == 200) {
-              notify('File distributed');
-              setTimeout(function() {
-                  $.getJSON('/_startGathering', {}, function(data) {});
-
-                  $.getJSON('/_startWorkers', {}, function(data) {
-                      $("#staworker").text(data.rep);
-                      if (data.statuwor == 200) {
-                          notify('Test started');
-                      } else {
-                          alert("error in launching the test");
-                     }
-                  });
-                  return false;
-              }, 1000);
-            } else {
-                alert("Files not distributed")
-            }
-        });
+            $.post('/files/distribute', {}, function(data) {
+                if (data.state == "started") {
+                    notify('File distribution...');
+                    $.getJSON('/files/status', {}, startAfterDistribution(data));
+                } else {
+                    // TODO replace by http://jqueryui.com/dialog/
+                    alert("Error: Unable to start the file distribution, please check Grinder logs for more information");
+                }
+        }, "json");
         }
     });
 });
 
-
 $(function() {
     $('#restartrecord').bind('click', function() {
-        $.getJSON('/_zeroStats', {}, function(data) {
-            if (data.startrecordi == 200) {
+        $.post('/recording/zero', {}, function(data) {
+            if (data == "success") {
                 $("#datakid").empty();
                 resetCharts();
             } else {
-                alert("Recording restarted not correctly  ");
+                // TODO replace by http://jqueryui.com/dialog/
+                alert("Error: Unable to zeroing the statistics, please check Grinder logs for more information.");
             }
         });
         return false;
@@ -478,9 +477,10 @@ $(function() {
 
 $(function() {
     $('#startAgent').bind('click', function() {
-        $.getJSON('/_newAgent', {}, function(data) {
-            if (data.erreur != "ok") {
-                alert("Error: " + data.erreur);
+        $.post('/agents/start', {}, function(data) {
+            if (data != "success") {
+                // TODO replace by http://jqueryui.com/dialog/
+                alert("Error: Unable to start embedded Agent, please check Grinder logs for more information.");
             }
         });
     });
@@ -488,17 +488,23 @@ $(function() {
 
 $(function() {
     $('#deletelog').bind('click', function() {
-        $.getJSON('/_deleteLogs', {}, function(data) {
-            if (data.erreur == "ok") {
-                $("#idLog").empty();
-                document.getElementById("loglog").value = "";
-            }
-            else {
-                alert("Error: " + data.erreur);
-            }
+        $.ajax({
+            type: 'DELETE',
+            url: '/logs/delete',
+            success: function(data) {
+                         if (data.error == "ok") {
+                             $("#idLog").empty();
+                             document.getElementById("loglog").value = "";
+                         }
+                         else {
+                             // TODO replace by http://jqueryui.com/dialog/
+                             alert("Error: Unable to delete the local logs: " + data.error);
+                         }
+                     },
+            dataType: "json"
         });
-        $.getJSON('/_resetLogServ', { resetlog:""}, function(data) { });
-        $.getJSON('/_logServ', {}, function(data) {
+
+        $.getJSON('/logs/list', {}, function(data) {
            loadLogs(data)
         });
     });

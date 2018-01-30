@@ -97,7 +97,7 @@ public class RestController {
      */
     @RequestMapping(value="/agents/start-workers", method = RequestMethod.POST, produces={MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
-    String startWorkers(@RequestBody Map<String, String> newProperties){
+    String startWorkers(@RequestBody(required = false) Map<String, String> newProperties){
         ConsoleProperties properties = Bootstrap.getInstance().consoleProperties;
         return processes.startWorkers(properties, newProperties);
     }

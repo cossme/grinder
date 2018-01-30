@@ -56,7 +56,6 @@ import java.nio.file.Paths;
 public class WebConsoleEndPoint {
 
     private String currentPath;
-    private String logFile;
     private String propertiesFile;
     private short testFinish;
     private GrinderProperties properties;
@@ -77,18 +76,10 @@ public class WebConsoleEndPoint {
             e.printStackTrace();
             properties = new GrinderProperties();
         }
-        logFile = "";
         testFinish = 0;
     }
 
-    @RequestMapping(value="/_setPath", produces={"application/json"})
-    @ResponseBody
-    String setPath(@RequestParam(value="newchem2", required=true) String paths2){
-        WebConsoleUI.getInstance().logger.error(new Object(){}.getClass().getEnclosingMethod().getName() + ": NOT IMPLEMENTED");
-        return "{\"path2\": \"" + paths2 + "\"}";
-    }
-
-    @RequestMapping(value="/_logServ", produces={"application/json"})
+    @RequestMapping(value="/logs/list", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     String logServ(){
         File folder = new File(properties.getProperty("grinder.logDirectory", "log"));
@@ -109,50 +100,7 @@ public class WebConsoleEndPoint {
         return output;
     }
 
-    @RequestMapping(value="/_startGathering", produces={"application/json"})
-    @ResponseBody
-    String startRecup(){
-        WebConsoleUI.getInstance().logger.info("reset data  ...");
-        WebConsoleUI.getInstance().model.reset();
-        return "{\"startrecordi\": 200}";
-    }
-
-    @RequestMapping(value="/_release", produces={"application/json"})
-    @ResponseBody
-    String release(){
-        return "{\"versionGR\": \"" + GrinderBuild.getVersionString() + "\"}";
-    }
-
-    @RequestMapping(value="/_zeroStats", produces={"application/json"})
-    @ResponseBody
-    String stopRe(){
-        WebConsoleUI.getInstance().logger.info("zero data  ...");
-        WebConsoleUI.getInstance().model.zeroStatistics();
-        return "{\"startrecordi\": 200}";
-    }
-
-    @RequestMapping(value="/_stopGathering", produces={"application/json"})
-    @ResponseBody
-    String stopGathering(){
-        WebConsoleUI.getInstance().logger.info("stop data  ...");
-        WebConsoleUI.getInstance().model.stop();
-        return "{\"stopre\": 200}";
-    }
-
-    @RequestMapping(value="/_setDistributionPath", produces={"application/json"})
-    @ResponseBody
-    String setDistributionPath(){
-        try {
-            WebConsoleUI.getInstance().consoleProperties.setAndSaveDistributionDirectory(new Directory(new File(currentPath)));
-            return "{\"erreur\": \"ok\"}";
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return "{\"erreur\": \"" + e.getMessage() + "\"}";
-        }
-    }
-
-    @RequestMapping("/_getLog")
+    @RequestMapping("/logs")
     @ResponseBody
     String getLog(@RequestParam(value="doclo", required=true) String logFile){
         String contentFile = "";
@@ -180,7 +128,7 @@ public class WebConsoleEndPoint {
         output += "}";
         return output;    }
 
-    @RequestMapping(value="/_getFile", produces={"application/json"})
+    @RequestMapping(value="/filesystem/files", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     String getFile(@RequestParam(value="docAdvan", required=true) String fileName){
         String contentFile = "";
@@ -209,12 +157,14 @@ public class WebConsoleEndPoint {
         String output = "{\n";
         output += " \"doc\": \"" + contentFile + "\",\n";
         output += " \"doc1\": \"" + filePath + "\",\n";
-        output += " \"erreur\": \"" + error +"\"\n";
+        output += " \"error\": \"" + error +"\"\n";
         output += "}";
         return output;
     }
 
-    @RequestMapping(value="/_writeFile", produces={"application/json"})
+    // TODO: replace by a put
+    // TODO: Use BASE64 Body
+    @RequestMapping(value="/filesystem/files/write", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     String writeFile(@RequestParam(value="ajaa", required=true) String fileContent,
                      @RequestParam(value="chemup", required=true) String filePath){
@@ -235,10 +185,12 @@ public class WebConsoleEndPoint {
         if (filePath.equals(this.propertiesFile)){
             setPropertiesFileLocation(this.propertiesFile);
         }
-        return "{\"erreur\": \"" + err + "\"}";
+        return "{\"error\": \"" + err + "\"}";
     }
 
-    @RequestMapping(value="/_saveAs", produces={"application/json"})
+    // TODO: replace by a put
+    // TODO: Use BASE64 Body
+    @RequestMapping(value="/filesystem/files/save", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     String saveAs(@RequestParam(value="ajaa", required=true) String a,
                   @RequestParam(value="newname", required=true) String b){
@@ -256,7 +208,93 @@ public class WebConsoleEndPoint {
 
     }
 
-    @RequestMapping(value="/_gatherData", produces={"application/json"})
+    @RequestMapping(value="/filesystem/files/list", produces={MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    String listFiles(){
+        File folder = new File(currentPath);
+        File[] listOfFiles = folder.listFiles();
+        String output = "{\n";
+        output += " \"chemfile\": \"" + currentPath + "\",\n";
+        output += " \"docss2\": { ";
+
+        if (listOfFiles != null && listOfFiles.length > 0) {
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    output += "\n  \"" + listOfFiles[i].getName() + "\": false,";
+                } else if (listOfFiles[i].isDirectory()) {
+                    output += "\n  \"" + listOfFiles[i].getName() + "\": true,";
+                }
+            }
+            output = output.substring(0, output.length() - 1);
+        }
+        output += "\n }\n}\n";
+        return output;
+    }
+
+    @RequestMapping(value="//filesystem/directory/change", produces={MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    String changeChem2(@RequestParam(value="newPath2", required=true) String newPath){
+        currentPath = newPath.replace('\\', '/');
+        return "{\"Pathes2\": \"" + currentPath + "\"}";
+    }
+
+
+    @RequestMapping(value="/logs/delete", method = RequestMethod.DELETE, produces={MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    String deleteLogs(){
+        String err = "ok";
+        try {
+            WebConsoleUI.getInstance().logger.info("deleting logs");
+            File[] listOfFiles = new File(properties.getProperty("grinder.logDirectory", "log")).listFiles();
+            if (listOfFiles != null) {
+                for (int i = 0; i < listOfFiles.length; i++) {
+                    listOfFiles[i].delete();
+                }
+            }
+        }
+
+        catch (Exception e) {
+            e.printStackTrace();
+            WebConsoleUI.getInstance().logger.error("deleting logs failed - " + e.getMessage());
+            err = e.getMessage();
+        }
+        return "{\"error\": \"" + err + "\"}";
+    }
+
+    @RequestMapping(value="/filesystem/file/download", method = RequestMethod.GET)
+    ResponseEntity<Resource> downloadFile(@RequestParam(value="logFile", required=false) String logFile) throws IOException{
+        File file = new File(logFile);
+        Path path = Paths.get(file.getAbsolutePath());
+        Resource resource = new ByteArrayResource(Files.readAllBytes(path));
+
+        return ResponseEntity.ok()
+                //.headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(resource);
+    }
+
+    @RequestMapping(value="/agents/start", method = RequestMethod.POST, produces={MediaType.TEXT_PLAIN_VALUE})
+    @ResponseBody
+    String startNewAgent() {
+        Grinder.main(new String[] {});
+        return "success";
+    }
+
+    @RequestMapping(value="/_setDistributionPath", produces={MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    String setDistributionPath(){
+        try {
+            WebConsoleUI.getInstance().consoleProperties.setAndSaveDistributionDirectory(new Directory(new File(currentPath)));
+            return "{\"error\": \"ok\"}";
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return "{\"error\": \"" + e.getMessage() + "\"}";
+        }
+    }
+
+    @RequestMapping(value="/_gatherData", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     String gatherData(@RequestParam(value="statCheckbox", required=false) String statusCheckbox){
         WebConsoleUI.getInstance().logger.info("recover Data");
@@ -345,12 +383,12 @@ public class WebConsoleEndPoint {
         return output;
     }
 
-    @RequestMapping(value="/_agentStats", produces={"application/json"})
+    @RequestMapping(value="/_agentStats", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     String agentStats(){
         int numberOfAgents = WebConsoleUI.getInstance().processControl.getNumberOfLiveAgents();
 
-        String output = "{\n \"adressFichierlog\": \"" + logFile + "\",\n  \"allWorker\": [\n   0\n  ],\n \"erreur\": \"ok\",\n";
+        String output = "{\n  \"allWorker\": [\n   0\n  ],\n \"error\": \"ok\",\n";
         output += " \"nombreAgents\": " + numberOfAgents + ",\n";
         output += " \"textagent\": [\n";
 
@@ -384,132 +422,7 @@ public class WebConsoleEndPoint {
         return output;
     }
 
-    @RequestMapping(value="/_listFiles", produces={"application/json"})
-    @ResponseBody
-    String listFiles(){
-        File folder = new File(currentPath);
-        File[] listOfFiles = folder.listFiles();
-        String output = "{\n";
-        output += " \"chemfile\": \"" + currentPath + "\",\n";
-        output += " \"docss2\": { ";
-
-        if (listOfFiles != null && listOfFiles.length > 0) {
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                    output += "\n  \"" + listOfFiles[i].getName() + "\": false,";
-                } else if (listOfFiles[i].isDirectory()) {
-                    output += "\n  \"" + listOfFiles[i].getName() + "\": true,";
-                }
-            }
-            output = output.substring(0, output.length() - 1);
-        }
-        output += "\n }\n}\n";
-        return output;
-    }
-
-    @RequestMapping(value="/_changeDir", produces={"application/json"})
-    @ResponseBody
-    String changeChem2(@RequestParam(value="newPath2", required=true) String newPath){
-        currentPath = newPath.replace('\\', '/');
-        return "{\"Pathes2\": \"" + currentPath + "\"}";
-    }
-
-    @RequestMapping(value="/_postDistribution", produces={"application/json"})
-    @ResponseBody
-    String postDistribution(){
-        String err = "ok";
-        try {
-            WebConsoleUI.getInstance().fileDistribution.scanDistributionFiles();
-            final FileDistributionHandler distributionHandler = WebConsoleUI.getInstance().fileDistribution.getHandler();
-            FileDistributionHandler.Result result = distributionHandler.sendNextFile();
-            while (result != null) {
-                result = distributionHandler.sendNextFile();
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            err = e.getMessage();
-        }
-        String output = "{\n";
-        output += " \"distribute\": 200,\n";
-        output += " \"erreur\": \"" + err + "\"\n";
-        output += "}";
-        return output;
-    }
-
-    @RequestMapping(value="/_deleteLogs", produces={"application/json"})
-    @ResponseBody
-    String deleteLogs(){
-        String err = "ok";
-        try {
-            WebConsoleUI.getInstance().logger.info("deleting logs");
-            File[] listOfFiles = new File(properties.getProperty("grinder.logDirectory", "log")).listFiles();
-            if (listOfFiles != null) {
-                for (int i = 0; i < listOfFiles.length; i++) {
-                    listOfFiles[i].delete();
-                }
-            }
-        }
-
-        catch (Exception e) {
-            e.printStackTrace();
-            WebConsoleUI.getInstance().logger.error("deleting logs failed - " + e.getMessage());
-            err = e.getMessage();
-        }
-        return "{\"erreur\": \"" + err + "\"}";
-    }
-
-    @RequestMapping(value="/_downloadFile", method = RequestMethod.GET)
-    ResponseEntity<Resource> downloadFile(@RequestParam(value="logFile", required=false) String logFile) throws IOException{
-        File file = new File(logFile);
-        Path path = Paths.get(file.getAbsolutePath());
-        Resource resource = new ByteArrayResource(Files.readAllBytes(path));
-
-        return ResponseEntity.ok()
-                //.headers(headers)
-                .contentLength(file.length())
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(resource);
-    }
-
-    @RequestMapping(value="/_startWorkers", produces={"application/json"})
-    @ResponseBody
-    String startWorkers(){
-        try {
-            properties.setAssociatedFile(new File(
-                    WebConsoleUI.getInstance().consoleProperties.getPropertiesFile().getAbsolutePath().substring(currentPath.length()+1)));
-            WebConsoleUI.getInstance().processControl.startWorkerProcesses(properties);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return "{\"rep\": \"" + e.getMessage() +"\"}";
-        }
-        return "{\"rep\": \"success\", \"statuwor\": 200}";
-    }
-
-    @RequestMapping(value="/_stopAgents", produces={"application/json"})
-    @ResponseBody
-    String stopAgents(){
-        WebConsoleUI.getInstance().processControl.resetWorkerProcesses();
-        return "{\"response\": \"success\"}";
-    }
-
-    @RequestMapping(value="/_grinderVersion", produces={"application/json"})
-    @ResponseBody
-    String grinderVersion(){
-        return "{\"versionG\": \"" + GrinderBuild.getVersionString() + "\"}";
-    }
-
-    @RequestMapping(value="/_resetLogServ", produces={"application/json"})
-    @ResponseBody
-    String resetLogServ(@RequestParam(value="resetlog", required=true) String resetlog){
-        this.logFile=resetlog;
-        WebConsoleUI.getInstance().logger.info("setting/reset the logaddress inside the Python global variable");
-
-        return "{ \"filei\":1}";
-    }
-
-    @RequestMapping(value="/_setPropertiesFileLocation", produces={"application/json"})
+    @RequestMapping(value="/_setPropertiesFileLocation", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     String setPropertiesFileLocation(@RequestParam(value="a", required=true) String propertiesFile){
         WebConsoleUI.getInstance().logger.info("setting properties file location");
@@ -530,29 +443,6 @@ public class WebConsoleEndPoint {
             this.properties = new GrinderProperties();
         }
         return "{ \"filei\":1}";
-    }
-
-    @RequestMapping(value="/_newAgent", produces={"application/json"})
-    @ResponseBody
-    String newAgent() {
-        /*new Thread() {
-            public void run() {
-                WebConsoleUI.getInstance().logger.info("Starting an embedded agent...");
-                String separator = System.getProperty("file.separator");
-                String classpath = System.getProperty("java.class.path");
-                String path = System.getProperty("java.home") + separator + "bin" + separator + "java";
-                try {
-                    new ProcessBuilder(path, "-cp",
-                            classpath,
-                            Grinder.class.getName()).start();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();*/
-        Grinder.main(new String[] {});
-        return "{ \"erreur\":\"ok\"}";
     }
 
     private void escapeJavaStyleString(Writer out, String str, boolean escapeSingleQuote) throws IOException {
