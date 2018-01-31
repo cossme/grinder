@@ -463,10 +463,8 @@ $(function() {
 $(function() {
     $('#restartrecord').bind('click', function() {
         $.post('/recording/zero', {}, function(data) {
-            $("#datakid").empty();
             resetCharts();
         });
-        return false;
     });
 });
 
