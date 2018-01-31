@@ -463,13 +463,8 @@ $(function() {
 $(function() {
     $('#restartrecord').bind('click', function() {
         $.post('/recording/zero', {}, function(data) {
-            if (data == "success") {
-                $("#datakid").empty();
-                resetCharts();
-            } else {
-                // TODO replace by http://jqueryui.com/dialog/
-                alert("Error: Unable to zeroing the statistics, please check Grinder logs for more information.");
-            }
+            $("#datakid").empty();
+            resetCharts();
         });
         return false;
     });
