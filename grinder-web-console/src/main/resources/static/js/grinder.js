@@ -271,7 +271,7 @@ function interv(tempo) {
                 $("#datakid").empty();
                 for (j = 0; j < nombreTest; j++) {
                     var newRow = document.createElement('tr');
-                    newRow.innerHTML = '<tr> <td class="result" id="tabtest' + j + '"> ' + data.resu[j].description +
+                    newRow.innerHTML = '<tr> <td class="resultTitle" id="tabtest' + j + '"> ' + data.resu[j].description +
                                        '</td><td class="result" id="tabtests ' + j + '">' + data.resu[j].statistics[0] +
                                        '</td><td class="result" id="taberrors' + j + '">' + data.resu[j].statistics[1] +
                                        '</td><td class="result" id="tabaverage' + j + '">' + (Math.round((data.resu[j].statistics[2]) * 100) / 100) +
@@ -285,7 +285,7 @@ function interv(tempo) {
                 totalNbErrors = data.glob[1];
                 totalTps      = (Math.round((data.glob[4]) * 100) / 100);
                 var newRow = document.createElement('tr');
-                newRow.innerHTML = '<tr> <td class="result">Total</td><td class="result">' + totalNbTests +
+                newRow.innerHTML = '<tr> <td class="resultTitle">Total</td><td class="result">' + totalNbTests +
                                    '</td><td class="result">' + totalNbErrors +
                                    '</td><td class="result">' + (Math.round((data.glob[2]) * 100) / 100) +
                                    '</td><td class="result">' + (Math.round((data.glob[3]) * 100) / 100) +

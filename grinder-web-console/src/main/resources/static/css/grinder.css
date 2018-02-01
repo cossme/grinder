@@ -285,7 +285,10 @@ note { margin-left: 50px; margin-bottom: 20px; font-style: italic; -webkit-box-d
 div.tab-pane { display: none; }
 div.active   { display: block; }
 th.result    { text-align: center; }
+th.resultTitle { text-align: left;}
 td.result    { text-align: center; font-weight: bold;}
+td.resultTitle { text-align: left; font-weight: bold;}
+
 button { color: white; border: 1px solid #5d910b; background: linear_gradient(#93bd20, #659e10); border-radius: 2px; box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.3), 0px 3px 7px rgba(0, 0, 0, 0.7); background-color: #93bd20; padding: 10px 12px; margin-top: 6px; line-height: 14px; font-size: 14px; display: inline-block; text-align: center; }
 a.button { linear_gradient(#93bd20, #659e10); color: white; border: 1px solid #5d910b; background: linear_gradient(#93bd20, #659e10); border-radius: 2px; box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.3), 0px 3px 7px rgba(0, 0, 0, 0.7); background-color: #93bd20; padding: 10px 12px; margin-top: 6px; line-height: 14px; font-size: 14px; display: inline-block; text-align: center; }
 a.button:hover { background: linear_gradient(#749619, #527f0e); color: white; background-color: #659e10; border: 1px solid #527f0e; box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 1px 0px rgba(0, 0, 0, 0); }
