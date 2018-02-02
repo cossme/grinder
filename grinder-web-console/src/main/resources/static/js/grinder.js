@@ -213,46 +213,29 @@ function interv(tempo) {
             statuscheck()
             chemSave = document.getElementById("currentFile").innerText;
 
-            $.getJSON('/_agentStats', {}, function(data) {
+            $.getJSON('/agents/status', {}, function(data) {
                 $("#kids-body").empty();
-                nombrAgent = data.nombreAgents;
+                //nombrAgent = data.nombreAgents;
+                nombrAgent = data.length;
+
                 document.getElementById('dashboard_agents').innerText = nombrAgent;
 
-                if (data.nombreAgents > 0) {
-                    for (j = 0; j < data.nombreAgents; j++) {
-                        if (data.textagent[j].workers == "")  {
-                            data.textagent[j].workers = "[ ]"
-                            data.textagent[j].state = "Connected"
+                if (nombrAgent > 0) {
+                    for (agentIndex = 0; agentIndex < nombrAgent; agentIndex++) {
+                        agent = data[agentIndex];
+                        if (agent.workers.length == 0) {
+                            agent.state = "CONNECTED";
                             setProcessState(document.getElementById('processState'), 'start');
                         }
-                        else if (data.textagent[j].workers != "[ ]") {
-                           data.textagent[j].state = "Running"
+                        else {
                            setProcessState(document.getElementById('processState'), 'stop');
                         }
-
                         var newRow = document.createElement('tr');
-                        newRow.innerHTML = ' <td class="result" id="agent' + j + '">' + data.textagent[j].name +
-                                           ' </td><td class="result" id="states' + j + '">' + data.textagent[j].state + '<br>';
-                        ale = data.textagent[j].workers[0].name;
-                        if (ale) {
-                            if (runningTest == 0) {
-                              notify('Test running')
-                              runningTest=1;
-                            }
-
-                            mesWorkers = data.textagent[j].workers;
-                            nombreWorkers = mesWorkers.length;
-
-                            newRow.innerHTML = newRow.innerHTML + '<td class="result" id="workers' + j +
-                                                '"> workers received:' + data.allWorker[j] + '</td><br>';
-
-                            document.getElementById('kids-body').appendChild(newRow);
-                        }
-                        else {
-                            newRow.innerHTML = newRow.innerHTML + '<td class="result" id="workers' + j + '">'
-                                                                + data.textagent[j].workers + '</td><br>';
-                            document.getElementById('kids-body').appendChild(newRow);
-                        }
+                        newRow.innerHTML = '<td class="result"      id="agent'   + agentIndex + '">' + agent.name +
+                                           '</td><td class="result" id="states'  + agentIndex + '">' + agent.state +
+                                           '</td><td class="result" id="workers' + agentIndex + '">' + agent.workers.length +
+                                           '</td>';
+                        document.getElementById('kids-body').appendChild(newRow);
                     }
                 }
                 else {
@@ -418,7 +401,7 @@ function startAfterDistribution(status) {
             $.post('/recording/reset');
             $.post('/agents/start-workers', {}, function(data) {
                 if (data == "success") {
-                    notify('Starting test...');
+                    notify('Test starting...');
                 } else {
                     // TODO replace by http://jqueryui.com/dialog/
                     alert("Error: Unable to start worker processes, please check Grinder logs for more information");

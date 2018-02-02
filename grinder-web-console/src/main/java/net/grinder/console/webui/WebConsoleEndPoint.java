@@ -380,45 +380,6 @@ public class WebConsoleEndPoint {
         return output;
     }
 
-    @RequestMapping(value="/_agentStats", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    String agentStats(){
-        int numberOfAgents = WebConsoleUI.getInstance().processControl.getNumberOfLiveAgents();
-
-        String output = "{\n  \"allWorker\": [\n   0\n  ],\n \"error\": \"ok\",\n";
-        output += " \"nombreAgents\": " + numberOfAgents + ",\n";
-        output += " \"textagent\": [\n";
-
-        //loop agents
-        if (WebConsoleUI.getInstance().m_processReports != null) {
-            for (int i = 0; i < WebConsoleUI.getInstance().m_processReports.length; ++i) {
-                ProcessReport.State agentState = WebConsoleUI.getInstance().m_processReports[i].getAgentProcessReport().getState();
-
-                AgentIdentity aIdentity = WebConsoleUI.getInstance().m_processReports[i].getAgentProcessReport().getAgentIdentity();
-                output += " {\n";
-                output += "  \"id\": \"" + aIdentity.getUniqueID() + "\",\n";
-                output += "  \"name\": \"" + aIdentity.getName() + "\",\n";
-                output += "  \"number\": " + aIdentity.getNumber() + ",\n";
-                output += "  \"state\": \"" + agentState + "\",\n";
-                output += "  \"workers\": [ ";
-                for (int j = 0; j < WebConsoleUI.getInstance().m_processReports[i].getWorkerProcessReports().length; ++j) {
-                    WorkerProcessReport report = WebConsoleUI.getInstance().m_processReports[i].getWorkerProcessReports()[j];
-                    WorkerIdentity wIdentity = report.getWorkerIdentity();
-                    output += "\n {\n";
-                    output += "  \"id\": \"" + wIdentity.getUniqueID() + "\",\n";
-                    output += "  \"name\": \"" + wIdentity.getName() + "\",\n";
-                    output += "  \"number\": " + wIdentity.getNumber() + "\n";
-                    output += " },";
-                }
-                output = output.substring(0, output.length() - 1);
-                output += "  ]\n";
-                output += " }\n";
-            }
-        }
-        output += " ]\n}\n";
-        return output;
-    }
-
     @RequestMapping(value="/_setPropertiesFileLocation", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     String setPropertiesFileLocation(@RequestParam(value="a", required=true) String propertiesFile){
