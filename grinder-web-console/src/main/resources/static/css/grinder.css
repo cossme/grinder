@@ -274,9 +274,8 @@ dt { color: #F0E7D5; font-family: 'OpenSansSemibold', "Helvetica Neue", Helvetic
 #control-panel nav li.separator { float: left; margin: 10px 10px 10px 10px; }
 #control-panel nav li.double_separator { float: right; margin: 20px 20px 20px 20px; }
 #control-panel nav li.downloads { float: right; margin-left: 6px; }
-#control-panel nav li.stat { float: right; margin-right: 10px; font-size: 11px; }
-#control-panel nav li.stat tr { height: 25px; }
-#control-panel nav li.stat th { text-align: left; }
+#control-panel nav li.stat { float: right; margin-right: 10px; font-size: 12px; color: #f0e7d5}
+#control-panel nav li.stat span { font-size: 18px; }
 #control-panel nav li.image { float: left; margin-right: 10px; font-size: 11px; }
 note { margin-left: 50px; margin-bottom: 20px; font-style: italic; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 

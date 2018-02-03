@@ -47,8 +47,8 @@ function setBasePath() {
 
 function openFile(e) {
     file = e.text;
-    if (file.indexOf("/") >= 0) {
-        file = file.substring(file.lastIndexOf("/")+1)
+    if (file.indexOf("/") < 0 && file.indexOf("\\") < 0) {
+        file = document.getElementById("currentPath").innerText + '/' + file
     }
     $.getJSON('/filesystem/files', {
         docAdvan: file
@@ -158,22 +158,21 @@ function resetCharts() {
         charts.push(myLineChart);
     }
 
-    initialize = 0
+    graphInitialized = false
 }
 
 $(document).ready(function() {
     alertfirefox=false
-    statCheckbox=false
-    statuscheck()
 
     $.getJSON('/filesystem/files/list', {}, function(data) {
         loadFiles(data);
     });
 
-    $.getJSON('/_gatherData', { statCheckbox :statCheckbox}, function(data) {
-        document.getElementById("currentPath").innerText = data.chem2;
-        document.getElementById("basePath").value = data.chem2;
-        $("#setmsg2").attr("value", data.initPath2);
+    $.getJSON('/properties', {}, function(data) {
+        document.getElementById("currentPath").innerText = data.distributionDirectory;
+        document.getElementById("basePath").value = data.distributionDirectory;
+        document.getElementById("selectedPropertiesFile").innerHTML =
+            "<a onClick='openFile(this)' href='#'>" + data.propertiesFile + "</a>";
     });
 
     $.getJSON('/logs/list', {}, function(data) {
@@ -188,40 +187,105 @@ $(document).ready(function() {
         lineNumbers: true,
     });
 
-    // The following section is certainly to be cleaned
-    i = 0;
-    initialize = 0
-    nombreTest = 0;
-    ili = 0;
-    fich = [];
-    nombreFich = 1;
-
-    timee = ""
-    ik = 0
-    tempo = 1000
-    $("#changeTime").attr("value", tempo);
-
+    graphInitialized = false
+    graphSampleId = 0
+    $("#refreshPeriod").attr("value", 1000);
     resetCharts();
-
-    interv(tempo);
+    refreshGrinder(1000);
 
 });
 
-function interv(tempo) {
-     runningTest=0;
-        intervalle = setInterval(function() {
-            statuscheck()
+function updateResultTable(data) {
+    // Add the columns
+    $("#dataHead").empty();
+    var newRow = document.createElement('tr');
+    newRow.innerHTML = '<tr><th class="resultTitle">Test Name</th>'
+    //alert(JSON.stringify(data))
+    for (i = 0; i < data.columns.length; i++) {
+        newRow.innerHTML += '<th class="result"> ' + data.columns[i] + '</th>'
+    }
+    newRow.innerHTML += '</tr>'
+    document.getElementById('dataHead').appendChild(newRow);
+
+    // Add the test results
+    $("#datakid").empty();
+    for (j = 0; j < data.tests.length; j++) {
+        var newRow = document.createElement('tr');
+        newRow.innerHTML = '<tr><td class="resultTitle" id="tabtest' + j + '">' + data.tests[j].description + '</td>'
+        for (i = 0; i < data.columns.length; i++) {''
+            newRow.innerHTML += '<td class="result" id="tabtests' + j + '">' + roundToTwo(data.tests[j].statistics[i]) + '</td>'
+        }
+        newRow.innerHTML += '</tr>'
+        document.getElementById('datakid').appendChild(newRow);
+    }
+    // Add a "total" line
+    var newRow = document.createElement('tr');
+    newRow.innerHTML = '<tr><td class="resultTitle">Total</td>'
+    for (i = 0; i < data.totals.length; i++) {''
+        newRow.innerHTML += '<td class="result">' + roundToTwo(data.totals[i]) + '</td>'
+    }
+    newRow.innerHTML += '</tr>'
+    document.getElementById('datakid').appendChild(newRow);
+
+    // update dashboard elements
+    errorRate = 0
+    if (data.totals[0] > 0)
+        Math.round(data.totals[1]/data.totals[0]*100)
+    document.getElementById('dashboard_error_rate').innerText = roundToTwo(errorRate);
+    document.getElementById('dashboard_tps').innerText = roundToTwo(data.totals[4]);
+}
+
+function updateResultGraphs(data) {
+    d = new Date();
+    timee = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+    if (data.tests.length > 0) {
+        if (!graphInitialized) {
+            graphSampleId = 0;
+            graphInitialized = true;
+            for (curveIndex = 0; curveIndex < data.tests.length; curveIndex++) {
+                curveColor = "rgba(" +
+                               (Math.floor(Math.random() * 155) + 100) + ", " +
+                               (Math.floor(Math.random() * 155) + 100) + ", " +
+                               (Math.floor(Math.random() * 155) + 100) + ", 1)"
+                for (chartId = 0; chartId < charts.length; chartId++) {
+                    charts[chartId].data.labels[graphSampleId] = timee;
+                    charts[chartId].data.datasets.push({
+                       label: data.tests[curveIndex].description,
+                       borderColor: curveColor,
+                       pointBackgroundColor: curveColor,
+                       data: [ ]
+                    })
+                }
+            }
+        }
+
+        for (chartId = 0; chartId < charts.length; chartId++) {
+            for (cases = 0; cases < data.tests.length; cases++) {
+                if (charts[chartId].data.datasets[cases] != null) {
+                    statId = chartIndexes[chartId]
+                    valuegraph = data.tests[cases].statistics[statId];
+                    charts[chartId].data.datasets[cases].data[graphSampleId] = valuegraph
+                }
+            }
+            charts[chartId].data.labels[graphSampleId] = timee;
+            charts[chartId].update();
+        }
+        graphSampleId++
+    }
+}
+
+function refreshGrinder(refreshPeriod) {
+        interval = setInterval(function() {
             chemSave = document.getElementById("currentFile").innerText;
 
             $.getJSON('/agents/status', {}, function(data) {
                 $("#kids-body").empty();
-                //nombrAgent = data.nombreAgents;
-                nombrAgent = data.length;
+                nbOfAgents = data.length;
 
-                document.getElementById('dashboard_agents').innerText = nombrAgent;
+                document.getElementById('dashboard_agents').innerText = nbOfAgents;
 
-                if (nombrAgent > 0) {
-                    for (agentIndex = 0; agentIndex < nombrAgent; agentIndex++) {
+                if (nbOfAgents > 0) {
+                    for (agentIndex = 0; agentIndex < nbOfAgents; agentIndex++) {
                         agent = data[agentIndex];
                         if (agent.workers.length == 0) {
                             agent.state = "CONNECTED";
@@ -245,107 +309,25 @@ function interv(tempo) {
                 }
             });
 
-            $.getJSON('/_gatherData', { statCheckbox : statCheckbox }, function(data) {
-                nombreTest = data.tailla;
-                $("#dataProperties").text(data.pathsSend);
-                document.getElementById("selectedPropertiesFile").innerHTML = "<a onClick='openFile(this)' href='#'>" + data.etoilefile + "</a>";
-                document.getElementById("currentPath").innerText = data.chem2;
-                $("#setmsg2").attr("placeholder", data.initPath2);
-                $("#datakid").empty();
-                for (j = 0; j < nombreTest; j++) {
-                    var newRow = document.createElement('tr');
-                    newRow.innerHTML = '<tr> <td class="resultTitle" id="tabtest' + j + '"> ' + data.resu[j].description +
-                                       '</td><td class="result" id="tabtests ' + j + '">' + data.resu[j].statistics[0] +
-                                       '</td><td class="result" id="taberrors' + j + '">' + data.resu[j].statistics[1] +
-                                       '</td><td class="result" id="tabaverage' + j + '">' + (Math.round((data.resu[j].statistics[2]) * 100) / 100) +
-                                       '</td><td class="result" id="tabtts' + j + '">' + (Math.round((data.resu[j].statistics[3]) * 100) / 100) +
-                                       '</td><td class="result" id="tabtps' + j + '">' + (Math.round((data.resu[j].statistics[4]) * 100) / 100) +
-                                       '</td><td class="result" id="tabpeak' + j + '">' + data.resu[j].statistics[5] + '</td><br></tr>';
-                    document.getElementById('datakid').appendChild(newRow);
-                }
+            $.getJSON('/recording/data' + ($('#checkboxD').is(":checked")?'-latest':''), {}, function(data) {
+                updateResultTable(data)
+                updateResultGraphs(data);
 
-                totalNbTests  = data.glob[0];
-                totalNbErrors = data.glob[1];
-                totalTps      = (Math.round((data.glob[4]) * 100) / 100);
-                var newRow = document.createElement('tr');
-                newRow.innerHTML = '<tr> <td class="resultTitle">Total</td><td class="result">' + totalNbTests +
-                                   '</td><td class="result">' + totalNbErrors +
-                                   '</td><td class="result">' + (Math.round((data.glob[2]) * 100) / 100) +
-                                   '</td><td class="result">' + (Math.round((data.glob[3]) * 100) / 100) +
-                                   '</td><td class="result">' + totalTps +
-                                   '</td><td class="result">' + data.glob[5] + '</td></tr><br>';
-
-                document.getElementById('datakid').appendChild(newRow);
-                errorRate = 0
-                if (totalNbTests != 0)
-                    Math.round(totalNbErrors/totalNbTests*100)
-                document.getElementById('dashboard_error_rate').innerText = errorRate;
-                document.getElementById('dashboard_tps').innerText = totalTps;
-
-                $("#tab0").text(data.resu[0]);
-                $("#tab1").text(data.resu[1]);
-                $("#tab2").text(data.resu[2]);
-                $("#tab3").text(data.resu[3]);
-                $("#tab4").text(data.resu[4]);
-                $("#tab5").text(data.resu[5]);
-
-                d = new Date();
-                timee = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-                if (nombreTest > 0) {
-                    if (initialize == 0) {
-                        ik = 0;
-                        initialize = 1;
-                        for (nombrecourb = 0; nombrecourb < nombreTest; nombrecourb++) {
-                            curveColor = "rgba(" +
-                                           (Math.floor(Math.random() * 155) + 100) + ", " +
-                                           (Math.floor(Math.random() * 155) + 100) + ", " +
-                                           (Math.floor(Math.random() * 155) + 100) + ", 1)"
-                            for (chartId = 0; chartId < charts.length; chartId++) {
-                                charts[chartId].data.labels[ik] = timee;
-                                charts[chartId].data.datasets.push({
-                                   label: data.resu[nombrecourb].description,
-                                   borderColor: curveColor,
-                                   pointBackgroundColor: curveColor,
-                                   data: [ ]
-                                })
-                            }
-                        }
-                    }
-
-                    running = document.getElementById("processState").src.indexOf("stop") >= 0
-                    if (running) {
-                        for (chartId = 0; chartId < charts.length; chartId++) {
-                            for (cases = 0; cases < nombreTest; cases++) {
-                                if (charts[chartId].data.datasets[cases] != null) {
-                                    statId = chartIndexes[chartId]
-                                    valuegraph = data.resu[cases].statistics[statId];
-                                    charts[chartId].data.datasets[cases].data[ik] = valuegraph
-                                }
-                            }  
-                            charts[chartId].data.labels[ik] = timee;
-                            charts[chartId].update();
-                        }
-                        ik++
-                    }
-                    else {
-                        ik = 0
-                    }
-                }
-                i = i + 1;
             });
-        }, tempo);
+        }, refreshPeriod);
     }
 
 
 $(function() {
     $('#setPath').bind('click', function() {
         path = document.getElementById("currentPath").innerText;
-            $.getJSON('/_setDistributionPath', { distributionPath: path }, function(data) {
-            if ((data.error) != "ok") {
-              alert(data.error + "  if the problem persists, please refresh the page ")
-            }
+        $.ajax({
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ distributionDirectory: path }),
+            url: '/properties',
+            dataType: "json"
         });
-        return false;
     });
 });
 
@@ -376,10 +358,10 @@ $(function() {
 
 $(function() {
     $('#saveas').bind('click', function() {
-        var nomSave = prompt("Choose the name of your file", "");
-        if (nomSave != null) {
+        var saveName = prompt("Choose the name of your file", "");
+        if (saveName != null) {
             $.getJSON('/filesystem/files/save', {
-                newname: nomSave,
+                newname: saveName,
                 ajaa: editor.getValue()
             }, function(data) {
                 $.getJSON('/filesystem/files/list', {}, function(data) {
@@ -522,18 +504,22 @@ function showChart(index) {
 }
 
 function changeTempo() {
-    tempo = document.getElementById("changeTime").value;
-    clearInterval(intervalle);
-    interv(tempo);
+    refreshPeriod = document.getElementById("refreshPeriod").value;
+    clearInterval(interval);
+    refreshGrinder(refreshPeriod);
 }
 
 function setPropertiesFile() {
     var tess = document.getElementById("currentFile").innerText;
     if (tess != "") {
         document.getElementById("selectedPropertiesFile").innerHTML = "<a onClick='openFile(this)' href='#'>" + tess + "</a>";
-        $.getJSON('/_setPropertiesFileLocation', {
-            a: tess
-        }, function(data) {});
+        $.ajax({
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ propertiesFile: tess }),
+            url: '/properties',
+            dataType: "json"
+        });
     }
 
     if (tess == "") {
@@ -541,11 +527,7 @@ function setPropertiesFile() {
     }
 }
 
-function statuscheck() {
-    if ($('#checkboxD').is(":checked"))  {
-        statCheckbox=true
-    }
-    else {
-        statCheckbox=false
-    }
+function roundToTwo(num) {
+    result = +(Math.round(num + "e+2")  + "e-2");
+    return isNaN(result)?0:result
 }

@@ -22,18 +22,7 @@
 package net.grinder.console.webui;
 
 import net.grinder.Grinder;
-import net.grinder.common.GrinderBuild;
 import net.grinder.common.GrinderProperties;
-import net.grinder.common.Test;
-import net.grinder.common.processidentity.AgentIdentity;
-import net.grinder.common.processidentity.ProcessReport;
-import net.grinder.common.processidentity.WorkerIdentity;
-import net.grinder.common.processidentity.WorkerProcessReport;
-import net.grinder.console.common.ConsoleException;
-import net.grinder.console.distribution.FileDistributionHandler;
-import net.grinder.statistics.*;
-import net.grinder.util.Directory;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -98,6 +87,7 @@ public class WebConsoleEndPoint {
         return output;
     }
 
+    // TODO: Use BASE64 Body
     @RequestMapping("/logs")
     @ResponseBody
     String getLog(@RequestParam(value="doclo", required=true) String logFile){
@@ -125,12 +115,12 @@ public class WebConsoleEndPoint {
         output += "}";
         return output;    }
 
+    // TODO: Use BASE64 Body
     @RequestMapping(value="/filesystem/files", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    String getFile(@RequestParam(value="docAdvan", required=true) String fileName){
+    String getFile(@RequestParam(value="docAdvan", required=true) String filePath){
         String contentFile = "";
         String error = "ok";
-        String filePath = currentPath + "/" + fileName;
         try {
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(filePath));
             StringWriter out = new StringWriter();
@@ -153,7 +143,7 @@ public class WebConsoleEndPoint {
 
         String output = "{\n";
         output += " \"doc\": \"" + contentFile + "\",\n";
-        output += " \"doc1\": \"" + filePath + "\",\n";
+        output += " \"doc1\": \"" + filePath.replaceAll("\\\\", "/") + "\",\n";
         output += " \"error\": \"" + error +"\"\n";
         output += "}";
         return output;
@@ -177,10 +167,6 @@ public class WebConsoleEndPoint {
             WebConsoleUI.getInstance().logger.error("saveas: " + e.getMessage());
             e.printStackTrace();
             err = e.getMessage();
-        }
-        // If the properties file has been update, we reset it.
-        if (filePath.equals(this.propertiesFile)){
-            setPropertiesFileLocation(this.propertiesFile);
         }
         return "{\"error\": \"" + err + "\"}";
     }
@@ -278,131 +264,6 @@ public class WebConsoleEndPoint {
         return "success";
     }
 
-    @RequestMapping(value="/_setDistributionPath", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    String setDistributionPath(){
-        try {
-            WebConsoleUI.getInstance().consoleProperties.setAndSaveDistributionDirectory(new Directory(new File(currentPath)));
-            return "{\"error\": \"ok\"}";
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return "{\"error\": \"" + e.getMessage() + "\"}";
-        }
-    }
-
-    @RequestMapping(value="/_gatherData", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    String gatherData(@RequestParam(value="statCheckbox", required=false) String statusCheckbox){
-        WebConsoleUI.getInstance().logger.info("recover Data");
-        String propertiesFile = WebConsoleUI.getInstance().consoleProperties.getPropertiesFile().getAbsolutePath().replace('\\', '/');
-        double totalPeakTps = 0;
-
-        String output = "{\n";
-        output += "\"chem\": \"/\",\n";
-        output += "\"chem2\": \"" + currentPath + "\",\n";
-        output += "\"etoilefile\": \"" + propertiesFile + "\",\n";
-        output += "\"initPath\": \"\",\n";
-        output += "\"initPath2\": \"" + currentPath + "\",\n";
-        output += "\"pathsSend\": \"" + propertiesFile + "\",\n";
-        output += "\"resu\": [ ";
-
-        int nbOfTest = 0;
-        StatisticsServices statisticsServices = StatisticsServicesImplementation.getInstance();
-        StatisticsView view = statisticsServices.getSummaryStatisticsView();
-        Number[] totalStats = new Number[view.getExpressionViews().length];
-
-        PeakStatisticExpression peakTPSExpression =
-                statisticsServices.getStatisticExpressionFactory().createPeak(
-                        statisticsServices.getStatisticsIndexMap().getDoubleIndex("peakTPS"),
-                        statisticsServices.getTPSExpression());
-
-        for (int j = 0; j < view.getExpressionViews().length; ++j) {
-            final StatisticExpression expression = view.getExpressionViews()[j].getExpression();
-            if (expression.isDouble()) {
-                totalStats[j] = new Double(0);
-            }
-            else {
-                totalStats[j] = new Long(0);
-            }
-        }
-        if (WebConsoleUI.getInstance().testIndex != null) {
-            nbOfTest = WebConsoleUI.getInstance().testIndex.getNumberOfTests();
-
-            for (int  i = 0; i < WebConsoleUI.getInstance().testIndex.getNumberOfTests(); ++i) {
-                Test test = WebConsoleUI.getInstance().testIndex.getTest(i);
-                StatisticsSet cumulativeStats = WebConsoleUI.getInstance().testIndex.getCumulativeStatistics(i);
-                StatisticsSet stats;
-                if ("true".equalsIgnoreCase(statusCheckbox)) {
-                    stats = WebConsoleUI.getInstance().testIndex.getLastSampleStatistics(i);
-                } else {
-                    stats = cumulativeStats;
-                }
-
-                output += "\n{\"test\":" + test.getNumber() +
-                        ",\"description\":\"" + test.getDescription() +
-                        "\",\"statistics\":[";
-                for (int j = 0; j < view.getExpressionViews().length; ++j) {
-                    final StatisticExpression expression = view.getExpressionViews()[j].getExpression();
-                    output += "\"";
-                    if (expression.isDouble()) {
-                        double value =  expression.getDoubleValue(stats);
-                        totalStats[j] = totalStats[j].doubleValue() + value;
-                        output += value;
-                    }
-                    else {
-                        long value =  expression.getLongValue(stats);
-                        totalStats[j] = totalStats[j].longValue() + value;
-                        output += value;
-                    }
-                    output += "\",";
-                }
-
-                double peakTps = peakTPSExpression.getLongValue(cumulativeStats);
-                output += "\"" + peakTps  + "\"]},";
-                totalPeakTps += peakTps;
-            }
-        }
-        output = output.substring(0, output.length() - 1);
-        output += "\n],\n";
-        output += "\"glob\": [\n";
-        if (nbOfTest > 0) {
-            for (int j = 0; j < totalStats.length; ++j) {
-                output += "\"" + totalStats[j] + "\",\n";
-            }
-            output += "\"" + totalPeakTps + "\"\n";
-            output += "],\n";
-        }
-        else {
-            output += "\"0\",\"0\",\"0\",\"0\",\"0\",\"0\"],\n";
-        }
-        output += "\"tailla\": " + nbOfTest + "\n }";
-        return output;
-    }
-
-    @RequestMapping(value="/_setPropertiesFileLocation", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    String setPropertiesFileLocation(@RequestParam(value="a", required=true) String propertiesFile){
-        WebConsoleUI.getInstance().logger.info("setting properties file location");
-        this.propertiesFile=propertiesFile.replace('\\', '/');
-        File propFile = new File(propertiesFile);
-        try {
-            WebConsoleUI.getInstance().consoleProperties.setAndSavePropertiesFile(propFile);
-        }
-        catch (ConsoleException e) {
-            e.printStackTrace();
-            WebConsoleUI.getInstance().consoleProperties.setPropertiesFile(propFile);
-        }
-        try {
-            this.properties = new GrinderProperties(WebConsoleUI.getInstance().consoleProperties.getPropertiesFile());
-        }
-        catch (GrinderProperties.PersistenceException e) {
-            e.printStackTrace();
-            this.properties = new GrinderProperties();
-        }
-        return "{ \"filei\":1}";
-    }
-
     private void escapeJavaStyleString(Writer out, String str, boolean escapeSingleQuote) throws IOException {
         if (out == null) {
             throw new IllegalArgumentException("The Writer must not be null");
@@ -475,6 +336,4 @@ public class WebConsoleEndPoint {
             }
         }
     }
-
-
 }
