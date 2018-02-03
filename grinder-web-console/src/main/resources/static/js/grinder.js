@@ -237,7 +237,7 @@ function updateResultTable(data) {
 
 function updateResultGraphs(data) {
     d = new Date();
-    timee = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+    curTime = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
     if (data.tests.length > 0) {
         if (!graphInitialized) {
             graphSampleId = 0;
@@ -248,7 +248,7 @@ function updateResultGraphs(data) {
                                (Math.floor(Math.random() * 155) + 100) + ", " +
                                (Math.floor(Math.random() * 155) + 100) + ", 1)"
                 for (chartId = 0; chartId < charts.length; chartId++) {
-                    charts[chartId].data.labels[graphSampleId] = timee;
+                    charts[chartId].data.labels[graphSampleId] = curTime;
                     charts[chartId].data.datasets.push({
                        label: data.tests[curveIndex].description,
                        borderColor: curveColor,
@@ -267,7 +267,7 @@ function updateResultGraphs(data) {
                     charts[chartId].data.datasets[cases].data[graphSampleId] = valuegraph
                 }
             }
-            charts[chartId].data.labels[graphSampleId] = timee;
+            charts[chartId].data.labels[graphSampleId] = curTime;
             charts[chartId].update();
         }
         graphSampleId++
