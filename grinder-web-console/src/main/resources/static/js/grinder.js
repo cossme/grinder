@@ -1,16 +1,16 @@
 chartTitles = ["Transactions Per Second", "Average Response Time(ms)", "Response Time Standard Deviation(ms)"]
-chartIndexes = [ 4, 2, 3]
+chartIndexes = [4, 2, 3]
 charts = []
 
 function loadFiles(data) {
-    fich1 = data.docss2;
+    serverFiles = data.files;
     var listFile = document.getElementById("listFile");
     folders = files = "";
-    for (var files2 in fich1) {
-        if (fich1[files2] == true) {
-            folders = folders + '\n<li class="folder"><a onClick="browseFolder(this)" href="#">'+files2+'</a></li>';
+    for (var file in serverFiles) {
+        if (serverFiles[file] == true) {
+            folders = folders + '\n<li class="folder"><a onClick="browseFolder(this)" href="#">'+file+'</a></li>';
         } else {
-            files = files + '\n<li class="file"><a onClick="openFile(this)" href="#">'+files2+'</a></li>';
+            files = files + '\n<li class="file"><a onClick="openFile(this)" href="#">'+file+'</a></li>';
         }
     }
     listFile.innerHTML = '<li class="folder"><a onClick="browseFolder(this)" href="#">..</a></li>' + folders + files;
@@ -21,26 +21,26 @@ function browseFolder(e) {
     part11 = document.getElementById("currentPath").innerText;
     part21 = e.text;
     if (part21 == "..") {
-        chemVal2 = part11.substring(0, part11.lastIndexOf('/'));
+        path = part11.substring(0, part11.lastIndexOf('/'));
     }
     else {
-        chemVal2 = part11 + "/" + part21;
+        path = part11 + "/" + part21;
     }
-    $.getJSON('/filesystem/directory/change', {newPath2: chemVal2}, function(data) {
-        document.getElementById("currentPath").innerText = data.Pathes2;
+    $.getJSON('/filesystem/directory/change', {newPath: path}, function(data) {
+        document.getElementById("currentPath").innerText = data.newPath;
         $.getJSON('/filesystem/files/list', {}, function(data) {
-                loadFiles(data);
+            loadFiles(data);
         });
     });
 }
 
 function setBasePath() {
     // Set new Path
-    chemVal2 = document.getElementById("basePath").value;
-    $.getJSON('/filesystem/directory/change', {newPath2: chemVal2}, function(data) {
-        document.getElementById("currentPath").innerText = data.Pathes2;
+    path = document.getElementById("basePath").value;
+    $.getJSON('/filesystem/directory/change', {newPath: path}, function(data) {
+        document.getElementById("currentPath").innerText = data.newPath;
         $.getJSON('/filesystem/files/list', {}, function(data) {
-                loadFiles(data);
+            loadFiles(data);
         });
     });
 }
@@ -51,9 +51,9 @@ function openFile(e) {
         file = document.getElementById("currentPath").innerText + '/' + file
     }
     $.getJSON('/filesystem/files', {
-        docAdvan: file
+        file: file
     }, function(data) {
-        $("#currentFile").text(data.doc1);
+        $("#currentFile").text(data.filePath);
         editor.getDoc().setValue(data.doc);
     });
 }
@@ -62,8 +62,8 @@ function loadLogs(data) {
     document.getElementById("adressLog").innerText = data.logPath;
     var idLogs = document.getElementById("idLog");
     idLogs.innerHTML = "";
-    for (var files2 in data.doclog) {
-        idLogs.innerHTML = idLog.innerHTML + '\n<li class="file"><a onClick="openLogFile(this)" href="#">'+files2+'</a></li>';
+    for (var file in data.logFiles) {
+        idLogs.innerHTML = idLog.innerHTML + '\n<li class="file"><a onClick="openLogFile(this)" href="#">'+file+'</a></li>';
     }
 }
 
@@ -75,7 +75,7 @@ function openLogFile(e) {
     downloadButton.download = e.text;
 
     $.getJSON('/logs', {
-        doclo: log
+        logFile: log
     }, function(data) {
         document.getElementById("loglog").value = (data.doc);
     });
@@ -276,8 +276,6 @@ function updateResultGraphs(data) {
 
 function refreshGrinder(refreshPeriod) {
         interval = setInterval(function() {
-            chemSave = document.getElementById("currentFile").innerText;
-
             $.getJSON('/agents/status', {}, function(data) {
                 $("#kids-body").empty();
                 nbOfAgents = data.length;
@@ -342,11 +340,11 @@ $(function() {
 
 $(function() {
     $('#te').bind('click', function() {
-        chemSave = document.getElementById("currentFile").innerText;
+        savePath = document.getElementById("currentFile").innerText;
         if (confirm("You will change the content of your file, sure ? ")) {
             $.getJSON('/filesystem/files/write', {
-                ajaa: editor.getValue(),
-                chemup: chemSave
+                fileContent: editor.getValue(),
+                filePath: savePath
             }, function(data) {
                 alert(data.error)
             });
@@ -361,8 +359,8 @@ $(function() {
         var saveName = prompt("Choose the name of your file", "");
         if (saveName != null) {
             $.getJSON('/filesystem/files/save', {
-                newname: saveName,
-                ajaa: editor.getValue()
+                newName: saveName,
+                fileContent: editor.getValue()
             }, function(data) {
                 $.getJSON('/filesystem/files/list', {}, function(data) {
                     loadFiles(data);
@@ -450,15 +448,15 @@ $(function() {
             type: 'DELETE',
             url: '/logs/delete',
             success: function(data) {
-                         if (data.error == "ok") {
-                             $("#idLog").empty();
-                             document.getElementById("loglog").value = "";
-                         }
-                         else {
-                             // TODO replace by http://jqueryui.com/dialog/
-                             alert("Error: Unable to delete the local logs: " + data.error);
-                         }
-                     },
+                if (data.error == "ok") {
+                    $("#idLog").empty();
+                    document.getElementById("loglog").value = "";
+                }
+                else {
+                    // TODO replace by http://jqueryui.com/dialog/
+                    alert("Error: Unable to delete the local logs: " + data.error);
+                }
+            },
             dataType: "json"
         });
 

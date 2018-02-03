@@ -73,7 +73,7 @@ public class WebConsoleEndPoint {
         File[] listOfFiles = folder.listFiles();
         String output = "{\n";
         output += " \"logPath\": \"" + folder.getAbsolutePath().replaceAll("\\\\", "/") + "\",\n" ;
-        output += " \"doclog\": { ";
+        output += " \"logFiles\": { ";
         if (listOfFiles != null) {
             for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile()) {
@@ -90,11 +90,21 @@ public class WebConsoleEndPoint {
     // TODO: Use BASE64 Body
     @RequestMapping("/logs")
     @ResponseBody
-    String getLog(@RequestParam(value="doclo", required=true) String logFile){
+    String getLog(@RequestParam(value="logFile", required=true) String logFile){
         String contentFile = "";
         String filePath = logFile;
         try {
-            BufferedInputStream in = new BufferedInputStream(new FileInputStream(filePath));
+            BufferedReader in = new BufferedReader(new InputStreamReader (new ReverseLineInputStream(filePath)));
+            // We read the last 5000 lines of the file (to avoid loading to much data in memory)
+            for (int i = 0; i < 50; ++i) {
+                String line = in.readLine();
+                if (line == null) {
+                    break;
+                }
+                contentFile = line + "\n" + contentFile;
+            }
+
+            /*BufferedInputStream in = new BufferedInputStream(new FileInputStream(filePath));
             StringWriter out = new StringWriter();
             int b;
             while ((b = in.read()) != -1)
@@ -102,7 +112,7 @@ public class WebConsoleEndPoint {
             out.flush();
             out.close();
             in.close();
-            contentFile = out.toString();
+            contentFile = out.toString();*/
             StringWriter writer = new StringWriter();
             escapeJavaStyleString(writer, contentFile, false);
             contentFile = writer.toString();
@@ -113,112 +123,7 @@ public class WebConsoleEndPoint {
         String output = "{\n";
         output += " \"doc\": \"" + contentFile + "\"\n";
         output += "}";
-        return output;    }
-
-    // TODO: Use BASE64 Body
-    @RequestMapping(value="/filesystem/files", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    String getFile(@RequestParam(value="docAdvan", required=true) String filePath){
-        String contentFile = "";
-        String error = "ok";
-        try {
-            BufferedInputStream in = new BufferedInputStream(new FileInputStream(filePath));
-            StringWriter out = new StringWriter();
-            int b;
-            while ((b=in.read()) != -1)
-                out.write(b);
-            out.flush();
-            out.close();
-            in.close();
-            contentFile = out.toString();
-            StringWriter writer = new StringWriter();
-            escapeJavaStyleString(writer, contentFile, false);
-            contentFile = writer.toString();
-
-        }
-        catch (IOException ie) {
-            ie.printStackTrace();
-            error = ie.getMessage();
-        }
-
-        String output = "{\n";
-        output += " \"doc\": \"" + contentFile + "\",\n";
-        output += " \"doc1\": \"" + filePath.replaceAll("\\\\", "/") + "\",\n";
-        output += " \"error\": \"" + error +"\"\n";
-        output += "}";
         return output;
-    }
-
-    // TODO: replace by a put
-    // TODO: Use BASE64 Body
-    @RequestMapping(value="/filesystem/files/write", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    String writeFile(@RequestParam(value="ajaa", required=true) String fileContent,
-                     @RequestParam(value="chemup", required=true) String filePath){
-        WebConsoleUI.getInstance().logger.info("save Files and write on folder ...");
-        String err;
-        try {
-            PrintWriter writer = new PrintWriter(filePath, "UTF-8");
-            writer.println(fileContent);
-            writer.close();
-            err="file saved";
-        }
-        catch (IOException e) {
-            WebConsoleUI.getInstance().logger.error("saveas: " + e.getMessage());
-            e.printStackTrace();
-            err = e.getMessage();
-        }
-        return "{\"error\": \"" + err + "\"}";
-    }
-
-    // TODO: replace by a put
-    // TODO: Use BASE64 Body
-    @RequestMapping(value="/filesystem/files/save", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    String saveAs(@RequestParam(value="ajaa", required=true) String a,
-                  @RequestParam(value="newname", required=true) String b){
-        WebConsoleUI.getInstance().logger.info("save as ...");
-        try {
-            PrintWriter writer = new PrintWriter(currentPath + "/" + b, "UTF-8");
-            writer.println(a);
-            writer.close();
-        }
-        catch (IOException e) {
-            WebConsoleUI.getInstance().logger.error("saveas: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return "{\"docss\":1}";
-
-    }
-
-    @RequestMapping(value="/filesystem/files/list", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    String listFiles(){
-        File folder = new File(currentPath);
-        File[] listOfFiles = folder.listFiles();
-        String output = "{\n";
-        output += " \"chemfile\": \"" + currentPath + "\",\n";
-        output += " \"docss2\": { ";
-
-        if (listOfFiles != null && listOfFiles.length > 0) {
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                    output += "\n  \"" + listOfFiles[i].getName() + "\": false,";
-                } else if (listOfFiles[i].isDirectory()) {
-                    output += "\n  \"" + listOfFiles[i].getName() + "\": true,";
-                }
-            }
-            output = output.substring(0, output.length() - 1);
-        }
-        output += "\n }\n}\n";
-        return output;
-    }
-
-    @RequestMapping(value="/filesystem/directory/change", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    String changeChem2(@RequestParam(value="newPath2", required=true) String newPath){
-        currentPath = newPath.replace('\\', '/');
-        return "{\"Pathes2\": \"" + currentPath + "\"}";
     }
 
 
@@ -244,6 +149,111 @@ public class WebConsoleEndPoint {
         return "{\"error\": \"" + err + "\"}";
     }
 
+    // TODO: Use BASE64 Body
+    @RequestMapping(value="/filesystem/files", produces={MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    String getFile(@RequestParam(value="file", required=true) String filePath){
+        String contentFile = "";
+        String error = "ok";
+        try {
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(filePath));
+            StringWriter out = new StringWriter();
+            int b;
+            while ((b=in.read()) != -1)
+                out.write(b);
+            out.flush();
+            out.close();
+            in.close();
+            contentFile = out.toString();
+            StringWriter writer = new StringWriter();
+            escapeJavaStyleString(writer, contentFile, false);
+            contentFile = writer.toString();
+
+        }
+        catch (IOException ie) {
+            ie.printStackTrace();
+            error = ie.getMessage();
+        }
+
+        String output = "{\n";
+        output += " \"doc\": \"" + contentFile + "\",\n";
+        output += " \"filePath\": \"" + filePath.replaceAll("\\\\", "/") + "\",\n";
+        output += " \"error\": \"" + error +"\"\n";
+        output += "}";
+        return output;
+    }
+
+    // TODO: replace by a put
+    // TODO: Use BASE64 Body
+    @RequestMapping(value="/filesystem/files/write", produces={MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    String writeFile(@RequestParam(value="fileContent", required=true) String fileContent,
+                     @RequestParam(value="filePath", required=true) String filePath){
+        WebConsoleUI.getInstance().logger.info("save Files and write on folder ...");
+        String err;
+        try {
+            PrintWriter writer = new PrintWriter(filePath, "UTF-8");
+            writer.println(fileContent);
+            writer.close();
+            err="file saved";
+        }
+        catch (IOException e) {
+            WebConsoleUI.getInstance().logger.error("saveas: " + e.getMessage());
+            e.printStackTrace();
+            err = e.getMessage();
+        }
+        return "{\"error\": \"" + err + "\"}";
+    }
+
+    // TODO: replace by a put
+    // TODO: Use BASE64 Body
+    @RequestMapping(value="/filesystem/files/save", produces={MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    String saveAs(@RequestParam(value="fileContent", required=true) String fileContent,
+                  @RequestParam(value="newName", required=true) String newName){
+        WebConsoleUI.getInstance().logger.info("save as ...");
+        try {
+            PrintWriter writer = new PrintWriter(currentPath + "/" + newName, "UTF-8");
+            writer.println(fileContent);
+            writer.close();
+        }
+        catch (IOException e) {
+            WebConsoleUI.getInstance().logger.error("saveas: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return "success";
+
+    }
+
+    @RequestMapping(value="/filesystem/files/list", produces={MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    String listFiles(){
+        File folder = new File(currentPath);
+        File[] listOfFiles = folder.listFiles();
+        String output = "{\n";
+        output += " \"files\": { ";
+
+        if (listOfFiles != null && listOfFiles.length > 0) {
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    output += "\n  \"" + listOfFiles[i].getName() + "\": false,";
+                } else if (listOfFiles[i].isDirectory()) {
+                    output += "\n  \"" + listOfFiles[i].getName() + "\": true,";
+                }
+            }
+            output = output.substring(0, output.length() - 1);
+        }
+        output += "\n }\n}\n";
+        return output;
+    }
+
+    @RequestMapping(value="/filesystem/directory/change", produces={MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    String changeDirectory(@RequestParam(value="newPath", required=true) String newPath){
+        currentPath = newPath.replace('\\', '/');
+        return "{\"newPath\": \"" + currentPath + "\"}";
+    }
+
     @RequestMapping(value="/filesystem/file/download", method = RequestMethod.GET)
     ResponseEntity<Resource> downloadFile(@RequestParam(value="logFile", required=false) String logFile) throws IOException{
         File file = new File(logFile);
@@ -251,10 +261,9 @@ public class WebConsoleEndPoint {
         Resource resource = new ByteArrayResource(Files.readAllBytes(path));
 
         return ResponseEntity.ok()
-                //.headers(headers)
-                .contentLength(file.length())
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(resource);
+            .contentLength(file.length())
+            .contentType(MediaType.parseMediaType("application/octet-stream"))
+            .body(resource);
     }
 
     @RequestMapping(value="/agents/start", method = RequestMethod.POST, produces={MediaType.TEXT_PLAIN_VALUE})
