@@ -41,7 +41,7 @@
     <appender-ref ref="log-file" />
   </logger>
 
-  <logger name="data" additivity="false">
+  <logger name="data" additivity="false" level="info">
     <appender-ref ref="data-file" />
   </logger>
 
