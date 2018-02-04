@@ -21,8 +21,15 @@ package net.grinder.console;
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import org.springframework.boot.Banner;
+import org.springframework.boot.ResourceBanner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.FileSystemResource;
+
+import java.io.*;
+import java.util.Properties;
 
 /**
  * Created by solcyr on 27/01/2018.
@@ -31,9 +38,29 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages={"net.grinder.console"})
 public class SpringConsoleFoundation {
 
-    public static void initSpring() {
+    public static void initSpring()  {
         SpringApplication app = new SpringApplication(SpringConsoleFoundation.class);
-        //SpringApplication.setBannerMode(Banner.Mode.OFF);
+
+        app.setBanner(new Banner() {
+                          @Override
+                          public void printBanner(Environment environment, Class<?> aClass,
+                                                  PrintStream printStream) {
+                              try {
+                                  InputStream in = SpringConsoleFoundation.class.getClassLoader()
+                                                   .getResourceAsStream("grinderBanner.txt");
+                                  BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                                  String line;
+                                  while ((line = reader.readLine()) != null) {
+                                      printStream.println(line);
+                                  }
+                                  reader.close();
+                              }
+                              catch (IOException e) {
+                                  e.printStackTrace();
+                              }
+                          }
+                      });
+        //app.setBannerMode(Banner.Mode.OFF);
         app.run(new String[]{});
     }
 
