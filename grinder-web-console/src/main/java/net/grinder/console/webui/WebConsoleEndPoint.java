@@ -45,7 +45,6 @@ import java.nio.file.Paths;
 public class WebConsoleEndPoint {
 
     private String currentPath;
-    private String propertiesFile;
     private GrinderProperties properties;
 
     WebConsoleEndPoint() {
@@ -57,8 +56,12 @@ public class WebConsoleEndPoint {
             currentPath = System.getProperty("user.dir").replace('\\', '/');
         }
         try {
-            properties = new GrinderProperties(WebConsoleUI.getInstance().consoleProperties.getPropertiesFile());
-            this.propertiesFile=WebConsoleUI.getInstance().consoleProperties.getPropertiesFile().getAbsolutePath().replace('\\', '/');
+            if (WebConsoleUI.getInstance().consoleProperties.getPropertiesFile() != null) {
+                properties = new GrinderProperties(WebConsoleUI.getInstance().consoleProperties.getPropertiesFile());
+            }
+            else {
+                properties = new GrinderProperties();
+            }
         }
         catch (GrinderProperties.PersistenceException e) {
             e.printStackTrace();
