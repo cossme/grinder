@@ -1,7 +1,7 @@
 FROM openjdk:8u151-jdk-alpine3.7
 
 ENV GRINDER_VERSION 4.0.0-SNAPSHOT
-ENV GRINDER_BINARY grinder-4.0.0-20180208.141204-3-binary.zip
+ENV GRINDER_BINARY grinder-4.0.0-20180208.215526-4-binary.zip
 
 RUN apk add --no-cache curl && \
     mkdir -p /opt/workspace && \
