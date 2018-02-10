@@ -132,6 +132,11 @@ function resetCharts() {
         var option = {
             showLines: true,
             animation: false,
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
             scales: {
                 yAxes: [{
                     gridLines: {
