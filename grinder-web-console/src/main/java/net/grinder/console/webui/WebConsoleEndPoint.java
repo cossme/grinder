@@ -67,6 +67,9 @@ public class WebConsoleEndPoint {
             e.printStackTrace();
             properties = new GrinderProperties();
         }
+        if (Boolean.getBoolean("grinder.startEmbeddedAgent")) {
+            this.startNewAgent();
+        }
     }
 
     @RequestMapping(value="/logs/list", produces={MediaType.APPLICATION_JSON_VALUE})
@@ -263,7 +266,11 @@ public class WebConsoleEndPoint {
     @RequestMapping(value="/agents/start", method = RequestMethod.POST, produces={MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     String startNewAgent() {
-        Grinder.main(new String[] {});
+        new Thread() {
+            public void run() {
+                Grinder.main(new String[] {});
+            }
+        }.start();
         return "success";
     }
 

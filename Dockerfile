@@ -22,4 +22,4 @@ WORKDIR "${GRINDER_ROOT}"
 EXPOSE 6372
 EXPOSE 6373
 
-CMD . ${GRINDER_WORKSPACE}/setGrinderEnv.sh && java -cp ${CLASSPATH}:lib/grinder.jar net.grinder.Console
+CMD . ${GRINDER_WORKSPACE}/setGrinderEnv.sh && java -cp ${CLASSPATH}:lib/grinder.jar ${JAVA_PROPERTIES} net.grinder.Console
