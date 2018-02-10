@@ -107,15 +107,6 @@ public class WebConsoleEndPoint {
                 contentFile = line + "\n" + contentFile;
             }
 
-            /*BufferedInputStream in = new BufferedInputStream(new FileInputStream(filePath));
-            StringWriter out = new StringWriter();
-            int b;
-            while ((b = in.read()) != -1)
-                out.write(b);
-            out.flush();
-            out.close();
-            in.close();
-            contentFile = out.toString();*/
             StringWriter writer = new StringWriter();
             escapeJavaStyleString(writer, contentFile, false);
             contentFile = writer.toString();

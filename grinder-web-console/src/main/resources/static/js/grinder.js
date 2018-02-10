@@ -1,5 +1,8 @@
 chartTitles = ["Transactions Per Second", "Average Response Time(ms)", "Response Time Standard Deviation(ms)"]
 chartIndexes = [4, 2, 3]
+MAX_NUMBER_SAMPLE = 720
+GRAPH_SAMPLE = 5
+
 charts = []
 
 function loadFiles(data) {
@@ -128,6 +131,7 @@ function resetCharts() {
         canvas.height = 100;
         var option = {
             showLines: true,
+            animation: false,
             scales: {
                 yAxes: [{
                     gridLines: {
@@ -187,12 +191,9 @@ $(document).ready(function() {
         lineNumbers: true,
     });
 
-    graphInitialized = false
-    graphSampleId = 0
     $("#refreshPeriod").attr("value", 1000);
     resetCharts();
     refreshGrinder(1000);
-
 });
 
 function updateResultTable(data) {
@@ -236,41 +237,51 @@ function updateResultTable(data) {
 }
 
 function updateResultGraphs(data) {
-    d = new Date();
-    curTime = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
     if (data.tests.length > 0) {
-        if (!graphInitialized) {
-            graphSampleId = 0;
-            graphInitialized = true;
-            for (curveIndex = 0; curveIndex < data.tests.length; curveIndex++) {
-                curveColor = "rgba(" +
-                               (Math.floor(Math.random() * 155) + 100) + ", " +
-                               (Math.floor(Math.random() * 155) + 100) + ", " +
-                               (Math.floor(Math.random() * 155) + 100) + ", 1)"
-                for (chartId = 0; chartId < charts.length; chartId++) {
-                    charts[chartId].data.labels[graphSampleId] = curTime;
-                    charts[chartId].data.datasets.push({
-                       label: data.tests[curveIndex].description,
-                       borderColor: curveColor,
-                       pointBackgroundColor: curveColor,
-                       data: [ ]
-                    })
+        d = new Date();
+        curTime = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+        if (d.getSeconds() % GRAPH_SAMPLE == 0) {
+            if (!graphInitialized) {
+                graphSampleId = 0;
+                graphInitialized = true;
+                for (curveIndex = 0; curveIndex < data.tests.length; curveIndex++) {
+                    curveColor = "rgba(" +
+                                   (Math.floor(Math.random() * 155) + 100) + ", " +
+                                   (Math.floor(Math.random() * 155) + 100) + ", " +
+                                   (Math.floor(Math.random() * 155) + 100) + ", 1)"
+                    for (chartId = 0; chartId < charts.length; chartId++) {
+                        charts[chartId].data.labels[graphSampleId] = curTime;
+                        charts[chartId].data.datasets.push({
+                           label: data.tests[curveIndex].description,
+                           borderColor: curveColor,
+                           pointBackgroundColor: curveColor,
+                           data: [ ]
+                        })
+                    }
                 }
             }
-        }
 
-        for (chartId = 0; chartId < charts.length; chartId++) {
-            for (cases = 0; cases < data.tests.length; cases++) {
-                if (charts[chartId].data.datasets[cases] != null) {
-                    statId = chartIndexes[chartId]
-                    valuegraph = data.tests[cases].statistics[statId];
-                    charts[chartId].data.datasets[cases].data[graphSampleId] = valuegraph
+            for (chartId = 0; chartId < charts.length; chartId++) {
+                for (cases = 0; cases < data.tests.length; cases++) {
+                    if (charts[chartId].data.datasets[cases] != null) {
+                        statId = chartIndexes[chartId]
+                        plotValue = data.tests[cases].statistics[statId];
+                        if (charts[chartId].data.datasets[cases].data.length > MAX_NUMBER_SAMPLE) {
+                            charts[chartId].data.datasets[cases].data.shift()
+                        }
+                        charts[chartId].data.datasets[cases].data[graphSampleId] = plotValue
+                    }
                 }
+                if (charts[chartId].data.labels.length > MAX_NUMBER_SAMPLE) {
+                    charts[chartId].data.labels.shift()
+                }
+                charts[chartId].data.labels[graphSampleId] = curTime;
+                charts[chartId].update();
             }
-            charts[chartId].data.labels[graphSampleId] = curTime;
-            charts[chartId].update();
+            if (graphSampleId < MAX_NUMBER_SAMPLE) {
+                graphSampleId++
+            }
         }
-        graphSampleId++
     }
 }
 
