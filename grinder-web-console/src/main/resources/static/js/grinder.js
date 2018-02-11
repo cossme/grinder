@@ -2,7 +2,6 @@ chartTitles = ["Transactions Per Second", "Average Response Time(ms)", "Response
 chartIndexes = [4, 2, 3]
 MAX_NUMBER_SAMPLE = 720
 GRAPH_SAMPLE = 5
-
 charts = []
 
 function loadFiles(data) {
@@ -166,7 +165,7 @@ function resetCharts() {
         myLineChart.update();
         charts.push(myLineChart);
     }
-
+    sampleId = 0
     graphInitialized = false
 }
 
@@ -245,47 +244,45 @@ function updateResultGraphs(data) {
     if (data.tests.length > 0) {
         d = new Date();
         curTime = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-        if (d.getSeconds() % GRAPH_SAMPLE == 0) {
-            if (!graphInitialized) {
-                graphSampleId = 0;
-                graphInitialized = true;
-                for (curveIndex = 0; curveIndex < data.tests.length; curveIndex++) {
-                    curveColor = "rgba(" +
-                                   (Math.floor(Math.random() * 155) + 100) + ", " +
-                                   (Math.floor(Math.random() * 155) + 100) + ", " +
-                                   (Math.floor(Math.random() * 155) + 100) + ", 1)"
-                    for (chartId = 0; chartId < charts.length; chartId++) {
-                        charts[chartId].data.labels[graphSampleId] = curTime;
-                        charts[chartId].data.datasets.push({
-                           label: data.tests[curveIndex].description,
-                           borderColor: curveColor,
-                           pointBackgroundColor: curveColor,
-                           data: [ ]
-                        })
-                    }
+        if (!graphInitialized) {
+            graphSampleId = 0;
+            graphInitialized = true;
+            for (curveIndex = 0; curveIndex < data.tests.length; curveIndex++) {
+                curveColor = "rgba(" +
+                               (Math.floor(Math.random() * 155) + 100) + ", " +
+                               (Math.floor(Math.random() * 155) + 100) + ", " +
+                               (Math.floor(Math.random() * 155) + 100) + ", 1)"
+                for (chartId = 0; chartId < charts.length; chartId++) {
+                    charts[chartId].data.labels[graphSampleId] = curTime;
+                    charts[chartId].data.datasets.push({
+                       label: data.tests[curveIndex].description,
+                       borderColor: curveColor,
+                       pointBackgroundColor: curveColor,
+                       data: [ ]
+                    })
                 }
             }
+        }
 
-            for (chartId = 0; chartId < charts.length; chartId++) {
-                for (cases = 0; cases < data.tests.length; cases++) {
-                    if (charts[chartId].data.datasets[cases] != null) {
-                        statId = chartIndexes[chartId]
-                        plotValue = data.tests[cases].statistics[statId];
-                        if (charts[chartId].data.datasets[cases].data.length > MAX_NUMBER_SAMPLE) {
-                            charts[chartId].data.datasets[cases].data.shift()
-                        }
-                        charts[chartId].data.datasets[cases].data[graphSampleId] = plotValue
+        for (chartId = 0; chartId < charts.length; chartId++) {
+            for (cases = 0; cases < data.tests.length; cases++) {
+                if (charts[chartId].data.datasets[cases] != null) {
+                    statId = chartIndexes[chartId]
+                    plotValue = data.tests[cases].statistics[statId];
+                    if (charts[chartId].data.datasets[cases].data.length > MAX_NUMBER_SAMPLE) {
+                        charts[chartId].data.datasets[cases].data.shift()
                     }
+                    charts[chartId].data.datasets[cases].data[graphSampleId] = plotValue
                 }
-                if (charts[chartId].data.labels.length > MAX_NUMBER_SAMPLE) {
-                    charts[chartId].data.labels.shift()
-                }
-                charts[chartId].data.labels[graphSampleId] = curTime;
-                charts[chartId].update();
             }
-            if (graphSampleId < MAX_NUMBER_SAMPLE) {
-                graphSampleId++
+            if (charts[chartId].data.labels.length > MAX_NUMBER_SAMPLE) {
+                charts[chartId].data.labels.shift()
             }
+            charts[chartId].data.labels[graphSampleId] = curTime;
+            charts[chartId].update();
+        }
+        if (graphSampleId < MAX_NUMBER_SAMPLE) {
+            graphSampleId++
         }
     }
 }
@@ -325,7 +322,10 @@ function refreshGrinder(refreshPeriod) {
 
             $.getJSON('/recording/data' + ($('#checkboxD').is(":checked")?'-latest':''), {}, function(data) {
                 updateResultTable(data)
-                updateResultGraphs(data);
+                if (sampleId == 0) {
+                    updateResultGraphs(data);
+                }
+                sampleId = (sampleId + 1) % GRAPH_SAMPLE
 
             });
         }, refreshPeriod);
