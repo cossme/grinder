@@ -394,7 +394,9 @@ function startAfterDistribution(status) {
         });
     }
     else if (status.state == "finished") {
-            $.post('/recording/reset');
+            $.post('/recording/stop', {}, function(data) {
+                $.post('/recording/start');
+            })
             $.post('/agents/start-workers', {}, function(data) {
                 if (data == "success") {
                     notify('Test starting...');
