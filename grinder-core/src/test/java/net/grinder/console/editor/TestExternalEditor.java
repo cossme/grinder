@@ -31,7 +31,6 @@ import net.grinder.console.distribution.FileChangeWatcher;
 import net.grinder.testutility.AbstractFileTestCase;
 import net.grinder.testutility.AssertUtilities;
 import net.grinder.testutility.RandomStubFactory;
-import org.junit.Ignore;
 
 
 /**
@@ -89,8 +88,7 @@ public class TestExternalEditor extends AbstractFileTestCase {
       result3);
   }
 
-  @Ignore ("Doesn't work inside TRAVIS.")
-  public void testOpen() throws Exception {
+  public void ignoreTestOpen() throws Exception {
     final long[] lastInvalidAfter = new long[1];
 
     final AgentCacheState cacheState =
