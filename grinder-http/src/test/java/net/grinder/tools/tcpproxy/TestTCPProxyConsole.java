@@ -38,59 +38,62 @@ import junit.framework.TestCase;
  */
 public class TestTCPProxyConsole extends TestCase {
 
-  public void ignoretestConstructor() throws Exception {
-    final RandomStubFactory<TCPProxyEngine> engineStubFactory =
-      RandomStubFactory.create(TCPProxyEngine.class);
+  public void testConstructor() throws Exception {
+    if (Boolean.getBoolean("build.travis")) {
+      final RandomStubFactory<TCPProxyEngine> engineStubFactory =
+              RandomStubFactory.create(TCPProxyEngine.class);
 
-    final UpdatableCommentSource commentSource =
-      new CommentSourceImplementation();
+      final UpdatableCommentSource commentSource =
+              new CommentSourceImplementation();
 
-    final TCPProxyConsole console =
-      new TCPProxyConsole(engineStubFactory.getStub(), commentSource);
+      final TCPProxyConsole console =
+              new TCPProxyConsole(engineStubFactory.getStub(), commentSource);
 
-    console.dispose();
+      console.dispose();
 
-    engineStubFactory.assertNoMoreCalls();
+      engineStubFactory.assertNoMoreCalls();
+    }
   }
 
-  public void ignoretestButton() throws Exception {
-    final RandomStubFactory<TCPProxyEngine> engineStubFactory =
-      RandomStubFactory.create(TCPProxyEngine.class);
+  public void testButton() throws Exception {
+    if (Boolean.getBoolean("build.travis")) {
+      final RandomStubFactory<TCPProxyEngine> engineStubFactory =
+              RandomStubFactory.create(TCPProxyEngine.class);
 
-    final UpdatableCommentSource commentSource =
-      new CommentSourceImplementation();
+      final UpdatableCommentSource commentSource =
+              new CommentSourceImplementation();
 
-    final TCPProxyConsole console =
-      new TCPProxyConsole(engineStubFactory.getStub(), commentSource);
+      final TCPProxyConsole console =
+              new TCPProxyConsole(engineStubFactory.getStub(), commentSource);
 
-    JButton stopButton = null;
+      JButton stopButton = null;
 
-    final Component[] components = console.getContentPane().getComponents();
-    for (int i=0; i<components.length; ++i) {
-      if (components[i] instanceof JButton) {
-        final JButton b = (JButton)components[i];
-        if ("Stop".equals(b.getText())) {
-          stopButton = (JButton)components[i];
+      final Component[] components = console.getContentPane().getComponents();
+      for (int i = 0; i < components.length; ++i) {
+        if (components[i] instanceof JButton) {
+          final JButton b = (JButton) components[i];
+          if ("Stop".equals(b.getText())) {
+            stopButton = (JButton) components[i];
+          }
         }
       }
+
+      assertNotNull(stopButton);
+
+      if (stopButton != null) { // Shut up eclipse null warning.
+        stopButton.doClick();
+      }
+      engineStubFactory.assertSuccess("stop");
+      engineStubFactory.assertNoMoreCalls();
+
+      console.dispatchEvent(new WindowEvent(console, WindowEvent.WINDOW_CLOSING));
+      engineStubFactory.assertSuccess("stop");
+      engineStubFactory.assertNoMoreCalls();
+
+      console.dispose();
+
+      engineStubFactory.assertNoMoreCalls();
+
     }
-
-    assertNotNull(stopButton);
-
-    if (stopButton != null) { // Shut up eclipse null warning.
-      stopButton.doClick();
-    }
-    engineStubFactory.assertSuccess("stop");
-    engineStubFactory.assertNoMoreCalls();
-
-    console.dispatchEvent(new WindowEvent(console, WindowEvent.WINDOW_CLOSING));
-    engineStubFactory.assertSuccess("stop");
-    engineStubFactory.assertNoMoreCalls();
-
-    console.dispose();
-
-    engineStubFactory.assertNoMoreCalls();
-
-
   }
 }
