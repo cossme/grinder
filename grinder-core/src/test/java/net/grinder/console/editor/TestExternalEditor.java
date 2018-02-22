@@ -89,7 +89,7 @@ public class TestExternalEditor extends AbstractFileTestCase {
   }
 
   public void testOpen() throws Exception {
-    if (Boolean.getBoolean("build.travis")) {
+    if (!Boolean.getBoolean("build.travis")) {
       final long[] lastInvalidAfter = new long[1];
 
       final AgentCacheState cacheState =

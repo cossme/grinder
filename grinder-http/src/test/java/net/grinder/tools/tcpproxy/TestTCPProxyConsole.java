@@ -39,7 +39,7 @@ import junit.framework.TestCase;
 public class TestTCPProxyConsole extends TestCase {
 
   public void testConstructor() throws Exception {
-    if (Boolean.getBoolean("build.travis")) {
+    if (!Boolean.getBoolean("build.travis")) {
       final RandomStubFactory<TCPProxyEngine> engineStubFactory =
               RandomStubFactory.create(TCPProxyEngine.class);
 
@@ -56,7 +56,7 @@ public class TestTCPProxyConsole extends TestCase {
   }
 
   public void testButton() throws Exception {
-    if (Boolean.getBoolean("build.travis")) {
+    if (!Boolean.getBoolean("build.travis")) {
       final RandomStubFactory<TCPProxyEngine> engineStubFactory =
               RandomStubFactory.create(TCPProxyEngine.class);
 
