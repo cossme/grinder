@@ -1,6 +1,7 @@
 /build
 /cachedir
 /target/
-/.*
+/.i*
+/.g*
 /**/*.iml
 !/.gitignore
