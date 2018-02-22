@@ -113,9 +113,9 @@ public class TestExternalEditor extends AbstractFileTestCase {
 
     String jvmLocation;
     if (System.getProperty("os.name").startsWith("Win")) {
-      jvmLocation = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "javaw.exe";
+      jvmLocation = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe";
     } else {
-      jvmLocation = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "javaw";
+      jvmLocation = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java";
     }
     final ExternalEditor externalEditor1 =
       new ExternalEditor(cacheState,
