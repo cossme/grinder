@@ -92,7 +92,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <argLine>-javaagent:${project.build.directory}/grinder-dcr-agent.jar
-            -XX:MaxPermSize=256m</argLine>
+            -XX:MaxPermSize=256m -Djava.awt.headless=true</argLine>
         </configuration>
       </plugin>
 
