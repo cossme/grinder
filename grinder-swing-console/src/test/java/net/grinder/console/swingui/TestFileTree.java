@@ -142,25 +142,28 @@ public class TestFileTree extends AbstractFileTestCase {
   }
 
   public void testDisplay() throws Exception {
-    final EditorModel editorModel = new EditorModel(s_resources,
-                                                    m_textSourceFactory,
-                                                    m_agentCacheState,
-                                                    m_fileChangeWatcher);
+    if (!Boolean.getBoolean("build.travis")) {
 
-    final BufferTreeModel bufferTreeModel = new BufferTreeModel(editorModel);
-    final FileTreeModel fileTreeModel =
-      new FileTreeModel(editorModel, m_nullFileFilter, getDirectory());
+      final EditorModel editorModel = new EditorModel(s_resources,
+              m_textSourceFactory,
+              m_agentCacheState,
+              m_fileChangeWatcher);
 
-    final FileTree fileTree =
-      new FileTree(s_resources, m_errorHandler, editorModel,
-                   bufferTreeModel, fileTreeModel, new JLabel().getFont(),
-                   new JPopupMenu(), null);
+      final BufferTreeModel bufferTreeModel = new BufferTreeModel(editorModel);
+      final FileTreeModel fileTreeModel =
+              new FileTreeModel(editorModel, m_nullFileFilter, getDirectory());
 
-    final JFrame frame = new JFrame();
+      final FileTree fileTree =
+              new FileTree(s_resources, m_errorHandler, editorModel,
+                      bufferTreeModel, fileTreeModel, new JLabel().getFont(),
+                      new JPopupMenu(), null);
 
-    frame.getContentPane().add(fileTree.getComponent(), BorderLayout.CENTER);
-    frame.pack();
-    frame.setVisible(true);
-    frame.dispose();
+      final JFrame frame = new JFrame();
+
+      frame.getContentPane().add(fileTree.getComponent(), BorderLayout.CENTER);
+      frame.pack();
+      frame.setVisible(true);
+      frame.dispose();
+    }
   }
 }

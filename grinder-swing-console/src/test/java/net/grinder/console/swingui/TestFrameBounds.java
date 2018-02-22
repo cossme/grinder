@@ -53,33 +53,36 @@ public class TestFrameBounds extends AbstractFileTestCase {
   }
 
   public void testFrameBounds() throws Exception {
-    final ConsoleProperties properties =
-      new ConsoleProperties(s_resources, m_file);
+    if (!Boolean.getBoolean("build.travis")) {
 
-    final JFrame frame = new JFrame();
+      final ConsoleProperties properties =
+              new ConsoleProperties(s_resources, m_file);
 
-    final FrameBounds frameBounds = new FrameBounds(properties, frame);
-    frameBounds.restore();
+      final JFrame frame = new JFrame();
 
-    final Rectangle bounds1 = frame.getBounds();
-    assertEquals(new Dimension(900, 600), frame.getSize());
-    AssertUtilities.assertNotEquals(new Point(0, 0), frame.getLocation());
+      final FrameBounds frameBounds = new FrameBounds(properties, frame);
+      frameBounds.restore();
 
-    frameBounds.store();
+      final Rectangle bounds1 = frame.getBounds();
+      assertEquals(new Dimension(900, 600), frame.getSize());
+      AssertUtilities.assertNotEquals(new Point(0, 0), frame.getLocation());
 
-    final ConsoleProperties properties2 =
-      new ConsoleProperties(s_resources, m_file);
+      frameBounds.store();
 
-    final FrameBounds frameBounds2 = new FrameBounds(properties2, frame);
-    frameBounds2.restore();
+      final ConsoleProperties properties2 =
+              new ConsoleProperties(s_resources, m_file);
 
-    assertEquals(bounds1, frame.getBounds());
+      final FrameBounds frameBounds2 = new FrameBounds(properties2, frame);
+      frameBounds2.restore();
 
-    frame.setLocation(-1000, -1000);
-    frameBounds.store();
+      assertEquals(bounds1, frame.getBounds());
 
-    frameBounds.restore();
+      frame.setLocation(-1000, -1000);
+      frameBounds.store();
 
-    assertEquals(bounds1, frame.getBounds());
+      frameBounds.restore();
+
+      assertEquals(bounds1, frame.getBounds());
+    }
   }
 }

@@ -57,7 +57,7 @@ public class TestGraph extends TestCase {
   private JFrame m_frame;
 
   protected void setUp() throws Exception {
-    m_frame = new JFrame("Test Graph");
+      m_frame = new JFrame("Test Graph");
   }
 
   protected void tearDown() throws Exception {
@@ -71,134 +71,145 @@ public class TestGraph extends TestCase {
   }
 
   public void testRamp() throws Exception {
-    final Graph graph = new Graph(25);
-    createUI(graph);
 
-    graph.setMaximum(150);
+    if (!Boolean.getBoolean("build.travis")) {
+      final Graph graph = new Graph(25);
+      createUI(graph);
 
-    for (int i = 0; i < 150; i++) {
-      graph.add(i);
-      pause();
-    }
+      graph.setMaximum(150);
 
-    graph.setMaximum(0);
+      for (int i = 0; i < 150; i++) {
+        graph.add(i);
+        pause();
+      }
 
-    for (int i = 0; i < 10; i++) {
-      graph.add(i);
-      pause();
+      graph.setMaximum(0);
+
+      for (int i = 0; i < 10; i++) {
+        graph.add(i);
+        pause();
+      }
     }
   }
 
   public void testRandom() throws Exception {
-    final Graph graph = new Graph(100);
-    createUI(graph);
 
-    graph.setMaximum(1);
+    if (!Boolean.getBoolean("build.travis")) {
+      final Graph graph = new Graph(100);
+      createUI(graph);
 
-    for (int i = 0; i < 200; i++) {
-      graph.add(s_random.nextDouble());
-      pause();
+      graph.setMaximum(1);
+
+      for (int i = 0; i < 200; i++) {
+        graph.add(s_random.nextDouble());
+        pause();
+      }
     }
   }
 
   public void testLabelledGraph() throws Exception {
-    final StatisticsServices statisticsServices =
-      StatisticsServicesImplementation.getInstance();
 
-    final StatisticsIndexMap indexMap =
-      statisticsServices.getStatisticsIndexMap();
+    if (!Boolean.getBoolean("build.travis")) {
+      final StatisticsServices statisticsServices =
+              StatisticsServicesImplementation.getInstance();
 
-    final StatisticsIndexMap.LongIndex periodIndex = indexMap
-        .getLongIndex("period");
-    final StatisticsIndexMap.LongIndex errorStatisticIndex = indexMap
-        .getLongIndex("errors");
-    final StatisticsIndexMap.LongIndex untimedTestsIndex = indexMap
-        .getLongIndex("untimedTests");
-    final StatisticsIndexMap.LongSampleIndex timedTestsIndex = indexMap
-        .getLongSampleIndex("timedTests");
+      final StatisticsIndexMap indexMap =
+              statisticsServices.getStatisticsIndexMap();
 
-    final StatisticExpressionFactory statisticExpressionFactory =
-      statisticsServices.getStatisticExpressionFactory();
+      final StatisticsIndexMap.LongIndex periodIndex = indexMap
+              .getLongIndex("period");
+      final StatisticsIndexMap.LongIndex errorStatisticIndex = indexMap
+              .getLongIndex("errors");
+      final StatisticsIndexMap.LongIndex untimedTestsIndex = indexMap
+              .getLongIndex("untimedTests");
+      final StatisticsIndexMap.LongSampleIndex timedTestsIndex = indexMap
+              .getLongSampleIndex("timedTests");
 
-    final StatisticExpression tpsExpression = statisticExpressionFactory
-        .createExpression("(* 1000 (/(+ (count timedTests) untimedTests) period))");
+      final StatisticExpressionFactory statisticExpressionFactory =
+              statisticsServices.getStatisticExpressionFactory();
 
-    final PeakStatisticExpression peakTPSExpression = statisticExpressionFactory
-        .createPeak(indexMap.getDoubleIndex("peakTPS"), tpsExpression);
+      final StatisticExpression tpsExpression = statisticExpressionFactory
+              .createExpression("(* 1000 (/(+ (count timedTests) untimedTests) period))");
 
-    final LabelledGraph labelledGraph =
-      new LabelledGraph(
-        "Test",
-        new ResourcesImplementation(
-          "net.grinder.console.common.resources.Console"),
-        tpsExpression,
-        peakTPSExpression,
-        statisticsServices.getTestStatisticsQueries());
+      final PeakStatisticExpression peakTPSExpression = statisticExpressionFactory
+              .createPeak(indexMap.getDoubleIndex("peakTPS"), tpsExpression);
 
-    createUI(labelledGraph);
+      final LabelledGraph labelledGraph =
+              new LabelledGraph(
+                      "Test",
+                      new ResourcesImplementation(
+                              "net.grinder.console.common.resources.Console"),
+                      tpsExpression,
+                      peakTPSExpression,
+                      statisticsServices.getTestStatisticsQueries());
 
-    final StatisticsSetFactory statisticsSetFactory =
-      statisticsServices.getStatisticsSetFactory();
+      createUI(labelledGraph);
 
-    final StatisticsSet cumulativeStatistics = statisticsSetFactory.create();
+      final StatisticsSetFactory statisticsSetFactory =
+              statisticsServices.getStatisticsSetFactory();
 
-    final DecimalFormat format = new DecimalFormat();
+      final StatisticsSet cumulativeStatistics = statisticsSetFactory.create();
 
-    final int period = 1000;
+      final DecimalFormat format = new DecimalFormat();
 
-    for (int i = 0; i < 200; i++) {
-      final StatisticsSet intervalStatistics = statisticsSetFactory.create();
+      final int period = 1000;
 
-      intervalStatistics.setValue(periodIndex, period);
+      for (int i = 0; i < 200; i++) {
+        final StatisticsSet intervalStatistics = statisticsSetFactory.create();
 
-      while (s_random.nextInt() > 0) {
-        intervalStatistics.addValue(untimedTestsIndex, 1);
+        intervalStatistics.setValue(periodIndex, period);
+
+        while (s_random.nextInt() > 0) {
+          intervalStatistics.addValue(untimedTestsIndex, 1);
+        }
+
+        long time;
+
+        while ((time = s_random.nextInt()) > 0) {
+          intervalStatistics.addSample(timedTestsIndex, time % 10000);
+        }
+
+        while (s_random.nextFloat() > 0.95) {
+          intervalStatistics.addValue(errorStatisticIndex, 1);
+        }
+
+        cumulativeStatistics.add(intervalStatistics);
+        cumulativeStatistics.setValue(periodIndex, (1 + i) * period);
+
+        peakTPSExpression.update(intervalStatistics, cumulativeStatistics);
+        labelledGraph.add(intervalStatistics, cumulativeStatistics, format);
+        pause();
+
       }
 
-      long time;
+      LabelledGraph.resetPeak();
+      labelledGraph.calculateColour(100);
+      LabelledGraph.resetPeak();
 
-      while ((time = s_random.nextInt()) > 0) {
-        intervalStatistics.addSample(timedTestsIndex, time % 10000);
-      }
+      final Color colour1 = labelledGraph.calculateColour(100);
+      assertFalse(colour1.equals(labelledGraph.calculateColour(50)));
+      assertEquals(colour1, labelledGraph.calculateColour(100));
+      assertEquals(colour1, labelledGraph.calculateColour(150));
+      assertEquals(colour1, labelledGraph.calculateColour(100));
 
-      while (s_random.nextFloat() > 0.95) {
-        intervalStatistics.addValue(errorStatisticIndex, 1);
-      }
+      LabelledGraph.resetPeak();
+      assertFalse(colour1.equals(labelledGraph.calculateColour(100)));
+      assertEquals(colour1, labelledGraph.calculateColour(150));
 
-      cumulativeStatistics.add(intervalStatistics);
-      cumulativeStatistics.setValue(periodIndex, (1 + i) * period);
-
-      peakTPSExpression.update(intervalStatistics, cumulativeStatistics);
-      labelledGraph.add(intervalStatistics, cumulativeStatistics, format);
-      pause();
+      final LabelledGraph labelledGraph2 =
+              new LabelledGraph(
+                      "Test",
+                      new ResourcesImplementation(
+                              "net.grinder.console.common.resources.Console"),
+                      Colours.DARK_GREEN,
+                      tpsExpression,
+                      peakTPSExpression,
+                      statisticsServices.getTestStatisticsQueries());
+      assertEquals(Colours.DARK_GREEN, labelledGraph2.calculateColour(100));
+      assertEquals(Colours.DARK_GREEN, labelledGraph2.calculateColour(0));
     }
-
-    LabelledGraph.resetPeak();
-    labelledGraph.calculateColour(100);
-    LabelledGraph.resetPeak();
-
-    final Color colour1 = labelledGraph.calculateColour(100);
-    assertFalse(colour1.equals(labelledGraph.calculateColour(50)));
-    assertEquals(colour1, labelledGraph.calculateColour(100));
-    assertEquals(colour1, labelledGraph.calculateColour(150));
-    assertEquals(colour1, labelledGraph.calculateColour(100));
-
-    LabelledGraph.resetPeak();
-    assertFalse(colour1.equals(labelledGraph.calculateColour(100)));
-    assertEquals(colour1, labelledGraph.calculateColour(150));
-
-    final LabelledGraph labelledGraph2 =
-      new LabelledGraph(
-        "Test",
-        new ResourcesImplementation(
-          "net.grinder.console.common.resources.Console"),
-        Colours.DARK_GREEN,
-        tpsExpression,
-        peakTPSExpression,
-        statisticsServices.getTestStatisticsQueries());
-    assertEquals(Colours.DARK_GREEN, labelledGraph2.calculateColour(100));
-    assertEquals(Colours.DARK_GREEN, labelledGraph2.calculateColour(0));
   }
+
 
   private void pause() throws Exception {
     if (m_pauseTime > 0) {
