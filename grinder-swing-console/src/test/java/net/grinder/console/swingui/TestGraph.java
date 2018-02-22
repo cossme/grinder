@@ -57,11 +57,13 @@ public class TestGraph extends TestCase {
   private JFrame m_frame;
 
   protected void setUp() throws Exception {
+    if (!Boolean.getBoolean("build.travis")) {
       m_frame = new JFrame("Test Graph");
+    }
   }
 
   protected void tearDown() throws Exception {
-    m_frame.dispose();
+    if (m_frame != null) m_frame.dispose();
   }
 
   private void createUI(JComponent component) throws Exception {
