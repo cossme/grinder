@@ -18,14 +18,16 @@ before_script:
   - unset _JAVA_OPTIONS
 
 install: true
+script: true
 #script: mvn -Dbuild.travis=true install 
 
-#deploy:
-  #provider: script
+deploy:
+  provider: script
+  script: true
   #script: mvn -DskipTests=true deploy --settings .travis.settings.xml
-  #skip_cleanup: true
-  ##on:
-  ##  tags: true
+  skip_cleanup: true
+  #on:
+  #  tags: true
 
 after_deploy:
  - export GRINDER_BINARY_VERSION=`curl https://oss.sonatype.org/content/repositories/snapshots/io/github/cossme/grinder/4.0.0-SNAPSHOT/maven-metadata.xml | grep binary -A2 | grep value | cut -d '>' -f 2 | cut -d '<' -f1`
