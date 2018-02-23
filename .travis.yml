@@ -1,5 +1,22 @@
 language: java
-install: true
-script: mvn -Dbuild.travis=true install 
-before_script:
+
+env:
+  global:
+    - SONATYPE_USERNAME=yourusername
+    - secure: "gC/CakQPbhfFCCU0K74AI+Iz1PcLfl17BxW+D5ePtlQWO/702dikh3MajNsq6OIA/MoYbjvgTzpwnuwnZt1tAmBwLLk3NIErd5Aholi/bG4bsOtvWctXZI5fUt5il6AFzUcd16vuskhOKbDbq3xgiDBnJktINTMu6Hafqou9uICfLo0/TNWnDdiA2si6CLtvU/Ct4BtGYQjBi/Td5D9kLVpp9HmZzqcTeB+CtGzZLgxGn1DBHksR2hRehA5lpSpuyjIk+qGYed99N3tR5ARdYQJ1bs6H/hLMBtfJpiZjAzg6pgrqofjU3haer5MIvNb2SnXKnkcTza7XgPwr4oQnXSUoU+6SRBj+0rjjWrlyLVdMFXtPM/JPEhE8MPlwWkf9c5WjF8USYf/K4PsOyraVTEnPWdHAYtNazixBXkUafnm8hstW6n9EYBJlk0Vgx618MEca4xpoO0aJmwCbH8jg0UkPcqnOrdk5jl/41XFl7PCaIej+n0nMdDrPT8pMOzPI6HMfv6vCRxZTEdNiuFlXt4YHgOduq7PjXfR0rulmiV8LNwXJNCvDsqFteh0j6hvzAyxStw2YCKuc3toQ9wJJf9tnersENgj5d0YIXP3Gh72tRYJ5i3ZKJoMvxmJzO7+/x5TAm4+DkraXU69dwIAEAefkMHhCuUt8PZzQU+KHYFc="
+
+services:
+- docker
+cache:
+  directories:
+  - "$HOME/.cache"
+
+before_install:
   - unset _JAVA_OPTIONS
+
+deploy:
+  provider: script
+  script: mvn -DskipTests=true deploy --settings .travis.settings.xml
+  skip_cleanup: true
+  #on:
+  #  tags: true
