@@ -11,9 +11,11 @@ cache:
   directories:
   - "$HOME/.cache"
 
-before_install:
+before_script:
   - unset _JAVA_OPTIONS
-install: mvn -Dbuild.travis=true install 
+
+install: true
+script: mvn -Dbuild.travis=true install 
 
 deploy:
   provider: script
