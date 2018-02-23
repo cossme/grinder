@@ -4,6 +4,9 @@ env:
   global:
     - SONATYPE_USERNAME=solcyr
     - secure: "YV3Ie+5Xhzl4mheZfbnOzClBcVnGI4u5wd8fyQBMfDVJXe5RMBR/MC1L11Ne5K71L885Vf0RdaeTvyujTzorE99N0zgs+H9ydTLdYCiXk6BRxvDwC6toBnOtg7Y7AdXT1Xc83cbHhe0DCYWp1PWH6ziAc/LCg33AuQp/FeoWsW1tb5gHosSCihMrcWspAX/bF350JIFQawD3S4fUJQyNC3+2alEYoioqLuMXLK89lX1VJ4XBi8FS5EkmPXXskUy8vtDNruUyhitrcH0N3g3lapsYb+ll5rAguHKkXIyE7cZNkLA2LtO+M1GmXonAhhA+RpXPwd+dOP8VPJ25TkdEX2+Q7H1aW4dqq7Temp7qQSQrXxUGmYIs/wvGXuChBhvyLQwNUf9G3xxn/HYxIR1Qc0FHU5Smkiu2wEIttLcmmva8meGVB9cPT6R0tjzvn0nR3SV9ibx2DBfvuebIRAzDTXgZPDynhsEdK8pRoGRjlHD0ATHzL5UuKHvhWWht+iXYHL0ilMSVbC39DEbggrD1KcCFJBdi2qg1yRFGNMYAgFanQx/oBA9r/rfRAVRf2wh2axZzMH498d4qbrCFsi+YNFkoXM6xbfd3Fx4QDxG/OwwrGGnjKloRW6+2h2d0VEtVX1kgA7puO9tqQqABuZb428umjfAzMvKD1QCX/nhSEsM="
+    - DOCKER_USERNAME=solcyr
+    - secure: "NcfZWkwpxiCqwsdH0pA9PXo0u4SipKToeLXQjFs/wkOqEBRQErEok/Imxt+7FecPLx1DyLAW9iK9WW9M+DLI1bdEAGhBIU0/6xOV3rnnZjnuHoMHTvSkQctet++MHKq/U6BpU77fIWckZ/kxoaINF3ybeG7/p0s/1UL3wz3K7RLf4sEbO0GTb46qia3kg3Sv1WK8vzYm2UfSl3cZ1sL7+wlyydkW9LUQiIQx0JfCg/Ag12xuPlVoMJaMxJCSKi1PTcinMTQYLYjtFxT7W+cDnkhvEJQj3bGoqtLYey+DJZcnnK1ZNJwKDTXT/VM6vVa9mnOyOG31pnDeUqBF6hzka/rSoAKmxwH3GOQvvF+UTgNK0kfiK1kEI0/mLepRSKbB0zaAN5ZmbOTE418psJBCYDbhXRRA0Iamp99d4BfFHmWyqlqJbLRNFZdHLaTq8sjwAXlzwbrTfugPoCqzqw+2MTmafWDsa+ky6VNM4UOaQEGHPuwbv7WGLntm1IYVRzfg0dst8JXbOpQHzXHfaNWx9YLXdETLjikeIip2eJ57xxcEYYMhvYVb3UcjlQ6/m1K7lkeYNtVXFGXZq5lxpco+esMlS5227vhYOMH2iay7awqKoFeITssN+MB+/yZ91LwTBHFUuTy9eBLzIU/5BbvzvEy6pnqPEugdYOjipOSXeGA="
+
 
 services:
 - docker
@@ -23,3 +26,11 @@ deploy:
   skip_cleanup: true
   #on:
   #  tags: true
+
+after_deploy:
+ - export GRINDER_BINARY_VERSION=`curl https://oss.sonatype.org/content/repositories/snapshots/io/github/cossme/grinder/4.0.0-SNAPSHOT/maven-metadata.xml | grep binary -A2 | grep value | cut -d '>' -f 2 | cut -d '<' -f1`
+ - cd docker && docker build --build-arg GRINDER_BINARY_VERSION=$GRINDER_BINARY_VERSION -t docker.io/cossme/grinder:$GRINDER_BINARY_VERSION .
+ - docker tag docker.io/cossme/grinder:$GRINDER_BINARY_VERSION docker.io/cossme/grinder:latest
+ - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+ - docker push docker.io/cossme/grinder:4.0.0-SNAPSHOT
+ - docker push docker.io/cossme/grinder:latest
