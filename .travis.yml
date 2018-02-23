@@ -13,6 +13,7 @@ cache:
 
 before_install:
   - unset _JAVA_OPTIONS
+install: mvn -Dbuild.travis=true install 
 
 deploy:
   provider: script
