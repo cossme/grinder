@@ -18,18 +18,18 @@ before_script:
   - unset _JAVA_OPTIONS
 
 install: true
-script: mvn -Dbuild.travis=true install 
+#script: mvn -Dbuild.travis=true install 
 
-deploy:
-  provider: script
-  script: mvn -DskipTests=true deploy --settings .travis.settings.xml
-  skip_cleanup: true
-  #on:
-  #  tags: true
+#deploy:
+  #provider: script
+  #script: mvn -DskipTests=true deploy --settings .travis.settings.xml
+  #skip_cleanup: true
+  ##on:
+  ##  tags: true
 
 after_deploy:
  - export GRINDER_BINARY_VERSION=`curl https://oss.sonatype.org/content/repositories/snapshots/io/github/cossme/grinder/4.0.0-SNAPSHOT/maven-metadata.xml | grep binary -A2 | grep value | cut -d '>' -f 2 | cut -d '<' -f1`
- - cd docker && sed -i 's,${GRINDER_BINARY_VERSION},'${GRINDER_BINARY_VERSION}',g' Dockerfile && docker build -t docker.io/cossme/grinder:4.0.0-SNAPSHOT
+ - cd docker && sed -i 's,${GRINDER_BINARY_VERSION},'${GRINDER_BINARY_VERSION}',g' Dockerfile && docker build -t docker.io/cossme/grinder:4.0.0-SNAPSHOT .
  - docker tag docker.io/cossme/grinder:$GRINDER_BINARY_VERSION docker.io/cossme/grinder:latest
  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
  - docker push docker.io/cossme/grinder:4.0.0-SNAPSHOT
