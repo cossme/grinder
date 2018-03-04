@@ -83,7 +83,7 @@ function openLogFile(e) {
     $.get('/logs', {
         logFile: log
     }, function(data) {
-        document.getElementById("loglog").value = data;
+        document.getElementById("loglog").value = window.atob(data);
     });
 }
 
@@ -362,11 +362,18 @@ $(function() {
     $('#te').bind('click', function() {
         savePath = document.getElementById("currentFile").innerText;
         if (confirm("You will change the content of your file, sure ? ")) {
-            $.getJSON('/filesystem/files/write', {
-                fileContent: editor.getValue(),
-                filePath: savePath
-            }, function(data) {
-                alert(data.error)
+            $.ajax({
+                url: '/filesystem/files/write',
+                type: 'PUT',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({
+                    filePath: savePath,
+                    fileContent: window.btoa(editor.getValue())
+                }),
+                success: function(data) {
+                    alert(data.error)
+                }
             });
         }
     });
@@ -378,14 +385,21 @@ $(function() {
     $('#saveas').bind('click', function() {
         var saveName = prompt("Choose the name of your file", "");
         if (saveName != null) {
-            $.getJSON('/filesystem/files/save', {
-                newName: saveName,
-                fileContent: editor.getValue()
-            }, function(data) {
-                $.getJSON('/filesystem/files/list', {}, function(data) {
-                    loadFiles(data);
-                });
-             });
+            $.ajax({
+                url: '/filesystem/files/save',
+                type: 'PUT',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({
+                    newName: saveName,
+                    fileContent: window.btoa(editor.getValue())
+                }),
+                success: function(data) {
+                    $.getJSON('/filesystem/files/list', {}, function(data) {
+                        loadFiles(data);
+                    });
+                }
+            });
         }
         return false;
     });

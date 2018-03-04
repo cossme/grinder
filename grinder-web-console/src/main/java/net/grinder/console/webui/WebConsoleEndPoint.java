@@ -28,10 +28,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.*;
@@ -93,11 +90,10 @@ public class WebConsoleEndPoint {
         return result;
     }
 
-    // TODO: Use BASE64 Body
     @RequestMapping(value="/logs", produces={MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     String getLog(@RequestParam(value="logFile", required=true) String logFile){
-        String contentFile = "";
+        String fileContent = "";
         String filePath = logFile;
         try {
             ReverseLineInputStream ris = new ReverseLineInputStream(filePath);
@@ -109,7 +105,7 @@ public class WebConsoleEndPoint {
                 if (line == null) {
                     break;
                 }
-                contentFile = line + "\n" + contentFile;
+                fileContent = line + "\n" + fileContent;
             }
 
             in.close();
@@ -119,7 +115,7 @@ public class WebConsoleEndPoint {
         catch (IOException e) {
             e.printStackTrace();
         }
-        return contentFile;
+        return DatatypeConverter.printBase64Binary(fileContent.getBytes());
     }
 
 
@@ -176,38 +172,32 @@ public class WebConsoleEndPoint {
         return result;
     }
 
-    // TODO: replace by a put
-    // TODO: Use BASE64 Body
-    @RequestMapping(value="/filesystem/files/write", produces={MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value="/filesystem/files/write", method = RequestMethod.PUT, produces={MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
-    String writeFile(@RequestParam(value="fileContent", required=true) String fileContent,
-                     @RequestParam(value="filePath", required=true) String filePath){
+    String writeFile(@RequestBody Map<String, String> body){
         WebConsoleUI.getInstance().logger.info("save Files and write on folder ...");
         String err;
         try {
-            PrintWriter writer = new PrintWriter(filePath, "UTF-8");
-            writer.println(fileContent);
+            PrintWriter writer = new PrintWriter(body.get("filePath"), "UTF-8");
+            writer.print(new String(DatatypeConverter.parseBase64Binary(body.get("fileContent"))));
             writer.close();
-            err="file saved";
+            err="success";
         }
         catch (IOException e) {
             WebConsoleUI.getInstance().logger.error("saveas: " + e.getMessage());
             e.printStackTrace();
             err = e.getMessage();
         }
-        return "{\"error\": \"" + err + "\"}";
+        return err;
     }
 
-    // TODO: replace by a put
-    // TODO: Use BASE64 Body
-    @RequestMapping(value="/filesystem/files/save", produces={MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value="/filesystem/files/save", method = RequestMethod.PUT, produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    String saveAs(@RequestParam(value="fileContent", required=true) String fileContent,
-                  @RequestParam(value="newName", required=true) String newName){
+    String saveAs(@RequestBody Map<String, String> body){
         WebConsoleUI.getInstance().logger.info("save as ...");
         try {
-            PrintWriter writer = new PrintWriter(currentPath + "/" + newName, "UTF-8");
-            writer.println(fileContent);
+            PrintWriter writer = new PrintWriter(currentPath + "/" + body.get("newName"), "UTF-8");
+            writer.print(new String(DatatypeConverter.parseBase64Binary(body.get("fileContent"))));
             writer.close();
         }
         catch (IOException e) {
