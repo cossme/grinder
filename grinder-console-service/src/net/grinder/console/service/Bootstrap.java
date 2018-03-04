@@ -33,9 +33,7 @@ import net.grinder.console.model.SampleModelViews;
 import org.picocontainer.Startable;
 import org.slf4j.Logger;
 
-import java.util.Map;
 import java.util.Set;
-
 
 public class Bootstrap implements Startable {
 

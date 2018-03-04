@@ -5,7 +5,11 @@ GRAPH_SAMPLE = 5
 charts = []
 
 function loadFiles(data) {
-    serverFiles = data.files;
+    //ISSUE #24 EDITOR TAB : Alphabetical order - filelist
+    serverFiles = {};
+    Object.keys(data.files).sort().forEach(function(key) {
+      serverFiles[key] = data.files[key];
+    });
     var listFile = document.getElementById("listFile");
     folders = files = "";
     for (var file in serverFiles) {
@@ -56,7 +60,7 @@ function openFile(e) {
         file: file
     }, function(data) {
         $("#currentFile").text(data.filePath);
-        editor.getDoc().setValue(data.doc);
+        editor.getDoc().setValue(window.atob(data.doc));
     });
 }
 
@@ -76,10 +80,10 @@ function openLogFile(e) {
     downloadButton.href = "/filesystem/file/download?logFile="+encodeURIComponent(log);
     downloadButton.download = e.text;
 
-    $.getJSON('/logs', {
+    $.get('/logs', {
         logFile: log
     }, function(data) {
-        document.getElementById("loglog").value = (data.doc);
+        document.getElementById("loglog").value = data;
     });
 }
 
@@ -466,13 +470,13 @@ $(function() {
             type: 'DELETE',
             url: '/logs/delete',
             success: function(data) {
-                if (data.error == "ok") {
+                if (data == "success") {
                     $("#idLog").empty();
                     document.getElementById("loglog").value = "";
                 }
                 else {
                     // TODO replace by http://jqueryui.com/dialog/
-                    alert("Error: Unable to delete the local logs: " + data.error);
+                    alert("Error: Unable to delete the local logs: " + data);
                 }
             },
             dataType: "json"

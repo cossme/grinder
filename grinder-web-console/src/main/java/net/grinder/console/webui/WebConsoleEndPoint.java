@@ -33,10 +33,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by solcyr on 15/12/2017.
@@ -74,35 +77,34 @@ public class WebConsoleEndPoint {
 
     @RequestMapping(value="/logs/list", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    String logServ(){
+    Map<String, Object> logServ(){
         File folder = new File(properties.getProperty("grinder.logDirectory", "log"));
+        Map<String, Object> result = new HashMap<>();
+        result.put("logPath", folder.getAbsolutePath().replaceAll("\\\\", "/"));
+
         File[] listOfFiles = folder.listFiles();
-        String output = "{\n";
-        output += " \"logPath\": \"" + folder.getAbsolutePath().replaceAll("\\\\", "/") + "\",\n" ;
-        output += " \"logFiles\": { ";
+        Map<String, Boolean> logFiles = new HashMap<>();
         if (listOfFiles != null) {
             for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                    output += "\n  \"" + listOfFiles[i].getName() + "\": false,";
-                } else if (listOfFiles[i].isDirectory()) {
-                    output += "\n  \"" + listOfFiles[i].getName() + "\": true,";
-                }
+                logFiles.put(listOfFiles[i].getName(), listOfFiles[i].isDirectory());
             }
         }
-        output = output.substring(0, output.length() - 1) + "\n }\n}\n";
-        return output;
+        result.put("logFiles", logFiles);
+        return result;
     }
 
     // TODO: Use BASE64 Body
-    @RequestMapping("/logs")
+    @RequestMapping(value="/logs", produces={MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     String getLog(@RequestParam(value="logFile", required=true) String logFile){
         String contentFile = "";
         String filePath = logFile;
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader (new ReverseLineInputStream(filePath)));
+            ReverseLineInputStream ris = new ReverseLineInputStream(filePath);
+            InputStreamReader isr = new InputStreamReader (ris);
+            BufferedReader in = new BufferedReader(isr);
             // We read the last 5000 lines of the file (to avoid loading to much data in memory)
-            for (int i = 0; i < 50; ++i) {
+            for (int i = 0; i < 5000; ++i) {
                 String line = in.readLine();
                 if (line == null) {
                     break;
@@ -110,24 +112,21 @@ public class WebConsoleEndPoint {
                 contentFile = line + "\n" + contentFile;
             }
 
-            StringWriter writer = new StringWriter();
-            escapeJavaStyleString(writer, contentFile, false);
-            contentFile = writer.toString();
+            in.close();
+            isr.close();
+            ris.close();
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-        String output = "{\n";
-        output += " \"doc\": \"" + contentFile + "\"\n";
-        output += "}";
-        return output;
+        return contentFile;
     }
 
 
-    @RequestMapping(value="/logs/delete", method = RequestMethod.DELETE, produces={MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value="/logs/delete", method = RequestMethod.DELETE, produces={MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     String deleteLogs(){
-        String err = "ok";
+        String result = "success";
         try {
             WebConsoleUI.getInstance().logger.info("deleting logs");
             File[] listOfFiles = new File(properties.getProperty("grinder.logDirectory", "log")).listFiles();
@@ -141,17 +140,17 @@ public class WebConsoleEndPoint {
         catch (Exception e) {
             e.printStackTrace();
             WebConsoleUI.getInstance().logger.error("deleting logs failed - " + e.getMessage());
-            err = e.getMessage();
+            result = e.getMessage();
         }
-        return "{\"error\": \"" + err + "\"}";
+        return result;
     }
 
     // TODO: Use BASE64 Body
     @RequestMapping(value="/filesystem/files", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    String getFile(@RequestParam(value="file", required=true) String filePath){
+    Map<String, Object> getFile(@RequestParam(value="file", required=true) String filePath){
         String contentFile = "";
-        String error = "ok";
+        String error = "success";
         try {
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(filePath));
             StringWriter out = new StringWriter();
@@ -162,9 +161,7 @@ public class WebConsoleEndPoint {
             out.close();
             in.close();
             contentFile = out.toString();
-            StringWriter writer = new StringWriter();
-            escapeJavaStyleString(writer, contentFile, false);
-            contentFile = writer.toString();
+            contentFile = DatatypeConverter.printBase64Binary(contentFile.getBytes());
 
         }
         catch (IOException ie) {
@@ -172,12 +169,11 @@ public class WebConsoleEndPoint {
             error = ie.getMessage();
         }
 
-        String output = "{\n";
-        output += " \"doc\": \"" + contentFile + "\",\n";
-        output += " \"filePath\": \"" + filePath.replaceAll("\\\\", "/") + "\",\n";
-        output += " \"error\": \"" + error +"\"\n";
-        output += "}";
-        return output;
+        Map<String, Object> result = new HashMap<>();
+        result.put("doc", contentFile);
+        result.put("filePath", filePath.replaceAll("\\\\", "/"));
+        result.put("error", error);
+        return result;
     }
 
     // TODO: replace by a put
@@ -224,31 +220,29 @@ public class WebConsoleEndPoint {
 
     @RequestMapping(value="/filesystem/files/list", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    String listFiles(){
+    Map<String, Object> listFiles(){
         File folder = new File(currentPath);
-        File[] listOfFiles = folder.listFiles();
-        String output = "{\n";
-        output += " \"files\": { ";
+        Map<String, Object> result = new HashMap<>();
 
+        Map<String, Boolean> files = new HashMap<>();
+        File[] listOfFiles = folder.listFiles();
         if (listOfFiles != null && listOfFiles.length > 0) {
             for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                    output += "\n  \"" + listOfFiles[i].getName() + "\": false,";
-                } else if (listOfFiles[i].isDirectory()) {
-                    output += "\n  \"" + listOfFiles[i].getName() + "\": true,";
-                }
+                files.put(listOfFiles[i].getName(), listOfFiles[i].isDirectory());
             }
-            output = output.substring(0, output.length() - 1);
         }
-        output += "\n }\n}\n";
-        return output;
+
+        result.put("files", files);
+        return result;
     }
 
     @RequestMapping(value="/filesystem/directory/change", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    String changeDirectory(@RequestParam(value="newPath", required=true) String newPath){
+    Map<String, String> changeDirectory(@RequestParam(value="newPath", required=true) String newPath){
+        Map<String, String> result = new HashMap<>();
         currentPath = newPath.replace('\\', '/');
-        return "{\"newPath\": \"" + currentPath + "\"}";
+        result.put("newPath", currentPath);
+        return result;
     }
 
     @RequestMapping(value="/filesystem/file/download", method = RequestMethod.GET)
@@ -272,78 +266,5 @@ public class WebConsoleEndPoint {
             }
         }.start();
         return "success";
-    }
-
-    private void escapeJavaStyleString(Writer out, String str, boolean escapeSingleQuote) throws IOException {
-        if (out == null) {
-            throw new IllegalArgumentException("The Writer must not be null");
-        }
-        if (str == null) {
-            return;
-        }
-        int sz;
-        sz = str.length();
-        for (int i = 0; i < sz; i++) {
-            char ch = str.charAt(i);
-
-            // handle unicode
-            if (ch > 0xfff) {
-                out.write("\\u" + Integer.toHexString(ch));
-            } else if (ch > 0xff) {
-                out.write("\\u0" + Integer.toHexString(ch));
-            } else if (ch > 0x7f) {
-                out.write("\\u00" + Integer.toHexString(ch));
-            } else if (ch < 32) {
-                switch (ch) {
-                    case '\b':
-                        out.write('\\');
-                        out.write('b');
-                        break;
-                    case '\n':
-                        out.write('\\');
-                        out.write('n');
-                        break;
-                    case '\t':
-                        out.write('\\');
-                        out.write('t');
-                        break;
-                    case '\f':
-                        out.write('\\');
-                        out.write('f');
-                        break;
-                    case '\r':
-                        out.write('\\');
-                        out.write('r');
-                        break;
-                    default :
-                        if (ch > 0xf) {
-                            out.write("\\u00" + Integer.toHexString(ch));
-                        } else {
-                            out.write("\\u000" + Integer.toHexString(ch));
-                        }
-                        break;
-                }
-            } else {
-                switch (ch) {
-                    case '\'':
-                        if (escapeSingleQuote) {
-                            out.write('\\');
-                        }
-                        out.write('\'');
-                        break;
-                    case '"':
-                        out.write('\\');
-                        out.write('"');
-                        break;
-                    case '\\':
-                        out.write('\\');
-                        out.write('\\');
-                        break;
-                    default :
-                        out.write(ch);
-                        break;
-                }
-            }
-        }
     }
 }
