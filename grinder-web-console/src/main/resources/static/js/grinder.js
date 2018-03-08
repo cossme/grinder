@@ -413,7 +413,9 @@ function startAfterDistribution(status) {
     }
     else if (status.state == "finished") {
             $.post('/recording/stop', {}, function(data) {
-                $.post('/recording/start');
+                $.post('/recording/start', {}, function(data) {
+                    $.post('/recording/reset');
+                })
             })
             $.post('/agents/start-workers', {}, function(data) {
                 if (data == "success") {
