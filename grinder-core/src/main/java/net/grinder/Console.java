@@ -51,11 +51,14 @@ public final class Console extends AbstractMainClass {
 
     super(logger, USAGE);
 
-    boolean headless = false;
+    boolean headless = true;
 
     for (int i = 0; i < args.length; i++) {
       if ("-headless".equalsIgnoreCase(args[i])) {
         headless = true;
+      }
+      else if ("-swing".equalsIgnoreCase(args[i])) {
+        headless = false;
       }
       else {
         throw barfUsage();

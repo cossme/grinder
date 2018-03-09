@@ -23,6 +23,13 @@ package net.grinder.console.webui;
 
 import net.grinder.Grinder;
 import net.grinder.common.GrinderProperties;
+import net.grinder.console.ConsoleFoundation;
+import net.grinder.console.common.ConsoleException;
+import net.grinder.console.common.Resources;
+import net.grinder.console.common.ResourcesImplementation;
+import net.grinder.util.Directory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -44,11 +51,14 @@ import java.util.Map;
 @Controller
 public class WebConsoleEndPoint {
 
+    final Resources resources = new ResourcesImplementation(
+            "net.grinder.console.common.resources.Console");
     private String currentPath;
     private GrinderProperties properties;
+    final Logger logger = LoggerFactory.getLogger(resources.getString("shortTitle"));
 
     WebConsoleEndPoint() {
-        File savedDistributionFolder = WebConsoleUI.getInstance().consoleProperties.getDistributionDirectory().getFile();
+        File savedDistributionFolder = ConsoleFoundation.PROPERTIES.getDistributionDirectory().getFile();
         if (savedDistributionFolder.exists()) {
             currentPath = savedDistributionFolder.getAbsolutePath().replace('\\', '/');
         }
@@ -56,8 +66,8 @@ public class WebConsoleEndPoint {
             currentPath = System.getProperty("user.dir").replace('\\', '/');
         }
         try {
-            if (WebConsoleUI.getInstance().consoleProperties.getPropertiesFile() != null) {
-                properties = new GrinderProperties(WebConsoleUI.getInstance().consoleProperties.getPropertiesFile());
+            if (ConsoleFoundation.PROPERTIES.getPropertiesFile() != null) {
+                properties = new GrinderProperties(ConsoleFoundation.PROPERTIES.getPropertiesFile());
             }
             else {
                 properties = new GrinderProperties();
@@ -124,7 +134,7 @@ public class WebConsoleEndPoint {
     String deleteLogs(){
         String result = "success";
         try {
-            WebConsoleUI.getInstance().logger.info("deleting logs");
+            logger.info("deleting logs");
             File[] listOfFiles = new File(properties.getProperty("grinder.logDirectory", "log")).listFiles();
             if (listOfFiles != null) {
                 for (int i = 0; i < listOfFiles.length; i++) {
@@ -135,7 +145,7 @@ public class WebConsoleEndPoint {
 
         catch (Exception e) {
             e.printStackTrace();
-            WebConsoleUI.getInstance().logger.error("deleting logs failed - " + e.getMessage());
+            logger.error("deleting logs failed - " + e.getMessage());
             result = e.getMessage();
         }
         return result;
@@ -175,7 +185,7 @@ public class WebConsoleEndPoint {
     @RequestMapping(value="/filesystem/files/write", method = RequestMethod.PUT, produces={MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
     String writeFile(@RequestBody Map<String, String> body){
-        WebConsoleUI.getInstance().logger.info("save Files and write on folder ...");
+        logger.info("save Files and write on folder ...");
         String err;
         try {
             PrintWriter writer = new PrintWriter(body.get("filePath"), "UTF-8");
@@ -184,7 +194,7 @@ public class WebConsoleEndPoint {
             err="success";
         }
         catch (IOException e) {
-            WebConsoleUI.getInstance().logger.error("saveas: " + e.getMessage());
+            logger.error("saveas: " + e.getMessage());
             e.printStackTrace();
             err = e.getMessage();
         }
@@ -194,14 +204,14 @@ public class WebConsoleEndPoint {
     @RequestMapping(value="/filesystem/files/save", method = RequestMethod.PUT, produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     String saveAs(@RequestBody Map<String, String> body){
-        WebConsoleUI.getInstance().logger.info("save as ...");
+        logger.info("save as ...");
         try {
             PrintWriter writer = new PrintWriter(currentPath + "/" + body.get("newName"), "UTF-8");
             writer.print(new String(DatatypeConverter.parseBase64Binary(body.get("fileContent"))));
             writer.close();
         }
         catch (IOException e) {
-            WebConsoleUI.getInstance().logger.error("saveas: " + e.getMessage());
+            logger.error("saveas: " + e.getMessage());
             e.printStackTrace();
         }
         return "success";
@@ -226,11 +236,36 @@ public class WebConsoleEndPoint {
         return result;
     }
 
+    @RequestMapping(value="/properties/save", produces={MediaType.TEXT_PLAIN_VALUE})
+    String saveProperties(@RequestParam(value="propertiesFile") String propertiesFile){
+        try {
+            ConsoleFoundation.PROPERTIES.setPropertiesFile( new File(propertiesFile));
+            ConsoleFoundation.PROPERTIES.save();
+        }
+        catch (ConsoleException ce) {
+            ce.printStackTrace();
+            return ce.getMessage();
+        }
+        return "success";
+    }
+
     @RequestMapping(value="/filesystem/directory/change", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    Map<String, String> changeDirectory(@RequestParam(value="newPath", required=true) String newPath){
+    Map<String, String> changeDirectory(@RequestParam(value="newPath") String newPath,
+                                        @RequestParam(value="save", required=false) Boolean save){
         Map<String, String> result = new HashMap<>();
         currentPath = newPath.replace('\\', '/');
+        if (save) {
+            try {
+                ConsoleFoundation.PROPERTIES.setDistributionDirectory(new Directory(new File(newPath)));
+                ConsoleFoundation.PROPERTIES.save();
+            }
+            catch (ConsoleException ce) {
+                ce.printStackTrace();
+            } catch (Directory.DirectoryException de) {
+                de.printStackTrace();
+            }
+        }
         result.put("newPath", currentPath);
         return result;
     }

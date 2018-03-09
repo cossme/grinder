@@ -75,6 +75,8 @@ public final class ConsoleFoundation {
   private final MutablePicoContainer m_container;
   private final Timer m_timer;
 
+  public static ConsoleProperties PROPERTIES = null;
+
   /**
    * Constructor. Locates the console properties in the user's home directory.
    *
@@ -120,7 +122,7 @@ public final class ConsoleFoundation {
     throws GrinderException {
 
     m_timer = timer;
-
+    PROPERTIES = properties;
     final ComponentMonitor monitor = new NullComponentMonitor();
 
     // Allow components to use Disposable/Startable interfaces or

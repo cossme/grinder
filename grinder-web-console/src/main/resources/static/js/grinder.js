@@ -32,7 +32,7 @@ function browseFolder(e) {
     else {
         path = part11 + "/" + part21;
     }
-    $.getJSON('/filesystem/directory/change', {newPath: path}, function(data) {
+    $.getJSON('/filesystem/directory/change', {newPath: path, save: false}, function(data) {
         document.getElementById("currentPath").innerText = data.newPath;
         $.getJSON('/filesystem/files/list', {}, function(data) {
             loadFiles(data);
@@ -43,12 +43,18 @@ function browseFolder(e) {
 function setBasePath() {
     // Set new Path
     path = document.getElementById("basePath").value;
-    $.getJSON('/filesystem/directory/change', {newPath: path}, function(data) {
+    $.getJSON('/filesystem/directory/change', {newPath: path, save: true}, function(data) {
         document.getElementById("currentPath").innerText = data.newPath;
         $.getJSON('/filesystem/files/list', {}, function(data) {
             loadFiles(data);
         });
     });
+}
+
+function setDistributionFolder() {
+    // Set new Path
+    path = document.getElementById("currentPath").innerText;
+    $.getJSON('/filesystem/directory/change', {newPath: path, save: true});
 }
 
 function openFile(e) {
@@ -335,20 +341,6 @@ function refreshGrinder(refreshPeriod) {
         }, refreshPeriod);
     }
 
-
-$(function() {
-    $('#setPath').bind('click', function() {
-        path = document.getElementById("currentPath").innerText;
-        $.ajax({
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify({ distributionDirectory: path }),
-            url: '/properties',
-            dataType: "json"
-        });
-    });
-});
-
 $(function() {
     $('#refreshlog').bind('click', function() {
         $.getJSON('/logs/list', {}, function(data) {
@@ -440,6 +432,7 @@ $(function() {
             $.post('/agents/stop-workers', {}, function(data) {
                 if (data == "success") {
                     notify('Test stopped');
+                     $.post('/recording/stop');
                 }
                 else {
                     // TODO replace by http://jqueryui.com/dialog/
@@ -546,19 +539,20 @@ function changeTempo() {
 }
 
 function setPropertiesFile() {
-    var tess = document.getElementById("currentFile").innerText;
-    if (tess != "") {
-        document.getElementById("selectedPropertiesFile").innerHTML = "<a onClick='openFile(this)' href='#'>" + tess + "</a>";
+    var currentFile = document.getElementById("currentFile").innerText;
+    if (currentFile != "") {
+        document.getElementById("selectedPropertiesFile").innerHTML = "<a onClick='openFile(this)' href='#'>" + currentFile + "</a>";
         $.ajax({
             type: 'PUT',
             contentType: 'application/json',
-            data: JSON.stringify({ propertiesFile: tess }),
+            data: JSON.stringify({ propertiesFile: currentFile }),
             url: '/properties',
             dataType: "json"
         });
+        $.post('/properties/save', { propertiesFile: currentFile });
     }
 
-    if (tess == "") {
+    if (currentFile == "") {
         alert("please choose file");
     }
 }
