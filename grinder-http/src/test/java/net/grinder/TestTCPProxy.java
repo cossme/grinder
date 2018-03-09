@@ -33,9 +33,7 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.Properties;
 
 import net.grinder.common.GrinderException;
@@ -281,11 +279,22 @@ public class TestTCPProxy {
     catch (GrinderException e) {
     }
 
+    // The following thing is done to get the locale message that the test will throw.
+    // For some reason, string the locale either programmatically or by System property didn't work
+    String localizedMessage = "No such file or directory";
+    try {
+      new FileReader(new File("nonexistent"));
+    }
+    catch (FileNotFoundException e) {
+      localizedMessage = e.getMessage();
+    }
+
+
     if (System.getProperty("os.name").startsWith("Win")) {
       verify(m_logger).error(contains("The system cannot find the file specified"));
     }
     else {
-      verify(m_logger).error(contains("No such file or directory"));
+      verify(m_logger).error(contains(localizedMessage));
     }
   }
 

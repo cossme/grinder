@@ -27,6 +27,7 @@ import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Timer;
 
 import net.grinder.common.StubTest;
@@ -53,6 +54,10 @@ import net.grinder.testutility.StubTimer;
  * @author Philip Aston
  */
 public class TestCumulativeStatisticsTableModel extends AbstractFileTestCase {
+
+  static {
+    Locale.setDefault(Locale.US);
+  }
 
   private File m_file;
 

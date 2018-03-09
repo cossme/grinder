@@ -40,8 +40,7 @@ import net.grinder.testutility.RandomStubFactory;
  */
 public class TestExternalEditor extends AbstractFileTestCase {
 
-  private static final String s_testClasspath =
-    "\"" + System.getProperty("java.class.path") + "\"";
+  private static String s_testClasspath = System.getProperty("java.class.path");
 
   private static final Resources s_resources =
     new ResourcesImplementation(
@@ -119,6 +118,7 @@ public class TestExternalEditor extends AbstractFileTestCase {
       String jvmLocation;
       if (System.getProperty("os.name").startsWith("Win")) {
         jvmLocation = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe";
+        s_testClasspath = "\"" + s_testClasspath + "\"";
       } else {
         jvmLocation = System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java";
       }
