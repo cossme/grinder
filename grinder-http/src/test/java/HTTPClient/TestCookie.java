@@ -113,6 +113,13 @@ public class TestCookie extends TestCase {
                  m_roRequest);
   }
 
+  public void testSecureCookieParsing() throws Exception {
+    Cookie.parse("NAME=VALUE; path=/; HttpOnly; Secure",
+            m_roRequest);
+    Cookie.parse("NAME=VALUE; Path=/; Secure; HttpOnly",
+            m_roRequest);
+  }
+
   public void testFixForBug1576609() throws Exception {
     m_roRequestStubFactory.setHost("khan.idc.shaw.ca");
 
