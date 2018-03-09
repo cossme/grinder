@@ -49,10 +49,12 @@ levels:
           url: /grinder/guide/logging.html
       - title: The Console
         children:
-        - title: User Interface
-          url: /grinder/guide/console.html
-        - title: Console Service
+        - title: The Web Console
+          url: /grinder/guide/webconsole.html
+        - title: The Console Service
           url: /grinder/guide/console-service.html
+        - title: The Classic Console
+          url: /grinder/guide/console.html
       - title: The TCP Proxy
         url: /grinder/guide/tcpproxy.html
       - title: Scripts

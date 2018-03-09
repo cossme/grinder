@@ -40,9 +40,10 @@ import org.slf4j.LoggerFactory;
 public final class Console extends AbstractMainClass {
 
   private static final String USAGE =
-    "  java " + Console.class.getName() + " [-headless]" +
+    "  java " + Console.class.getName() + " [-headless] [-classic]" +
     "\n" +
-    "\n  -headless                    Don't use a graphical user interface.";
+    "\n  -headless                    Don't use a graphical user interface." +
+    "\n  -classic                     use the classic swing graphical user interface.";
 
   private final ConsoleFoundation m_consoleFoundation;
 
@@ -57,7 +58,7 @@ public final class Console extends AbstractMainClass {
       if ("-headless".equalsIgnoreCase(args[i])) {
         headless = true;
       }
-      else if ("-swing".equalsIgnoreCase(args[i])) {
+      else if ("-classic".equalsIgnoreCase(args[i])) {
         headless = false;
       }
       else {
