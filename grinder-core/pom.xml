@@ -12,21 +12,21 @@
   <parent>
     <groupId>io.github.cossme</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.0-SNAPSHOT</version>
   </parent>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-dcr-agent</artifactId>
-      <version>4.0.0</version>
+      <version>4.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-test-support</artifactId>
-      <version>4.0.0</version>
+      <version>4.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
