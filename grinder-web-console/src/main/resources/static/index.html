@@ -61,13 +61,13 @@
                     <table class="table">
                        <thead id="dataHead">
                           <tr>
-                             <th class="resultTitle">Test(s)</th>
+                             <th class="resultTitle">Test Name</th>
                              <th class="result">Tests</th>
                              <th class="result">Errors</th>
-                             <th class="result">Average Resp Time(ms)</th>
-                             <th class="result">Resp Time Standard Deviation(ms)</th>
-                             <th class="result">Transactions per Second</th>
-                             <th class="result">Peak Transactions per Second</th>
+                             <th class="result">Mean Test Time (ms)</th>
+                             <th class="result">Test Time Standard Deviation (ms)</th>
+                             <th class="result">TPS</th>
+                             <th class="result">Peak TPS</th>
                           </tr>
                        </thead>
                        <tbody id="datakid">
@@ -104,7 +104,7 @@
                     <canvas id="myChart1" style="display:none" ></canvas>
                     <canvas id="myChart2" style="display:none" ></canvas>
                     <a class="button" href="#" onclick="showChart(0)" class="btn btn-default">TPS</a>
-                    <a class="button" href="#" onclick="showChart(1)" class="btn btn-default">Average Response Time</a>
+                    <a class="button" href="#" onclick="showChart(1)" class="btn btn-default">Mean Test Time</a>
                     <a class="button" href="#" onclick="showChart(2)" class="btn btn-default">Standard Deviation</a>
                   </div>
               </div>
