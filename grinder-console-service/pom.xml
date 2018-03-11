@@ -5,12 +5,12 @@
   <parent>
     <groupId>io.github.cossme</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.1-SNAPSHOT</version>
   </parent>
   <groupId>io.github.cossme</groupId>
   <artifactId>grinder-console-service</artifactId>
   <packaging>jar</packaging>
-  <version>4.0.0</version>
+  <version>4.0.1-SNAPSHOT</version>
   <name>grinder-console-service</name>
   <description>REST API to The Grinder console.</description>
   <url>http://grinder.sourceforge.net</url>
@@ -61,18 +61,18 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-core</artifactId>
-      <version>4.0.0</version>
+      <version>4.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-test-support</artifactId>
-      <version>4.0.0</version>
+      <version>4.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-core</artifactId>
       <type>test-jar</type>
-      <version>4.0.0</version>
+      <version>4.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
