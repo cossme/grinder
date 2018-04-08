@@ -5,6 +5,7 @@ GRAPH_SAMPLE = 5
 charts = []
 
 function loadFiles(data) {
+    document.getElementById("currentPath").innerText = data.currentPath;
     //ISSUE #24 EDITOR TAB : Alphabetical order - filelist
     serverFiles = {};
     Object.keys(data.files).sort().forEach(function(key) {
@@ -187,7 +188,6 @@ $(document).ready(function() {
     });
 
     $.getJSON('/properties', {}, function(data) {
-        document.getElementById("currentPath").innerText = data.distributionDirectory;
         document.getElementById("basePath").value = data.distributionDirectory;
         document.getElementById("selectedPropertiesFile").innerHTML =
             "<a onClick='openFile(this)' href='#'>" + data.propertiesFile + "</a>";

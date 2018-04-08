@@ -30,6 +30,7 @@ import net.grinder.console.common.ResourcesImplementation;
 import net.grinder.util.Directory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -37,6 +38,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.nio.file.Files;
@@ -51,20 +53,15 @@ import java.util.Map;
 @Controller
 public class WebConsoleEndPoint {
 
+    @Autowired
+    private HttpSession session;
+
     final Resources resources = new ResourcesImplementation(
             "net.grinder.console.common.resources.Console");
-    private String currentPath;
     private GrinderProperties properties;
     final Logger logger = LoggerFactory.getLogger(resources.getString("shortTitle"));
 
     WebConsoleEndPoint() {
-        File savedDistributionFolder = ConsoleFoundation.PROPERTIES.getDistributionDirectory().getFile();
-        if (savedDistributionFolder.exists()) {
-            currentPath = savedDistributionFolder.getAbsolutePath().replace('\\', '/');
-        }
-        else {
-            currentPath = System.getProperty("user.dir").replace('\\', '/');
-        }
         try {
             if (ConsoleFoundation.PROPERTIES.getPropertiesFile() != null) {
                 properties = new GrinderProperties(ConsoleFoundation.PROPERTIES.getPropertiesFile());
@@ -151,7 +148,6 @@ public class WebConsoleEndPoint {
         return result;
     }
 
-    // TODO: Use BASE64 Body
     @RequestMapping(value="/filesystem/files", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     Map<String, Object> getFile(@RequestParam(value="file", required=true) String filePath){
@@ -205,6 +201,7 @@ public class WebConsoleEndPoint {
     @ResponseBody
     String saveAs(@RequestBody Map<String, String> body){
         logger.info("save as ...");
+        String currentPath = getCurrentPath();
         try {
             PrintWriter writer = new PrintWriter(currentPath + "/" + body.get("newName"), "UTF-8");
             writer.print(new String(DatatypeConverter.parseBase64Binary(body.get("fileContent"))));
@@ -221,6 +218,7 @@ public class WebConsoleEndPoint {
     @RequestMapping(value="/filesystem/files/list", produces={MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     Map<String, Object> listFiles(){
+        String currentPath = getCurrentPath();
         File folder = new File(currentPath);
         Map<String, Object> result = new HashMap<>();
 
@@ -233,6 +231,7 @@ public class WebConsoleEndPoint {
         }
 
         result.put("files", files);
+        result.put("currentPath", currentPath);
         return result;
     }
 
@@ -254,7 +253,8 @@ public class WebConsoleEndPoint {
     Map<String, String> changeDirectory(@RequestParam(value="newPath") String newPath,
                                         @RequestParam(value="save", required=false) Boolean save){
         Map<String, String> result = new HashMap<>();
-        currentPath = newPath.replace('\\', '/');
+        String currentPath = newPath.replace('\\', '/');
+        setCurrentPath(currentPath);
         if (save) {
             try {
                 ConsoleFoundation.PROPERTIES.setDistributionDirectory(new Directory(new File(newPath)));
@@ -291,5 +291,24 @@ public class WebConsoleEndPoint {
             }
         }.start();
         return "success";
+    }
+
+    private String getCurrentPath() {
+        String currentPath = (String)session.getAttribute("currentPath");
+        if (currentPath == null) {
+            File savedDistributionFolder = ConsoleFoundation.PROPERTIES.getDistributionDirectory().getFile();
+            if (savedDistributionFolder.exists()) {
+                currentPath = savedDistributionFolder.getAbsolutePath().replace('\\', '/');
+            }
+            else {
+                currentPath = System.getProperty("user.dir").replace('\\', '/');
+            }
+            setCurrentPath(currentPath);
+        }
+        return currentPath;
+    }
+
+    private void setCurrentPath(String currentPath) {
+        session.setAttribute("currentPath", currentPath);
     }
 }
