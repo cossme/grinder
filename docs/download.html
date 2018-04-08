@@ -7,12 +7,11 @@ level: Index
   <h1>Download The Grinder</h1>
 
   <p>The Grinder can be downloaded from <a
-  href="{{ site.data.links.sourceforge.grinder.href }}">SourceForge.net</a>. New users are
-    <a href="faq.html#g2vsg3">advised</a> to start with The Grinder 3.
+  href="{{ site.github.repository_url }}">SourceForge.net</a>.
   The <a href="development/contributing.html#source">source code</a> is also available.
   </p>
 
-  <p>The Grinder 3 is distributed as two zip files which you should expand
+  <p>The Grinder is distributed as two zip files which you should expand
   using <code>unzip</code>, <a href="{{ site.data.links.winzip.href }}">WinZip</a> or
   similar. Everything required to run The Grinder is in the zip file labelled
   <code>grinder-</code><em>version</em><code>.zip</code>. The remaining
@@ -21,41 +20,22 @@ level: Index
   these are mainly of interest to developers wanting to
   <a href="development/contributing"> extend The Grinder</a>.
   </p>
+</section>
 
-  <section>
+<section>
   <h1>What else do I need?</h1>
 
-  <p>To run The Grinder:</p>
+  <p>To run The Grinder: <a href="{{ site.data.links.oracle.java.javase.href }}">Java Standard Edition6</a>, equivalent, or later</p>
+</section>
 
-  <table class="noborder">
-    <tr>
-      <td><a href="{{ site.data.links.oracle.java.javase.href }}">Java Standard Edition
-      6</a>, equivalent, or later</td><td>For The Grinder 3.</td>
-    </tr>
-    <tr>
-      <td><a href="{{ site.data.links.oracle.java.javase.href }}">Java 2 Standard Edition
-      1.3</a>, equivalent, or later</td><td>For The Grinder 2.</td>
-    </tr>
-    <tr>
-      <td><a href="{{ site.data.links.oracle.java.jsse.href }}">
-        JSSE (Java Secure Socket Extension) 1.0.2</a></td>
-      <td>For SSL support with The Grinder 2.
-      <br/>JSSE is a standard part of Java 2 Standard Edition 1.4.1 and later, so this extension is not requried for The Grinder 3.
-      </td>
-    </tr>
-  </table>
-  </section>
+<section>
+  <h1>Downloading The Grinder using Maven</h1>
 
- </section>
-
-  <section>
-    <h1>Downloading The Grinder using Maven</h1>
-
-    <p>Some users will find it preferable to use Maven to manage The
-    Grinder. On release, the jar files are deployed to the <a
-    href="{{ site.data.links.sonatype.oss.href }}">Sonatype</a> OSS Nexus repository, and
-    will be synchronised to <a href="{{ site.data.links.mvn.central.href }}">Maven
-    Central</a> soon afterwards. You can choose either to depend on
-    the the zip file, which should be identical to the Sourceforge
-    download, or the individual jar files.</p>
-  </section>
+  <p>Some users will find it preferable to use Maven to manage The
+  Grinder. On release, the jar files are deployed to the <a
+  href="{{ site.data.links.sonatype.oss.href }}">Sonatype</a> OSS Nexus repository, and
+  will be synchronised to <a href="{{ site.data.links.mvn.central.href }}">Maven
+  Central</a> soon afterwards. You can choose either to depend on
+  the the zip file, which should be identical to the Sourceforge
+  download, or the individual jar files.</p>
+</section>

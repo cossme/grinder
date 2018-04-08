@@ -375,8 +375,14 @@ sourceforge:
   
 
 
-sourceforge-inc:
-  href: "http://www.sourceforge.com/"
+github:
+  href: "http://www.github.com/"
+
+travis:
+  href: "http://www.travis-ci.org/"
+
+jekyll:
+  href: "https://jekyllrb.com/"
 
 swtest-discuss:
   href: "http://lists.topica.com/lists/swtest-discuss/"

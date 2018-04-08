@@ -4,7 +4,7 @@ level: UserGuide
 ---
 
   <section>
-    <h1>The Grinder 3 Properties File</h1>
+    <h1>The Grinder Properties File</h1>
   </section>
   
       <p>The Grinder worker and agent processes are controlled by
@@ -287,6 +287,21 @@ level: UserGuide
           console; other statistics are still reported.</td>
 
           <td>true</td>
+    </tr>
+
+        <tr>
+          <td>
+            <code>grinder.startEmbeddedAgent</code>
+          </td>
+
+          <td>This parameter is applicable to the Grinder Web Console only
+          If set to <code>true</code>, The Web Console becomes an agent.
+          This embedded mode allow the user to have a single process playing the 
+          role of the web console and the agent. This is useful when the user
+          is not sensitive the the topology of the injection cluster.
+          </td>
+
+          <td>false</td>
     </tr>
 
         <tr>

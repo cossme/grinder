@@ -25,6 +25,7 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import net.grinder.console.model.SampleModelViews.Listener;
@@ -156,7 +157,9 @@ public class TestSampleModelViewsImplementation extends AbstractFileTestCase {
   }
 
   public void testNumberFormat() throws Exception {
-
+    // Not all development environment are in US or UK locale.
+    // Better to force the local for the portabilty of the tests.
+    Locale.setDefault(Locale.US);
     final SampleModelViews sampleModelViews =
       new SampleModelViewsImplementation(
         m_consoleProperties,
