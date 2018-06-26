@@ -3799,11 +3799,11 @@ public class HTTPConnection implements GlobalConstants, HTTPClientModuleConstant
 	    dataout.writeBytes(req.getMethod() + " " + file + " " +
 			       RequestProtocolVersion + "\r\n");
 
-	String h_hdr = (ho_idx >= 0) ? hdrs[ho_idx].getValue().trim() : Host;
-	if (Port != URI.defaultPort(getProtocol()))
-	    dataout.writeBytes("Host: " + h_hdr + ":" + Port + "\r\n");
-	else    // Netscape-Enterprise has some bugs...
-	    dataout.writeBytes("Host: " + h_hdr + "\r\n");
+//	String h_hdr = (ho_idx >= 0) ? hdrs[ho_idx].getValue().trim() : Host;
+//	if (Port != URI.defaultPort(getProtocol()))
+//	    dataout.writeBytes("Host: " + h_hdr + ":" + Port + "\r\n");
+//	else    // Netscape-Enterprise has some bugs...
+	dataout.writeBytes("Host: " + h_hdr + "\r\n");
 
 
 	/*
