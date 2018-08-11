@@ -3,3 +3,5 @@ title: The Grinder
 description: A Java Load Testing Framework
 show_downloads: true
 download_url: https://github.com/cossme/grinder/releases/download/4.0.0/grinder-4.0.0-binary.zip
+plugins:
+  - jekyll-seo-tag
