@@ -94,11 +94,9 @@ public final class JVM {
 
     try {
       final int major = Integer.parseInt(versionTokenizer.nextToken());
-      final int minor = Integer.parseInt(versionTokenizer.nextToken());
-
       return
-        major >= minimumMajor &&
-        minor >= minimumMinor;
+        major > minimumMajor ? true  : major == minimumMajor 
+        && ( st.hasMoreTokens ? Integer.parseInt(versionTokenizer.nextToken()) : 0 ) >= minimumMinor;
     }
     catch (NoSuchElementException e) {
       throw new VersionException("Could not parse JVM version " + version);
