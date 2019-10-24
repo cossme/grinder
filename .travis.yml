@@ -18,12 +18,16 @@ before_script:
   - unset _JAVA_OPTIONS
 
 install: true
-script: mvn -Dbuild.travis=true install 
+script: 
+  - jdk_switcher use openjdk8
+  - mvn -Dbuild.travis=true install 
 
 deploy:
   provider: script
   script: true
-  script: mvn -DskipTests=true -Dbuild.travis=true deploy --settings .travis.settings.xml
+  script:   
+    - jdk_switcher use openjdk8
+    - mvn -DskipTests=true -Dbuild.travis=true deploy --settings .travis.settings.xml
   skip_cleanup: true
   #on:
     #tags: true
