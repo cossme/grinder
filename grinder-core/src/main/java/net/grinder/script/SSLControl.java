@@ -176,6 +176,44 @@ public interface SSLControl extends SSLContextFactory {
   void setKeyStore(InputStream keyStoreInputStream, String password)
     throws GeneralSecurityException, InvalidContextException, IOException;
 
+
+  /**
+   * Overloaded version of <code>setSSLStores</code> for key stores of
+   * the default type and truststore of the default type (usually <code>jks</code>).
+   *
+   * @param keyStoreInputStream Input stream to key store.
+   * @param password Key store password. Also used as the private key
+   * password.
+   * @param trustStoreInputStream Input stream to truststore
+   * @param passwordTrustStore Trust store password
+   * @exception GeneralSecurityException If JSSE could not load the key store.
+   * @exception InvalidContextException If called from a non-worker
+   * thread.
+   * @exception IOException If key store could not be read.
+   * @see #setKeyStoreFile(String, String, String)
+   */
+  void setSSLStores(InputStream keyStoreInputStream, String password, InputStream trustStoreInputStream, String passwordTrustStore)
+    throws GeneralSecurityException, InvalidContextException, IOException;
+
+  /**
+   * Overloaded version of <code>setSSLStores</code> for key stores of
+   * the default type and truststore of the default type (usually <code>jks</code>).
+   *
+   * @param keyStoreFileName Key store file name.
+   * @param password Key store password. Also used as the private key
+   * password.
+   * @param trustStoreFileName TrustStore file name
+   * @param passwordTrustStore Trust store password
+   * @exception GeneralSecurityException If JSSE could not load the key store.
+   * @exception InvalidContextException If called from a non-worker
+   * thread.
+   * @exception IOException If key store could not be read.
+   * @see #setKeyStoreFile(String, String, String)
+   */
+  void setSSLStores(String keyStoreFileName, String password, String trustStoreFileName, String passwordTrustStore)
+    throws GeneralSecurityException, InvalidContextException, IOException;
+
+
   /**
    * {@inheritDoc}
    */

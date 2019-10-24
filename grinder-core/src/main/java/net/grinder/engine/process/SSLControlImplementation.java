@@ -129,7 +129,22 @@ final class SSLControlImplementation implements SSLControl {
     setSSLStores(keyStoreInputStream, password, KeyStore.getDefaultType(), trustStoreInputStream, passwordTrustStore, KeyStore.getDefaultType());
   }
 
-  public void setKeyStoreFile(String keyStoreFileName,
+  public void setSSLStores(String keyStoreFileName, String password, String trustStoreFileName, String passwordTrustStore)
+    throws GeneralSecurityException, InvalidContextException, IOException {
+
+      final FileInputStream keyStoreInputStream = new FileInputStream(keyStoreFileName);
+      final FileInputStream trustStoreInputStream = new FileInputStream(trustStoreFileName);
+
+      try {
+          setSSLStores(keyStoreInputStream, password, trustStoreInputStream, passwordTrustStore);
+      }
+      finally {
+          keyStoreInputStream.close();
+          trustStoreInputStream.close();
+      }
+  }
+
+    public void setKeyStoreFile(String keyStoreFileName,
                               String password,
                               String keyStoreType)
     throws GeneralSecurityException, InvalidContextException, IOException {
