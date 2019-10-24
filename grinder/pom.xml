@@ -88,7 +88,6 @@
 
       <plugin>
         <groupId>nl.praegus</groupId>
-        <groupId>org.apache.portals.jetspeed-2</groupId>
         <artifactId>jetspeed-unpack-maven-plugin</artifactId>
         <executions>
           <execution>
