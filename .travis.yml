@@ -1,4 +1,5 @@
 language: java
+jdk: openjdk8
 
 env:
   global:
@@ -18,16 +19,12 @@ before_script:
   - unset _JAVA_OPTIONS
 
 install: true
-script: 
-  - jdk_switcher use openjdk8
-  - mvn -Dbuild.travis=true install 
+script: mvn -Dbuild.travis=true install 
 
 deploy:
   provider: script
   script: true
-  script:   
-    - jdk_switcher use openjdk8
-    - mvn -DskipTests=true -Dbuild.travis=true deploy --settings .travis.settings.xml
+  script: mvn -DskipTests=true -Dbuild.travis=true deploy --settings .travis.settings.xml
   skip_cleanup: true
   #on:
     #tags: true
