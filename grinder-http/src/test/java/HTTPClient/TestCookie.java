@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import net.grinder.testutility.RandomStubFactory;
 
@@ -109,6 +111,7 @@ public class TestCookie extends TestCase {
       m_roRequest);
     Cookie.parse(".ASPXANONYMOUS=AcbBC8KU9yE3MmQyMDA1Ni0wZDlmLTQ0MjktYWI2NS0zMTUwOGQwZmZhNTk1; expires=Wed, 16-Aug-2006 04:12:47 GMT; path=/;httponly, language=en-US; path=/;httponly",
       m_roRequest);
+      // m_roRequest);
     Cookie.parse(".ASPXANONYMOUS=AcbBC8KU9yE3MmQyMDA1Ni0wZDlmLTQ0MjktYWI2NS0zMTUwOGQwZmZhNTk1; httponly; expires=Wed, 16-Aug-2006 04:12:47 GMT; path=/;httponly, language=en-US; path=/",
                  m_roRequest);
   }
@@ -120,6 +123,13 @@ public class TestCookie extends TestCase {
             m_roRequest);
   }
 
+  @Test
+  public void testFixBug39() throws Exception {
+    Cookie.parse("csrf_habitat=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX; expires=Tue, 16-Jun-2020 13:29:05 GMT; Max-Age=22000; path=/;Secure, Habitat_session=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX; expires=Tue, 16-Jun-2020 19:22:25 GMT; Max-Age=43200; path=/;HttpOnly;Secure",
+    m_roRequest);
+  }
+
+  @Test
   public void testFixForBug1576609() throws Exception {
     m_roRequestStubFactory.setHost("khan.idc.shaw.ca");
 
