@@ -150,197 +150,189 @@ public class Cookie implements Serializable
     protected static Cookie[] parse(String set_cookie, RoRequest req)
     throws ProtocolException
     {
-        int    beg = 0,
-               end = 0,
-         start = 0;
-
-        /** ++GRINDER MODIFICATION **/
-        // Cope with .NET nonsense.
-        // See http://www.hanselman.com/blog/HttpOnlyCookiesOnASPNET11.aspx
-        if (set_cookie.toLowerCase().indexOf("httponly") != -1) {
-          // Typical section of a .NET cookie:
-          //    ... ; path=/;HttpOnly, language=en-US; path=/;HttpOnly
-          //
-          // We remove all instances of "HttpOnly," that follow a semi-colon,
-          // and all instances of HttpOnly following a semi-colon at the end of
-          // the cookie. This leaves something that is more conventional
-          // This shouldn't break any valid cookies.
-          set_cookie = set_cookie.replaceAll("(?i);\\s*HttpOnly;",";");
-          set_cookie = set_cookie.replaceAll("(?i);\\s*HttpOnly,",",");
-          set_cookie = set_cookie.replaceAll("(?i);\\s*HttpOnly$",";");
-        }
-        /** --GRINDER MODIFICATION **/
+        int beg = 0,
+            end = 0,
+            start = 0;
 
         char[] buf = set_cookie.toCharArray();
         int    len = buf.length;
 
         Cookie cookie_arr[] = new Cookie[0], curr;
 
+        cookies: while (true) {  // get all cookies
+          beg = Util.skipSpace(buf, beg);
+          if (beg >= len)  break;	// no more left
+          if (buf[beg] == ',')	{ // empty header
+            beg++;
+            continue;
+          }
 
-        cookies: while (true)                    // get all cookies
-        {
-            beg = Util.skipSpace(buf, beg);
-            if (beg >= len)  break;	// no more left
-      if (buf[beg] == ',')	// empty header
-      {
-    beg++;
-    continue;
-      }
+          curr  = new Cookie(req);
+          start = beg;
 
-      curr  = new Cookie(req);
-      start = beg;
+          // get cookie name and value first
 
-      // get cookie name and value first
+          end = set_cookie.indexOf('=', beg);
+          if (end == -1)
+            throw new ProtocolException("Bad Set-Cookie header: " +
+                      set_cookie + "\nNo '=' found " +
+                      "for token starting at " +
+                      "position " + beg);
+          curr.name = set_cookie.substring(beg, end).trim();
 
-      end = set_cookie.indexOf('=', beg);
-      if (end == -1)
-    throw new ProtocolException("Bad Set-Cookie header: " +
-              set_cookie + "\nNo '=' found " +
-              "for token starting at " +
-              "position " + beg);
-      curr.name = set_cookie.substring(beg, end).trim();
+          beg = Util.skipSpace(buf, end+1);
+          int comma = set_cookie.indexOf(',', beg);
+          int semic = set_cookie.indexOf(';', beg);
+          if (comma == -1  &&  semic == -1)  end = len;
+          else if (comma == -1)  end = semic;
+          else if (semic == -1)  end = comma;
+          else  {
+            if (comma > semic) {
+                end = semic;
+            }
+            else {
+                // try to handle broken servers which put commas
+                // into cookie values
+                int eq = set_cookie.indexOf('=', comma);
+                if (eq > 0  &&  eq < semic)
+              end = set_cookie.lastIndexOf(',', eq);
+                else
+              end = semic;
+            }
+          }
+          curr.value = set_cookie.substring(beg, end).trim();
 
-      beg = Util.skipSpace(buf, end+1);
-      int comma = set_cookie.indexOf(',', beg);
-      int semic = set_cookie.indexOf(';', beg);
-      if (comma == -1  &&  semic == -1)  end = len;
-      else if (comma == -1)  end = semic;
-      else if (semic == -1)  end = comma;
-      else
-      {
-    if (comma > semic)
-        end = semic;
-    else
-    {
-        // try to handle broken servers which put commas
-        // into cookie values
-        int eq = set_cookie.indexOf('=', comma);
-        if (eq > 0  &&  eq < semic)
-      end = set_cookie.lastIndexOf(',', eq);
-        else
-      end = semic;
-    }
-      }
-      curr.value = set_cookie.substring(beg, end).trim();
+          beg = end;
 
-      beg = end;
+          // now parse attributes
 
-      // now parse attributes
+          boolean legal = true;
+          parts: while (true)	{		// parse all parts
+    
+          if (beg >= len  ||  buf[beg] == ',')  break;
 
-      boolean legal = true;
-      parts: while (true)			// parse all parts
-      {
-    if (beg >= len  ||  buf[beg] == ',')  break;
+          // skip empty fields
+          if (buf[beg] == ';') {
+              beg = Util.skipSpace(buf, beg+1);
+              continue;
+          }
 
-    // skip empty fields
-    if (buf[beg] == ';')
-    {
-        beg = Util.skipSpace(buf, beg+1);
-        continue;
-    }
+          // first check for secure, it's a header w/o a '='
+          if ((beg+6 <= len)  &&
+              set_cookie.regionMatches(true, beg, "secure", 0, 6)) {
+              curr.secure = true;
+              beg += 6;
 
-    // first check for secure, as this is the only one w/o a '='
-    if ((beg+6 <= len)  &&
-        set_cookie.regionMatches(true, beg, "secure", 0, 6))
-    {
-        curr.secure = true;
-        beg += 6;
+              beg = Util.skipSpace(buf, beg);
+              if (beg < len  &&  buf[beg] == ';')	// consume ";"
+                beg = Util.skipSpace(buf, beg+1);
+              else if (beg < len  &&  buf[beg] != ',')
+                throw new ProtocolException("Bad Set-Cookie header: " +
+                          set_cookie + "\nExpected " +
+                          "';' or ',' at position " +
+                          beg);
+              continue;
+          }
+          
+          // first check for httponly, it's a header  w/o a '='
+          if ((beg+8 <= len)  &&
+              set_cookie.regionMatches(true, beg, "httponly", 0, 8)) {
+              curr.secure = true;
+              beg += 8;
 
-        beg = Util.skipSpace(buf, beg);
-        if (beg < len  &&  buf[beg] == ';')	// consume ";"
-      beg = Util.skipSpace(buf, beg+1);
-        else if (beg < len  &&  buf[beg] != ',')
-      throw new ProtocolException("Bad Set-Cookie header: " +
-                set_cookie + "\nExpected " +
-                "';' or ',' at position " +
-                beg);
+              beg = Util.skipSpace(buf, beg);
+              if (beg < len  &&  buf[beg] == ';')	// consume ";"
+                beg = Util.skipSpace(buf, beg+1);
+              else if (beg < len  &&  buf[beg] != ',')
+                throw new ProtocolException("Bad Set-Cookie header: " +
+                          set_cookie + "\nExpected " +
+                          "';' or ',' at position " +
+                          beg);
+              continue;
+          }
 
-        continue;
-    }
+          // alright, must now be of the form x=y
+          end = set_cookie.indexOf('=', beg);
+          if (end == -1)
+              throw new ProtocolException("Bad Set-Cookie header: " +
+                  set_cookie + "\nNo '=' found " +
+                  "for token starting at " +
+                  "position " + beg);
 
-    // alright, must now be of the form x=y
-    end = set_cookie.indexOf('=', beg);
-    if (end == -1)
-        throw new ProtocolException("Bad Set-Cookie header: " +
-            set_cookie + "\nNo '=' found " +
-            "for token starting at " +
-            "position " + beg);
+          String name = set_cookie.substring(beg, end).trim();
+          beg = Util.skipSpace(buf, end+1);
 
-    String name = set_cookie.substring(beg, end).trim();
-    beg = Util.skipSpace(buf, end+1);
+          if (name.equalsIgnoreCase("expires")) {
+              /** ++GRINDER MODIFICATION **/
+              if (beg >= len) {
+                  // Empty expires attribute at end of Cookie. We're done.
+                  break;
+              }
+              /** --GRINDER MODIFICATION **/
 
-    if (name.equalsIgnoreCase("expires"))
-    {
-        /** ++GRINDER MODIFICATION **/
-        if (beg >= len)
-        {
-            // Empty expires attribute at end of Cookie. We're done.
-            break;
-        }
-        /** --GRINDER MODIFICATION **/
+              /* Netscape ignores quotes around the date, and some twits
+              * actually send that...
+              */
+              if (set_cookie.charAt(beg) == '\"')
+                beg = Util.skipSpace(buf, beg+1);
 
-        /* Netscape ignores quotes around the date, and some twits
-         * actually send that...
-         */
-        if (set_cookie.charAt(beg) == '\"')
-      beg = Util.skipSpace(buf, beg+1);
+              /* cut off the weekday if it is there. This is a little
+              * tricky because the comma is also used between cookies
+              * themselves. To make sure we don't inadvertantly
+              * mistake a date for a weekday we only skip letters.
+              */
+              int pos = beg;
+              while (pos < len  &&
+                (buf[pos] >= 'a'  &&  buf[pos] <= 'z'  ||
+                buf[pos] >= 'A'  &&  buf[pos] <= 'Z'))
+                pos++;
+              pos = Util.skipSpace(buf, pos);
+              if (pos < len  &&  buf[pos] == ','  &&  pos > beg)
+                beg = pos+1;
 
-        /* cut off the weekday if it is there. This is a little
-         * tricky because the comma is also used between cookies
-         * themselves. To make sure we don't inadvertantly
-         * mistake a date for a weekday we only skip letters.
-         */
-        int pos = beg;
-        while (pos < len  &&
-         (buf[pos] >= 'a'  &&  buf[pos] <= 'z'  ||
-          buf[pos] >= 'A'  &&  buf[pos] <= 'Z'))
-      pos++;
-        pos = Util.skipSpace(buf, pos);
-        if (pos < len  &&  buf[pos] == ','  &&  pos > beg)
-      beg = pos+1;
+              /** ++GRINDER MODIFICATION **/
+              // Some other twits put a comma after the date.
+              // Replace it with a space.
+              pos = Util.skipSpace(buf, beg);
 
-            /** ++GRINDER MODIFICATION **/
-               // Some other twits put a comma after the date.
-               // Replace it with a space.
-               pos = Util.skipSpace(buf, beg);
-
-               // Skip past the date.
-               while (pos < len &&
+              // Skip past the date.
+              while (pos < len &&
                       (Character.isDigit(buf[pos]) || buf[pos] == '-')) {
-                 ++pos;
-               }
+                ++pos;
+              }
 
-               if (pos < len && buf[pos] == ',') {
-                 buf[pos] = ' ';
-                 set_cookie = new String(buf);
-               }
+              if (pos < len && buf[pos] == ',') {
+                buf[pos] = ' ';
+                set_cookie = new String(buf);
+              }
             /** --GRINDER MODIFICATION **/
-    }
+          }
 
-    comma = set_cookie.indexOf(',', beg);
-    semic = set_cookie.indexOf(';', beg);
-    if (comma == -1  &&  semic == -1)  end = len;
-    else if (comma == -1)  end = semic;
-    else if (semic == -1)  end = comma;
-    else end = Math.min(comma, semic);
+          comma = set_cookie.indexOf(',', beg);
+          semic = set_cookie.indexOf(';', beg);
+          if (comma == -1  &&  semic == -1)  end = len;
+          else if (comma == -1)  end = semic;
+          else if (semic == -1)  end = comma;
+          else end = Math.min(comma, semic);
 
-    String value = set_cookie.substring(beg, end).trim();
-    legal &= setAttribute(curr, name, value, set_cookie);
+          String value = set_cookie.substring(beg, end).trim();
+          legal &= setAttribute(curr, name, value, set_cookie);
 
-    beg = end;
-    if (beg < len  &&  buf[beg] == ';')	// consume ";"
-        beg = Util.skipSpace(buf, beg+1);
+          beg = end;
+          if (beg < len  &&  buf[beg] == ';')	// consume ";"
+              beg = Util.skipSpace(buf, beg+1);
+        }
+
+        if (legal) {
+          cookie_arr = Util.resizeArray(cookie_arr, cookie_arr.length+1);
+          cookie_arr[cookie_arr.length-1] = curr;
+        }
+        else {
+          Log.write(Log.COOKI, "Cooki: Ignoring cookie: " + curr);
+        }
       }
 
-      if (legal)
-      {
-    cookie_arr = Util.resizeArray(cookie_arr, cookie_arr.length+1);
-    cookie_arr[cookie_arr.length-1] = curr;
-      } else
-    Log.write(Log.COOKI, "Cooki: Ignoring cookie: " + curr);
-  }
-
-  return cookie_arr;
+      return cookie_arr;
     }
 
     /**

@@ -115,6 +115,7 @@ public class TestCookie extends TestCase {
                  m_roRequest);
   }
 
+  @Test
   public void testSecureCookieParsing() throws Exception {
     Cookie.parse("NAME=VALUE; path=/; HttpOnly; Secure",
             m_roRequest);
@@ -124,7 +125,7 @@ public class TestCookie extends TestCase {
 
   @Test
   public void testFixBug39() throws Exception {
-    Cookie.parse("csrf_habitat=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX; expires=Tue, 16-Jun-2020 13:29:05 GMT; Max-Age=22000; path=/;Secure, Habitat_session=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX; expires=Tue, 16-Jun-2020 19:22:25 GMT; Max-Age=43200; path=/;HttpOnly;Secure",
+    Cookie.parse("csrf_habitat=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX; expires=Tue, 16-Jun-2020 13:29:05 GMT; Max-Age=22000; path=/;Secure, Habitat_session=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX; expires=Tue, 16-Jun-2020 19:22:25 GMT; Max-Age=43200; path=/;HttpOnly;HttpOnly;HttpOnly;Secure",
     m_roRequest);
   }
 
