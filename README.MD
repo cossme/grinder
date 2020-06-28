@@ -16,7 +16,7 @@ The Grinder is a framework for running test scripts across a number of machines 
     *   Provides script editing and distribution.
 
 # Download
-You can download the latest grinder version [here](https://github.com/solcyr/grinder/releases/download/3.13/grinder-3.13-binary.zip)
+You can download the latest grinder version [here](https://github.com/cossme/grinder/releases/download/4.0.0/grinder-4.0.0-binary.zip)
     
 # Grinder Architecture    
 
