@@ -3972,28 +3972,36 @@ public class HTTPConnection implements GlobalConstants, HTTPClientModuleConstant
 		dataout.writeBytes("Expect: " + con_hdrs[1] + "\r\n");
 	    }
 	}
-	else if (ex_idx != -1)
-	{
-	    Vector expect_tokens;
-	    try
-		{ expect_tokens = Util.parseHeader(hdrs[ex_idx].getValue()); }
-	    catch (ParseException pe)
-		{ throw new IOException(pe.toString()); }
+    else { // Here there is no DATA in the request (no body) but we still have to 
+           // manage special headers
+        if (ex_idx != -1) {
+            Vector<HttpHeaderElement> expect_tokens;
+            try
+            { expect_tokens = Util.parseHeader(hdrs[ex_idx].getValue()); }
+            catch (ParseException pe)
+            { throw new IOException(pe.toString()); }
 
 
-	    // remove any 100-continue tokens
+            // remove any 100-continue tokens
 
-	    HttpHeaderElement cont = new HttpHeaderElement("100-continue");
-	    while (expect_tokens.removeElement(cont)) ;
+            HttpHeaderElement cont = new HttpHeaderElement("100-continue");
+            while (expect_tokens.removeElement(cont)) ;
 
 
-	    // write out header if any tokens left
+            // write out header if any tokens left
 
-	    if (!expect_tokens.isEmpty())
-	    {
-		con_hdrs[1] = Util.assembleHeader(expect_tokens);
-		dataout.writeBytes("Expect: " + con_hdrs[1] + "\r\n");
-	    }
+            if (!expect_tokens.isEmpty())
+            {
+            con_hdrs[1] = Util.assembleHeader(expect_tokens);
+            dataout.writeBytes("Expect: " + con_hdrs[1] + "\r\n");
+            }
+        }
+        if (ct_idx != -1)  { // BUG https://github.com/cossme/grinder/issues/32
+                             // If user really wants to send a Content-Type witout any Content
+                             // We should allow it as we are a testing framework. We adapt to 
+                             // the system we are testing.
+            dataout.writeBytes("Content-Type: " + hdrs[ct_idx].getValue().trim() + "\r\n");
+        }
 	}
 
 	dataout.writeBytes("\r\n");		// end of header

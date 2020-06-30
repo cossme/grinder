@@ -5,3 +5,8 @@
 /.g*
 /**/*.iml
 !/.gitignore
+.project
+.settings
+.vscode
+key
+
