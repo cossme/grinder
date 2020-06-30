@@ -363,6 +363,17 @@ public class TestHTTPRequest {
     assertEquals("GET / HTTP/1.1", m_handler.getRequestFirstHeader());
     m_handler.assertRequestDoesNotContainHeader("key: anotherValue");
     m_handler.assertRequestContainsHeader("key: value");
+
+    final NVPair[] headers3 = {
+      new NVPair("Content-Type", "application/json; charset=utf-8"),
+      new NVPair("Accept", "application/json"),
+      new NVPair("Protection-Token", "Protection-Token-Value"),
+    };
+
+    request.GET("/", null, headers3);
+    m_handler.assertRequestContainsHeader("Content-Type: application/json; charset=utf-8");
+    m_handler.assertRequestContainsHeader("Accept: application/json");
+    m_handler.assertRequestContainsHeader("Protection-Token: Protection-Token-Value");
   }
 
   @Test public void testHEAD() throws Exception {
