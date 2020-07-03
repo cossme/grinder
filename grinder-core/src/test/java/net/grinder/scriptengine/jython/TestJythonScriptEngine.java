@@ -137,7 +137,7 @@ public class TestJythonScriptEngine extends AbstractJUnit4FileTestCase {
   }
 
   @Test 
-  @Ignore
+  @Ignore /* This test is ignored because it fails in Travis but work in local*/
   public void testInitialisePathScriptWorkingDirectory()
       throws Exception {
     final File directory = new File(getDirectory(), "bah/foo");
@@ -157,7 +157,7 @@ public class TestJythonScriptEngine extends AbstractJUnit4FileTestCase {
   }
 
   @Test 
-  @Ignore
+  @Ignore /* This test is ignored because it fails in Travis but work in local*/
   public void testInitialisePathScriptDirectory() throws Exception {
     final File directory = new File(getDirectory(), "bah/foo");
     assertTrue(directory.mkdirs());
