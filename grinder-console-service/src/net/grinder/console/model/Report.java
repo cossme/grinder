@@ -21,8 +21,6 @@
 
 package net.grinder.console.model;
 
-import com.sun.org.apache.regexp.internal.RE;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

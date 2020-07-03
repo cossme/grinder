@@ -21,18 +21,9 @@
 
 package net.grinder.util;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.contains;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.Test;
-import org.slf4j.Logger;
 
 
 /**
@@ -41,63 +32,6 @@ import org.slf4j.Logger;
  * @author Philip Aston
  */
 public class TestJVM {
-
-  @Test public void testIsAtLeastVersion() throws Exception {
-    final JVM jvm = JVM.getInstance();
-
-    assertTrue(jvm.isAtLeastVersion(1, 1));
-    assertTrue(jvm.isAtLeastVersion(1, 2));
-    assertTrue(jvm.isAtLeastVersion(1, 3));
-
-    assertFalse(jvm.isAtLeastVersion(3, 0));
-    assertFalse(jvm.isAtLeastVersion(1, 9));
-
-    final String[] badVersions = {
-      "not parseable",
-      "123123",
-      "",
-    };
-
-    final String oldVersion = System.getProperty("java.version");
-
-    try {
-      for (int i = 0; i < badVersions.length; ++i) {
-        System.setProperty("java.version", badVersions[i]);
-
-        try {
-          jvm.isAtLeastVersion(1, 3);
-          fail("Expected JVM.VersionException");
-        }
-        catch (JVM.VersionException e) {
-        }
-      }
-    }
-    finally {
-      System.setProperty("java.version", oldVersion);
-    }
-  }
-
-  @Test public void testHaveRequisites() throws Exception {
-    final Logger logger = mock(Logger.class);
-    final JVM jvm = JVM.getInstance();
-
-    assertTrue(jvm.haveRequisites(logger));
-    verifyNoMoreInteractions(logger);
-
-    final String oldVersion = System.getProperty("java.version");
-
-    try {
-      System.setProperty("java.version", "1.2");
-
-      assertFalse(jvm.haveRequisites(logger));
-      verify(logger).error(contains("incompatible version"),
-                           same(jvm),
-                           isA(String.class));
-    }
-    finally {
-      System.setProperty("java.version", oldVersion);
-    }
-  }
 
   @Test public void testToString() throws Exception {
     final String result = JVM.getInstance().toString();

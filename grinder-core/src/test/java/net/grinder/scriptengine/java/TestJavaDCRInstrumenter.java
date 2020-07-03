@@ -163,7 +163,7 @@ public class TestJavaDCRInstrumenter {
     doThrow(new UnmodifiableClassException())
       .when(instrumentation).retransformClasses((Class<?>[]) any());
 
-    instrumentation.retransformClasses(new Class[0]);
+    //instrumentation.retransformClasses(new Class[0]);
 
     // Create a new weaver to force the weaving.
     final JavaDCRInstrumenter instrumenter =

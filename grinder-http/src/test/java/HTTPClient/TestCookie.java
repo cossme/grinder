@@ -24,6 +24,7 @@ package HTTPClient;
 
 import java.net.ProtocolException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -45,6 +46,7 @@ public class TestCookie extends TestCase {
     new RoRequestStubFactory();
   private final RoRequest m_roRequest = m_roRequestStubFactory.getStub();
 
+  @Test
   public void testParse() throws Exception {
     // No cookies, nothing to do.
     Cookie.parse("", null);
@@ -72,11 +74,13 @@ public class TestCookie extends TestCase {
     assertEquals("bah", cookies2[0].getValue());
     assertEquals("lah", cookies2[0].getPath());
 
-    final DateFormat df =
-      DateFormat.getDateTimeInstance(
-        DateFormat.SHORT, DateFormat.MEDIUM, Locale.UK);
-    df.setTimeZone(TimeZone.getTimeZone("GMT"));
-    final Date result = df.parse("25/03/06 16:53:28");
+    //final DateFormat df =
+    //  DateFormat.getDateTimeInstance(
+    //    DateFormat.SHORT, DateFormat.MEDIUM, Locale.UK);
+    //df.setTimeZone(TimeZone.getTimeZone("GMT"));
+    //final Date result = df.parse("25/03/06 16:53:28");
+    DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss z");
+    Date result = sdf.parse("25/03/2006 16:53:28 GMT"); // Handle the ParseException here
     assertEquals(result, cookies2[0].expires());
   }
 

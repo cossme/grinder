@@ -49,12 +49,6 @@ public class BlockingClassLoader extends URLClassLoader {
   private final Classes m_isolated;
   private final Classes m_shared;
 
-  private static URL[] join(List<URL> additionalClassPath, URL[] urls) {
-    final List<URL> classPath = new ArrayList<URL>(additionalClassPath);
-    classPath.addAll(asList(urls));
-    return classPath.toArray(new URL[classPath.size()]);
-  }
-
   /**
    * Constructor.
    *
@@ -93,13 +87,13 @@ public class BlockingClassLoader extends URLClassLoader {
    * @param respectGrandparents
    *          Only block or isolate classes from the parent class loader.
    */
-  public BlockingClassLoader(URLClassLoader parent,
+  public BlockingClassLoader(ClassLoader parent,
                              List<URL> additionalClassPath,
                              Set<String> blocked,
                              Set<String> isolated,
                              Set<String> shared,
                              boolean respectGrandparents) {
-    super(join(additionalClassPath, parent.getURLs()), parent);
+    super(additionalClassPath.toArray(new URL[] {}), parent);
 
     m_blocked = new Classes(blocked);
     m_isolated = new Classes(isolated);
@@ -132,7 +126,7 @@ public class BlockingClassLoader extends URLClassLoader {
                              Set<String> isolated,
                              Set<String> shared,
                              boolean respectGrandparents) {
-    this((URLClassLoader)BlockingClassLoader.class.getClassLoader(),
+    this(BlockingClassLoader.class.getClassLoader(),
          additionalClassPath,
          blocked,
          isolated,
@@ -196,7 +190,18 @@ public class BlockingClassLoader extends URLClassLoader {
           Class<?> c = findLoadedClass(name);
 
           if (c == null) {
-            c = findClass(name);
+            try {
+              c = findClass(name);
+            }
+            catch (ClassNotFoundException cnfe) {
+              // This change is related to JAVA 9 and above.
+              // ApplicationClass Loader is not an URLClassLoader Anymore
+              // Therefor the BlockingClassLoader can't source all ApplicationClassloader
+              // URLs anymore... Now we do it in an oportunistic way
+              Class<?> clazz = getParent().loadClass(name);
+              super.addURL(clazz.getProtectionDomain().getCodeSource().getLocation());
+              c = findClass(name);
+            }
           }
 
           if (resolve) {

@@ -16,10 +16,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -46,7 +46,7 @@ public class TestProcesses {
     public void testAgentsStop() {
         final Wrapper<Boolean> called = new Wrapper(false);
         Processes processes = new Processes();
-        Whitebox.setInternalState(processes, "pc", pc);
+        ReflectionTestUtils.setField(processes, "pc", pc);
         Mockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -86,7 +86,7 @@ public class TestProcesses {
         final Wrapper<GrinderProperties> called = new Wrapper();
 
         Processes processes = new Processes();
-        Whitebox.setInternalState(processes, "pc", pc);
+        ReflectionTestUtils.setField(processes, "pc", pc);
         Mockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -137,7 +137,7 @@ public class TestProcesses {
         final Wrapper<GrinderProperties> called = new Wrapper();
 
         Processes processes = new Processes();
-        Whitebox.setInternalState(processes, "pc", pc);
+        ReflectionTestUtils.setField(processes, "pc", pc);
         Mockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -162,7 +162,7 @@ public class TestProcesses {
     public void testWorkersStop() {
         final Wrapper<Boolean> called = new Wrapper(false);
         Processes processes = new Processes();
-        Whitebox.setInternalState(processes, "pc", pc);
+        ReflectionTestUtils.setField(processes, "pc", pc);
         Mockito.doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -181,7 +181,7 @@ public class TestProcesses {
         final Wrapper<ProcessControl.Listener> listener = new Wrapper();
 
         Processes processes = new Processes();
-        Whitebox.setInternalState(bootstrap, "INSTANCE", new Bootstrap(
+        ReflectionTestUtils.setField(bootstrap, "INSTANCE", new Bootstrap(
                 null,
                 model,
                 null,
@@ -207,7 +207,7 @@ public class TestProcesses {
         final Wrapper<ProcessControl.Listener> listener = new Wrapper();
 
         Processes processes = new Processes();
-        Whitebox.setInternalState(bootstrap, "INSTANCE", new Bootstrap(
+        ReflectionTestUtils.setField(bootstrap, "INSTANCE", new Bootstrap(
                 null,
                 model,
                 null,
@@ -337,7 +337,7 @@ public class TestProcesses {
         final Wrapper<ProcessControl.Listener> listener = new Wrapper();
 
         Processes processes = new Processes();
-        Whitebox.setInternalState(bootstrap, "INSTANCE", new Bootstrap(
+        ReflectionTestUtils.setField(bootstrap, "INSTANCE", new Bootstrap(
                 null,
                 model,
                 null,

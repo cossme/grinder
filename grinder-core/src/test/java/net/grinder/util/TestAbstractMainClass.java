@@ -54,33 +54,6 @@ public class TestAbstractMainClass {
 
     assertSame(logger, mainClass.getLogger());
 
-    final String javaVersion = System.getProperty("java.version");
-
-    try {
-      try {
-        System.setProperty("java.version", "whatever");
-        new MyMainClass(logger, myUsage);
-        fail("Expected VersionException");
-      }
-      catch (VersionException e) {
-      }
-
-      try {
-        System.setProperty("java.version", "1.3");
-        new MyMainClass(logger, myUsage);
-        fail("Expected LoggedInitialisationException");
-      }
-      catch (LoggedInitialisationException e) {
-        AssertUtilities.assertContains(e.getMessage(), "Unsupported");
-        verify(logger).error(contains("incompatible version"),
-                             isA(JVM.class),
-                             isA(String.class));
-      }
-    }
-    finally {
-      System.setProperty("java.version", javaVersion);
-    }
-
     final LoggedInitialisationException barfError = mainClass.barfError("foo");
     assertEquals("foo", barfError.getMessage());
     verify(logger).error(contains("foo"));

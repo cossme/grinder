@@ -35,7 +35,7 @@
     </encoder>
   </appender>
 
-  <root level="${grinder.logLevel:-warn}">
+  <root level="${grinder.logLevel:-info}">
     <appender-ref ref="filtered_stderr" />
     <appender-ref ref="filtered_stdout" />
   </root>

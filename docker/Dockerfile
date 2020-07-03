@@ -1,4 +1,4 @@
-FROM openjdk:8u151-jdk-alpine3.7
+FROM openjdk14-jdk-alpine3.10
 
 ENV GRINDER_VERSION 4.0.2-SNAPSHOT
 ENV GRINDER_BINARY grinder-${GRINDER_BINARY_VERSION}-binary.zip

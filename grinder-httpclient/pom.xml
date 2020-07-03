@@ -29,6 +29,7 @@
         <configuration>
           <showDeprecation>false</showDeprecation>
           <showWarnings>false</showWarnings>
+          <compilerArgument>-XDignore.symbol.file</compilerArgument>
         </configuration>
       </plugin>
     </plugins>

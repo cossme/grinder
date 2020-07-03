@@ -48,7 +48,7 @@ public class TestJythonScriptEngineServiceWithJython25
   extends AbstractJythonScriptEngineServiceTests {
 
   @Test public void testVersion() throws Exception {
-    assertVersion("2.5");
+    assertVersion("2.7");
   }
 
   @Test public void testCreateInstrumentedProxy() throws Exception {

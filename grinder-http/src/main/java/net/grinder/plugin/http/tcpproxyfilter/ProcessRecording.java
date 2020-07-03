@@ -27,9 +27,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+
 import net.grinder.common.GrinderException;
 import net.grinder.plugin.http.tcpproxyfilter.ProcessHTTPRecordingWithXSLT.StyleSheetFile;
-import net.grinder.plugin.http.xml.HttpRecordingDocument;
+import net.grinder.plugin.http.xml.HTTPRecordingType;
 import net.grinder.util.AbstractMainClass;
 
 import org.slf4j.Logger;
@@ -104,9 +107,9 @@ public final class ProcessRecording extends AbstractMainClass {
   }
 
   private void run() throws Exception {
-
-    final HttpRecordingDocument recording =
-      HttpRecordingDocument.Factory.parse(m_recordingStream);
+    JAXBContext jc = JAXBContext.newInstance("net.grinder");
+    Unmarshaller unmarshaller = jc.createUnmarshaller();
+    HTTPRecordingType recording = (HTTPRecordingType) unmarshaller.unmarshal(m_recordingStream);
 
     m_processor.process(recording);
   }

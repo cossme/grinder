@@ -316,7 +316,7 @@ public class TestDebugThreadWorkerFactory extends AbstractJUnit4FileTestCase {
 
 
   public static class BadClassInaccesible {
-    BadClassInaccesible() { }
+    private BadClassInaccesible() { }
   }
 
   public static abstract class BadClassCantInstantiate {

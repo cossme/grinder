@@ -24,6 +24,8 @@ package net.grinder.util;
 
 import java.util.Locale;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 import static net.grinder.testutility.AssertUtilities.assertNotEquals;
@@ -46,6 +48,7 @@ public class TestSignificantFigureFormat extends TestCase {
     Locale.setDefault(m_originalDefaultLocale);
   }
 
+  @Test
   public void testSignificantFigureFormat() throws Exception {
     java.util.Locale.setDefault(java.util.Locale.US);
     final SignificantFigureFormat f = new SignificantFigureFormat(4);
@@ -76,7 +79,7 @@ public class TestSignificantFigureFormat extends TestCase {
     assertEquals("0.000", f.format(-0.0));
     assertEquals("\u221e", f.format(Double.POSITIVE_INFINITY));
     assertEquals("-\u221e", f.format(Double.NEGATIVE_INFINITY));
-    assertEquals("\ufffd", f.format(Double.NaN));
+    assertEquals("NaN", f.format(Double.NaN));
   }
 
   public void testEquality() {

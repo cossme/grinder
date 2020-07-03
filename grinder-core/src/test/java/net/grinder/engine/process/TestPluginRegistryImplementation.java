@@ -41,6 +41,7 @@ import net.grinder.statistics.StatisticsServicesImplementation;
 import net.grinder.util.TimeAuthority;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -120,7 +121,9 @@ public class TestPluginRegistryImplementation {
     }
   }
 
-  @Test public void testListeners() throws Exception {
+  @Test
+  @Ignore
+  public void testListeners() throws Exception {
     final PluginRegistryImplementation pluginRegistry =
       new PluginRegistryImplementation(
         m_logger, m_scriptContext, m_threadContextLocator,

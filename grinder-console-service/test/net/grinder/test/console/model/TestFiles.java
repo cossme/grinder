@@ -21,24 +21,26 @@
 
 package net.grinder.test.console.model;
 
-import net.grinder.common.GrinderException;
-import net.grinder.console.distribution.AgentCacheState;
-import net.grinder.console.distribution.FileDistribution;
-import net.grinder.console.distribution.FileDistributionHandler;
-import net.grinder.console.model.DistributionResult;
-import net.grinder.console.model.Files;
-import net.grinder.console.service.Bootstrap;
-import net.grinder.util.FileContents;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import java.beans.PropertyChangeListener;
-import java.util.*;
+import net.grinder.console.distribution.AgentCacheState;
+import net.grinder.console.distribution.FileDistribution;
+import net.grinder.console.distribution.FileDistributionHandler;
+import net.grinder.console.model.DistributionResult;
+import net.grinder.console.model.Files;
+import net.grinder.util.FileContents;
 
 /**
  * Created by solcyr on 29/01/2018.
@@ -71,7 +73,7 @@ public class TestFiles {
             public void setNewFileTime(long time) {}
             public void addListener(PropertyChangeListener listener) {}
         });
-        Whitebox.setInternalState(files, "distributionResult", result);
+        ReflectionTestUtils.setField(files, "distributionResult", result);
         Map<String, Object> status = files.status(fileDistribution);
         Assert.assertEquals(status.get("stale"),stale);
         Assert.assertEquals(status.get("last-distribution"),result);
@@ -134,8 +136,8 @@ public class TestFiles {
     @Test
     public void testStartDistribution() throws FileContents.FileContentsException {
         DistributionResultHistory history = new DistributionResultHistory();
-        Whitebox.setInternalState(files, "nextId", 22);
-        Whitebox.setInternalState(files, "distributionResult", history);
+        ReflectionTestUtils.setField(files, "nextId", 22);
+        ReflectionTestUtils.setField(files, "distributionResult", history);
 
         NextFileSimulator nextFileSimulator = new NextFileSimulator();
         Mockito.when(fileDistribution.getHandler()).thenReturn(mockHandler);
@@ -165,8 +167,8 @@ public class TestFiles {
     @Test
     public void testStartDistributionBadHandler() throws FileContents.FileContentsException {
         DistributionResultHistory history = new DistributionResultHistory();
-        Whitebox.setInternalState(files, "nextId", 22);
-        Whitebox.setInternalState(files, "distributionResult", history);
+        ReflectionTestUtils.setField(files, "nextId", 22);
+        ReflectionTestUtils.setField(files, "distributionResult", history);
 
         Mockito.when(fileDistribution.getHandler()).thenReturn(mockHandler);
         Mockito.when(mockHandler.sendNextFile()).thenThrow(new FileContents.FileContentsException("Distribution failed"));

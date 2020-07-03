@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Marshaller;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -36,7 +39,8 @@ import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import net.grinder.plugin.http.xml.HttpRecordingDocument;
+import net.grinder.plugin.http.xml.HTTPRecordingType;
+import net.grinder.plugin.http.xml.ObjectFactory;
 
 import org.slf4j.Logger;
 
@@ -131,25 +135,15 @@ public class ProcessHTTPRecordingWithXSLT implements
    * @throws IOException
    *           If an output error occurred.
    */
-  public void process(HttpRecordingDocument result) throws IOException {
-
+  public void process(HTTPRecordingType result) throws IOException {
     try {
-      final Transformer transformer = m_transformerFactory
-          .newTransformer(new StreamSource(m_styleSheetInputStream));
-
-      // One might expect this to be the default, but it's not.
-      transformer.setErrorListener(m_transformerFactory.getErrorListener());
-
-      transformer.transform(new StAXSource(result.newXMLStreamReader()),
-                            new StreamResult(m_output));
-
-      m_output.println();
+      JAXBContext jc = JAXBContext.newInstance("net.grinder.plugin.http.xml");
+      Marshaller marshaller = jc.createMarshaller();
+      JAXBElement<HTTPRecordingType> je =  new ObjectFactory().createHttpRecording(result);
+      marshaller.marshal(je, m_output);  
     }
-    catch (TransformerException e) {
-      // ErrorListener will have logged.
-    }
-    finally {
-      m_styleSheetInputStream.close();
+    catch (Exception e) {
+      throw new IOException(e);
     }
   }
 
