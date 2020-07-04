@@ -28,4 +28,4 @@ class TestRunner:
 
     # This method is called for every run.
     def __call__(self):
-        test1("Hello World")
+        log("Hello World")
