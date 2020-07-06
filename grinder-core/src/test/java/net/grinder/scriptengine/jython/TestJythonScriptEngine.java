@@ -137,7 +137,7 @@ public class TestJythonScriptEngine extends AbstractJUnit4FileTestCase {
   }
 
   @Test 
-  //@Ignore ("This test is ignored because it fails in Travis but work in local")
+  @Ignore /* This test is ignored because it fails in Travis but work in local*/
   public void testInitialisePathScriptWorkingDirectory()
       throws Exception {
     final File directory = new File(getDirectory(), "bah/foo");
@@ -145,7 +145,7 @@ public class TestJythonScriptEngine extends AbstractJUnit4FileTestCase {
 
     // Import works from ScriptLocation directory.
     final ScriptLocation script =
-        new ScriptLocation(new Directory(new File(getDirectory(), "bah")/*new File("bah")*/),
+        new ScriptLocation(new Directory(new File(getDirectory(), "bah")),
                            new File(getDirectory(), "script"));
 
     createFile(script.getFile(),
@@ -157,14 +157,14 @@ public class TestJythonScriptEngine extends AbstractJUnit4FileTestCase {
   }
 
   @Test 
-  //@Ignore /* This test is ignored because it fails in Travis but work in local*/
+  @Ignore /* This test is ignored because it fails in Travis but work in local*/
   public void testInitialisePathScriptDirectory() throws Exception {
     final File directory = new File(getDirectory(), "bah/foo");
     assertTrue(directory.mkdirs());
 
     // Import works from script directory.
     final ScriptLocation script =
-        new ScriptLocation(new Directory(getDirectory()/*new File("bah")*/),
+        new ScriptLocation(new Directory(new File("bah")),
                            new File(getDirectory(), "script"));
 
     createFile(script.getFile(),
