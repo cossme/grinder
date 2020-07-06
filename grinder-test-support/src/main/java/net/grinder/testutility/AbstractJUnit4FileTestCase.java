@@ -66,7 +66,7 @@ public abstract class AbstractJUnit4FileTestCase {
 
   protected final File getDirectory() throws IOException {
     if (m_directory == null) {
-      m_directory = File.createTempFile(getClass().getName(), "test");
+      m_directory = File.createTempFile("/tmp" + getClass().getName(), "test");
       assertTrue(m_directory.delete());
       assertTrue(m_directory.mkdir());
       m_directory.deleteOnExit();
