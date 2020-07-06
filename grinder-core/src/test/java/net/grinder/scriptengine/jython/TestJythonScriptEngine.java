@@ -145,7 +145,7 @@ public class TestJythonScriptEngine extends AbstractJUnit4FileTestCase {
 
     // Import works from ScriptLocation directory.
     final ScriptLocation script =
-        new ScriptLocation(new Directory(new File(getDirectory(), "bah")),
+        new ScriptLocation(new Directory(new File(getDirectory(), "bah")/*new File("bah")*/),
                            new File(getDirectory(), "script"));
 
     createFile(script.getFile(),
@@ -164,7 +164,7 @@ public class TestJythonScriptEngine extends AbstractJUnit4FileTestCase {
 
     // Import works from script directory.
     final ScriptLocation script =
-        new ScriptLocation(new Directory(new File("bah")),
+        new ScriptLocation(new Directory(getDirectory()/*new File("bah")*/),
                            new File(getDirectory(), "script"));
 
     createFile(script.getFile(),
