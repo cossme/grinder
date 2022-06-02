@@ -134,16 +134,16 @@ public final class Jython22Instrumenter extends AbstractJythonDCRInstrumenter {
     // cope with other types of callable. I guess I could identify
     // PyFunction's and dispatch on their im_code should this become an issue.
 
-    if (target.im_self == null) {
+    if (target.__self__ == null) {
       // Unbound method.
-      instrumentPublicMethodsByName(target.im_func,
+      instrumentPublicMethodsByName(target.__func__,
                                     "__call__",
                                     recorder,
                                     false);
     }
     else {
-      instrumentPublicMethodsByName(target.im_func.getClass(),
-                                    target.im_self,
+      instrumentPublicMethodsByName(target.__func__.getClass(),
+                                    target.__self__,
                                     "__call__",
                                     TargetSource.SECOND_PARAMETER,
                                     recorder,

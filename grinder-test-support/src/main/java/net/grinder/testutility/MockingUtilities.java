@@ -26,7 +26,6 @@ import static org.mockito.Matchers.argThat;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-import org.hamcrest.Description;
 import org.mockito.ArgumentMatcher;
 
 
@@ -44,7 +43,7 @@ public class MockingUtilities {
    * @author Philip Aston
    */
   public abstract static class TypedArgumentMatcher<T>
-    extends ArgumentMatcher<T> {
+    implements ArgumentMatcher<T> {
 
     @SuppressWarnings("unchecked")
     @Override public final boolean matches(Object argument) {
@@ -67,10 +66,6 @@ public class MockingUtilities {
                  actual.containsAll(t) &&
                  t.containsAll(actual);
         }
-
-        @Override public void describeTo(Description description) {
-          description.appendText("equalContents(" + t + ")");
-        }
       });
   }
 
@@ -79,10 +74,6 @@ public class MockingUtilities {
       new TypedArgumentMatcher<Class<T>>() {
         @Override protected boolean argumentMatches(Class<T> t) {
           return superClass.isAssignableFrom(t);
-        }
-
-        @Override public void describeTo(Description description) {
-          description.appendText("subclass(" + superClass.getName() + ")");
         }
       });
   }
@@ -100,12 +91,6 @@ public class MockingUtilities {
 
       @Override protected boolean argumentMatches(String text) {
         return Pattern.compile(regex).matcher(text).find();
-      }
-
-      @Override public void describeTo(Description description) {
-        description.appendText(
-          "containsRegex(\"" + regex.replaceAll("\\\\", "\\\\\\\\")
-          + "\")");
       }
     });
   }

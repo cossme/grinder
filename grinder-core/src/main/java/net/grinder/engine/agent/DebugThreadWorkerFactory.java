@@ -25,6 +25,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -56,7 +57,7 @@ final class DebugThreadWorkerFactory extends AbstractWorkerFactory {
   /**
    * Allow unit tests to change the IsolateGrinderProcessRunner.
    */
-  static void setIsolatedRunnerClass(String isolatedRunnerClassName) {
+  static void setIsolatedRunnerClass(final String isolatedRunnerClassName) {
     if (isolatedRunnerClassName != null) {
       s_isolatedRunnerClassName = isolatedRunnerClassName;
     }
@@ -65,11 +66,11 @@ final class DebugThreadWorkerFactory extends AbstractWorkerFactory {
     }
   }
 
-  public DebugThreadWorkerFactory(AgentIdentityImplementation agentIdentity,
-                                  FanOutStreamSender fanOutStreamSender,
-                                  boolean reportToConsole,
-                                  ScriptLocation script,
-                                  GrinderProperties properties)
+  public DebugThreadWorkerFactory(final AgentIdentityImplementation agentIdentity,
+                                  final FanOutStreamSender fanOutStreamSender,
+                                  final boolean reportToConsole,
+                                  final ScriptLocation script,
+                                  final GrinderProperties properties)
     throws EngineException {
     super(agentIdentity,
           fanOutStreamSender,
@@ -95,9 +96,9 @@ final class DebugThreadWorkerFactory extends AbstractWorkerFactory {
   }
 
   @Override
-  protected Worker createWorker(WorkerIdentityImplementation workerIdentity,
-                                OutputStream outputStream,
-                                OutputStream errorStream)
+  protected Worker createWorker(final WorkerIdentityImplementation workerIdentity,
+                                final OutputStream outputStream,
+                                final OutputStream errorStream)
     throws EngineException {
 
     final ClassLoader classLoader =
@@ -114,7 +115,7 @@ final class DebugThreadWorkerFactory extends AbstractWorkerFactory {
                       true,
                       classLoader);
     }
-    catch (ClassNotFoundException e) {
+    catch (final ClassNotFoundException e) {
       throw new AssertionError(e);
     }
 
@@ -123,11 +124,11 @@ final class DebugThreadWorkerFactory extends AbstractWorkerFactory {
     try {
       runner = (IsolateGrinderProcessRunner)isolatedRunnerClass.newInstance();
     }
-    catch (InstantiationException e) {
+    catch (final InstantiationException e) {
       throw new EngineException(
         "Failed to create IsolateGrinderProcessRunner", e);
     }
-    catch (IllegalAccessException e) {
+    catch (final IllegalAccessException e) {
       throw new EngineException(
         "Failed to create IsolateGrinderProcessRunner", e);
     }

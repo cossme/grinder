@@ -47,12 +47,13 @@ import net.grinder.plugin.http.xml.ConflictingTokenReferenceType;
 import net.grinder.plugin.http.xml.FormBodyType;
 import net.grinder.plugin.http.xml.FormFieldType;
 import net.grinder.plugin.http.xml.HeaderType;
+import net.grinder.plugin.http.xml.HeadersType;
+import net.grinder.plugin.http.xml.MethodType;
 import net.grinder.plugin.http.xml.RequestType;
 import net.grinder.plugin.http.xml.ResponseType;
 import net.grinder.plugin.http.xml.ResponseTokenReferenceType;
 import net.grinder.plugin.http.xml.TokenReferenceType;
 import net.grinder.plugin.http.xml.TokenResponseLocationType;
-import net.grinder.plugin.http.xml.RequestType.Method.Enum;
 import net.grinder.tools.tcpproxy.CommentSource;
 import net.grinder.tools.tcpproxy.ConnectionDetails;
 import net.grinder.util.AttributeStringParser;
@@ -73,12 +74,12 @@ import HTTPClient.ParseException;
  */
 final class ConnectionHandlerImplementation implements ConnectionHandler {
 
-  private static final Set<Enum> HTTP_METHODS_WITH_BODY =
-    new HashSet<Enum>(Arrays.asList(
-        new RequestType.Method.Enum[] {
-            RequestType.Method.OPTIONS,
-            RequestType.Method.POST,
-            RequestType.Method.PUT,
+  private static final Set<MethodType> HTTP_METHODS_WITH_BODY =
+    new HashSet<MethodType>(Arrays.asList(
+        new MethodType[] {
+            MethodType.OPTIONS,
+            MethodType.POST,
+            MethodType.PUT,
         }
       ));
 
@@ -167,7 +168,7 @@ final class ConnectionHandlerImplementation implements ConnectionHandler {
       final String method = matcher.group(1);
       final String relativeURI = matcher.group(2);
 
-      if (RequestType.Method.Enum.forString(method) != null) {
+      if (MethodType.fromValue(method) != null) {
         requestFinished();
 
         m_request = new Request(method,
@@ -386,12 +387,13 @@ final class ConnectionHandlerImplementation implements ConnectionHandler {
 
       //add the user comments to the request element
       for (int i = 0; i < userComments.length; i++) {
-        m_requestXML.addComment(userComments[i]);
+        m_requestXML.getComment().add(userComments[i]);
       }
     }
 
     public void addNewResponse(int statusCode, String reasonPhrase) {
-      final ResponseType responseXML = m_requestXML.addNewResponse();
+      final ResponseType responseXML = new ResponseType();
+      m_requestXML.setResponse(responseXML);
       responseXML.setStatusCode(statusCode);
       responseXML.setReasonPhrase(reasonPhrase);
 
@@ -411,8 +413,11 @@ final class ConnectionHandlerImplementation implements ConnectionHandler {
         m_logger.error("Could not decode Authorization header");
       }
       else {
-        final BasicAuthorizationHeaderType basicAuthorization =
-          m_requestXML.getHeaders().addNewAuthorization().addNewBasic();
+        final BasicAuthorizationHeaderType basicAuthorization = new BasicAuthorizationHeaderType();
+        if (m_requestXML.getHeaders() == null) {
+          m_requestXML.setHeaders(new HeadersType());
+        }
+        m_requestXML.getHeaders().getHeaderOrAuthorization().add(basicAuthorization);
 
         basicAuthorization.setUserid(decoded.substring(0, colon));
         basicAuthorization.setPassword(decoded.substring(colon + 1));
@@ -429,7 +434,7 @@ final class ConnectionHandlerImplementation implements ConnectionHandler {
 
     public boolean expectingResponseBody() {
       // RFC 2616, 4.3.
-      if (m_requestXML.getMethod().equals(RequestType.Method.HEAD)) {
+      if (m_requestXML.getMethod().equals(MethodType.HEAD)) {
         return false;
       }
 
@@ -449,7 +454,11 @@ final class ConnectionHandlerImplementation implements ConnectionHandler {
     }
 
     public void addHeader(String name, String value) {
-      final HeaderType header = m_requestXML.getHeaders().addNewHeader();
+      final HeaderType header = new HeaderType();
+      if (m_requestXML.getHeaders() == null) {
+        m_requestXML.setHeaders(new HeadersType());
+      }
+      m_requestXML.getHeaders().getHeaderOrAuthorization().add(header);
       header.setName(name);
       header.setValue(value);
     }
@@ -504,7 +513,8 @@ final class ConnectionHandlerImplementation implements ConnectionHandler {
       }
 
       public void end() {
-        final BodyType body = m_requestXML.addNewBody();
+        final BodyType body = new BodyType();
+        m_requestXML.setBody(body);
 
         final boolean isFormData;
         final boolean isMultipart;
@@ -561,7 +571,8 @@ final class ConnectionHandlerImplementation implements ConnectionHandler {
                     Codecs.mpFormDataDecode(bytes, m_contentType, "/tmp") :
                     Codecs.query2nv(iso88591String);
 
-              final FormBodyType formData = body.addNewForm();
+              final FormBodyType formData = new FormBodyType();
+              body.setForm(formData);
               formData.setMultipart(isMultipart);
 
               for (int i = 0; i < formNameValuePairs.length; ++i) {
@@ -575,13 +586,14 @@ final class ConnectionHandlerImplementation implements ConnectionHandler {
                       TokenResponseLocationType
                       .RESPONSE_BODY_HIDDEN_INPUT.toString())) {
 
-                  final TokenReferenceType tokenReference =
-                    formData.addNewTokenReference();
+                  final TokenReferenceType tokenReference = new TokenReferenceType();
+                  formData.getFormFieldOrTokenReference().add(tokenReference);
                   m_httpRecording.setTokenReference(
                     name, value, tokenReference);
                 }
                 else {
-                  final FormFieldType formField = formData.addNewFormField();
+                  final FormFieldType formField = new FormFieldType();
+                  formData.getFormFieldOrTokenReference().add (formField);
                   formField.setName(name);
                   formField.setValue(value);
                 }
@@ -652,14 +664,14 @@ final class ConnectionHandlerImplementation implements ConnectionHandler {
     }
 
     public void addResponseTokenReference(String name, String value,
-      TokenResponseLocationType.Enum source) {
+      TokenResponseLocationType source) {
 
       final ResponseTokenReferenceType existingTokenReference =
         m_tokensInResponseMap.get(name);
 
       if (existingTokenReference == null) {
-        final ResponseTokenReferenceType newTokenReference =
-          m_responseXML.addNewTokenReference();
+        final ResponseTokenReferenceType newTokenReference = new ResponseTokenReferenceType();
+        m_responseXML.getTokenReference().add(existingTokenReference); 
 
         newTokenReference.setSource(source.toString());
         m_httpRecording.setTokenReference(name, value, newTokenReference);
@@ -673,8 +685,8 @@ final class ConnectionHandlerImplementation implements ConnectionHandler {
           return;
         }
 
-        final ConflictingTokenReferenceType conflictingValue =
-          existingTokenReference.addNewConflictingValue();
+        final ConflictingTokenReferenceType conflictingValue = new ConflictingTokenReferenceType();
+        existingTokenReference.getConflictingValue().add(conflictingValue);
 
         conflictingValue.setValue(value);
         conflictingValue.setSource(source.toString());

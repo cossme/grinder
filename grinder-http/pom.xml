@@ -12,41 +12,62 @@
   <parent>
     <groupId>io.github.cossme</groupId>
     <artifactId>grinder-parent</artifactId>
-    <version>4.0.2-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
   </parent>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-core</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>5.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-httpclient</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>5.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-xmlbeans</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>5.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-dcr-agent</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>5.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>grinder-test-support</artifactId>
-      <version>4.0.2-SNAPSHOT</version>
+      <version>5.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+   <dependency>
+     <groupId>javax.activation</groupId>
+     <artifactId>activation</artifactId>
+     <version>1.1.1</version>
+   </dependency>
   </dependencies>
 
   <build>

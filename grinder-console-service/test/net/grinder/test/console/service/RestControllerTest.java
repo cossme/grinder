@@ -21,45 +21,7 @@
 
 package net.grinder.test.console.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import net.grinder.console.common.*;
-import net.grinder.common.GrinderBuild;
-import net.grinder.console.SpringConsoleFoundation;
-import net.grinder.console.communication.ConsoleCommunicationImplementation;
-import net.grinder.console.communication.DistributionControl;
-import net.grinder.console.communication.ProcessControl;
-import net.grinder.console.communication.ProcessControlImplementation;
-import net.grinder.console.distribution.FileDistribution;
-import net.grinder.console.distribution.FileDistributionImplementation;
-import net.grinder.console.model.*;
-import net.grinder.console.service.Bootstrap;
-import net.grinder.statistics.StatisticsServices;
-import net.grinder.statistics.StatisticsServicesTestFactory;
-import net.grinder.statistics.TestStatisticsQueries;
-import net.grinder.testutility.AbstractJUnit4FileTestCase;
-import net.grinder.testutility.RandomStubFactory;
-import net.grinder.testutility.SocketUtilities;
-import net.grinder.testutility.StubTimer;
-import net.grinder.util.Directory;
-import net.grinder.util.StandardTimeAuthority;
-import net.grinder.util.TimeAuthority;
-import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.junit.runner.RunWith;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,6 +29,58 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import net.grinder.common.GrinderBuild;
+import net.grinder.console.SpringConsoleFoundation;
+import net.grinder.console.common.ConsoleException;
+import net.grinder.console.common.ErrorHandler;
+import net.grinder.console.common.ErrorQueue;
+import net.grinder.console.common.Resources;
+import net.grinder.console.common.ResourcesImplementation;
+import net.grinder.console.common.StubResources;
+import net.grinder.console.communication.ConsoleCommunicationImplementation;
+import net.grinder.console.communication.DistributionControl;
+import net.grinder.console.communication.ProcessControl;
+import net.grinder.console.communication.ProcessControlImplementation;
+import net.grinder.console.distribution.FileDistribution;
+import net.grinder.console.distribution.FileDistributionImplementation;
+import net.grinder.console.model.ConsoleProperties;
+import net.grinder.console.model.Files;
+import net.grinder.console.model.Processes;
+import net.grinder.console.model.Properties;
+import net.grinder.console.model.Recording;
+import net.grinder.console.model.SampleModel;
+import net.grinder.console.model.SampleModelViews;
+import net.grinder.console.service.Bootstrap;
+import net.grinder.statistics.StatisticsServices;
+import net.grinder.statistics.StatisticsServicesTestFactory;
+import net.grinder.testutility.AbstractJUnit4FileTestCase;
+import net.grinder.testutility.AssertUtilities;
+import net.grinder.testutility.RandomStubFactory;
+import net.grinder.testutility.SocketUtilities;
+import net.grinder.testutility.StubTimer;
+import net.grinder.util.Directory;
+import net.grinder.util.StandardTimeAuthority;
+import net.grinder.util.TimeAuthority;
 
 /**
  * Created by solcyr on 28/01/2018.
@@ -181,7 +195,7 @@ public class RestControllerTest  extends AbstractJUnit4FileTestCase {
 
         Bootstrap bootstrap = Mockito.mock(Bootstrap.class);
 
-        Whitebox.setInternalState(bootstrap, "INSTANCE", new Bootstrap(
+        ReflectionTestUtils.setField(bootstrap, "INSTANCE", new Bootstrap(
                 m_properties,
                 modelParam,
                 sampleModelViewsParam,
@@ -245,8 +259,13 @@ public class RestControllerTest  extends AbstractJUnit4FileTestCase {
 
     @Test
     public void testUnknownRoutes() throws Exception{
-        this.restController.perform(MockMvcRequestBuilders.put("agents/status"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+        try {
+          this.restController.perform(MockMvcRequestBuilders.put("agents/status"));
+          AssertUtilities.fail ("IllegalArgumentException Expected") ;
+        }
+        catch (IllegalArgumentException e) {
+          AssertUtilities.assertContains(e.getMessage(), "'url' should start with a path");
+        }
         this.restController.perform(MockMvcRequestBuilders.put("/agents/status"))
                 .andExpect(MockMvcResultMatchers.status().isMethodNotAllowed());
         this.restController.perform(MockMvcRequestBuilders.put("/agents/stop"))

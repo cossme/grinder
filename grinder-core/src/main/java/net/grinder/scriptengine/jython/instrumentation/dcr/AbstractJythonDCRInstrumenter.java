@@ -89,7 +89,7 @@ abstract class AbstractJythonDCRInstrumenter extends AbstractDCRInstrumenter {
       final Object argument = argsList[i];
 
       try {
-        final Field dataField = argument.getClass().getField("data");
+        final Field dataField = argument.getClass().getField("method");
         dataField.setAccessible(true);
         result.add((T)dataField.get(argument));
       }
@@ -124,18 +124,18 @@ abstract class AbstractJythonDCRInstrumenter extends AbstractDCRInstrumenter {
         // PyMethod is used for bound and unbound Python methods, and
         // bound Java methods.
 
-        if (pyMethod.im_func instanceof PyReflectedFunction) {
+        if (pyMethod.__func__ instanceof PyReflectedFunction) {
 
           // Its Java.
 
-          // Its possible im_func might be an unbound Java method or a Java
+          // Its possible __func__ might be an unbound Java method or a Java
           // constructor, but I can't find a way to trigger this. We always
           // receive a PyReflectedMethod or PyReflectedConstructor directly.
           // Here, we defensively cope with unbound methods, but not
           // constructors.
           transform(recorder,
-                    (PyReflectedFunction)pyMethod.im_func,
-                    pyMethod.im_self.__tojava__(Object.class));
+                    (PyReflectedFunction)pyMethod.__func__,
+                    pyMethod.__self__.__tojava__(Object.class));
         }
         else {
           transform(recorder, pyMethod);

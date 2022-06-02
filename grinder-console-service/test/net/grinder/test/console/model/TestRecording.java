@@ -1,27 +1,29 @@
 package net.grinder.test.console.model;
 
-import clojure.lang.Cons;
-import net.grinder.common.GrinderProperties;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import net.grinder.console.common.ConsoleException;
 import net.grinder.console.common.Resources;
 import net.grinder.console.communication.ProcessControl;
-import net.grinder.console.distribution.AgentCacheState;
-import net.grinder.console.model.*;
+import net.grinder.console.model.ConsoleProperties;
+import net.grinder.console.model.Recording;
+import net.grinder.console.model.SampleModel;
+import net.grinder.console.model.SampleModelImplementation;
+import net.grinder.console.model.SampleModelViews;
 import net.grinder.console.service.Bootstrap;
 import net.grinder.statistics.StatisticsServicesImplementation;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
-
-import javax.validation.constraints.AssertTrue;
-import java.io.File;
-import java.util.*;
 
 /**
  * Created by csolesala on 30/01/2018.
@@ -47,7 +49,7 @@ public class TestRecording {
         Bootstrap bootstrap = Mockito.mock(Bootstrap.class);
         SampleModel model = Mockito.mock(SampleModel.class);
         ProcessControl pc = Mockito.mock(ProcessControl.class);
-        Whitebox.setInternalState(bootstrap, "INSTANCE", new Bootstrap(
+        ReflectionTestUtils.setField(bootstrap, "INSTANCE", new Bootstrap(
                 null,
                 model,
                 null,
@@ -63,7 +65,7 @@ public class TestRecording {
             public long getSampleCount() { return Long.parseLong(input.get("sample-count")); }
         });
         Recording recording = new Recording();
-        Whitebox.setInternalState(recording, "model", model);
+        ReflectionTestUtils.setField(recording, "model", model);
         Map<String, String> result = recording.status();
 
         Assert.assertEquals(input, result);
@@ -108,9 +110,9 @@ public class TestRecording {
     private void initializeMock(Recording recording, Wrapper<String> called) throws ConsoleException {
         Bootstrap bootstrap = Mockito.mock(Bootstrap.class);
         SampleModel model = Mockito.mock(SampleModel.class);
-        Whitebox.setInternalState(recording, "model", model);
+        ReflectionTestUtils.setField(recording, "model", model);
         ProcessControl pc = Mockito.mock(ProcessControl.class);
-        Whitebox.setInternalState(bootstrap, "INSTANCE", new Bootstrap(
+        ReflectionTestUtils.setField(bootstrap, "INSTANCE", new Bootstrap(
                 null,
                 model,
                 null,
@@ -158,7 +160,7 @@ public class TestRecording {
     @Test
     public void testDataUninitialised () {
         Bootstrap bootstrap = Mockito.mock(Bootstrap.class);
-        Whitebox.setInternalState(bootstrap, "INSTANCE", null);
+        ReflectionTestUtils.setField(bootstrap, "INSTANCE", null);
         Recording recording = new Recording();
         try {
             recording.data();
@@ -196,7 +198,7 @@ public class TestRecording {
 
         Bootstrap bootstrap = Mockito.mock(Bootstrap.class);
         ProcessControl pc = Mockito.mock(ProcessControl.class);
-        Whitebox.setInternalState(bootstrap, "INSTANCE", new Bootstrap(
+        ReflectionTestUtils.setField(bootstrap, "INSTANCE", new Bootstrap(
                 null,
                 model,
                 sampleModelView,
@@ -259,7 +261,7 @@ public class TestRecording {
 
         Bootstrap bootstrap = Mockito.mock(Bootstrap.class);
         ProcessControl pc = Mockito.mock(ProcessControl.class);
-        Whitebox.setInternalState(bootstrap, "INSTANCE", new Bootstrap(
+        ReflectionTestUtils.setField(bootstrap, "INSTANCE", new Bootstrap(
                 consoleProperties,
                 sm,
                 sampleModelView,
@@ -328,7 +330,7 @@ public class TestRecording {
 
         Bootstrap bootstrap = Mockito.mock(Bootstrap.class);
         ProcessControl pc = Mockito.mock(ProcessControl.class);
-        Whitebox.setInternalState(bootstrap, "INSTANCE", new Bootstrap(
+        ReflectionTestUtils.setField(bootstrap, "INSTANCE", new Bootstrap(
                 consoleProperties,
                 sm,
                 sampleModelView,

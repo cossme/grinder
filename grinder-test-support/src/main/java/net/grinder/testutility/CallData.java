@@ -24,7 +24,7 @@ package net.grinder.testutility;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 
 /**

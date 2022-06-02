@@ -1,25 +1,15 @@
 package net.grinder.console.webui;
 
-
-import net.grinder.common.GrinderProperties;
 import net.grinder.console.ConsoleFoundation;
-import net.grinder.console.model.ConsoleProperties;
-import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.web.server.ConfigurableWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.stereotype.Component;
 
-@Configuration
-public class ServletConfig {
-
-    @Bean
-    public EmbeddedServletContainerCustomizer containerCustomizer() {
-
-        return new EmbeddedServletContainerCustomizer() {
-            public void customize(ConfigurableEmbeddedServletContainer configurableEmbeddedServletContainer) {
-                configurableEmbeddedServletContainer.setPort(
-                  ConsoleFoundation.PROPERTIES.getHttpPort());
-            }
-        };
+@Component
+public class ServletConfig implements WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
+  
+    @Override
+    public void customize(ConfigurableWebServerFactory factory) {
+        factory.setPort(ConsoleFoundation.PROPERTIES.getHttpPort());
     }
 }

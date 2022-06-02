@@ -51,9 +51,6 @@ public abstract class AbstractMainClass {
                                       80).format(usage);
     m_logger = logger;
 
-    if (!JVM.getInstance().haveRequisites(m_logger)) {
-      throw new LoggedInitialisationException("Unsupported JVM");
-    }
   }
 
   /**

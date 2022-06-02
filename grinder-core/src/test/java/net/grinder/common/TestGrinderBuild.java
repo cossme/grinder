@@ -59,8 +59,8 @@ public class TestGrinderBuild {
 
   @Test public void testGrinderBuildExceptions() throws Exception {
     final ClassLoader blockingLoader =
-      new BlockingClassLoader(Collections.<String>emptySet(),
-                              singleton(GrinderBuild.class.getName()),
+      new BlockingClassLoader(singleton(GrinderBuild.class.getName()),
+                              Collections.<String>emptySet(),
                               Collections.<String>emptySet(),
                               false) {
         @Override public URL getResource(String name) {
@@ -71,10 +71,10 @@ public class TestGrinderBuild {
 
     try {
       Class.forName(GrinderBuild.class.getName(), true, blockingLoader);
-      fail("Expected ExceptionInInitializerError");
+      fail("Expected ClassNotFoundException");
     }
-    catch (ExceptionInInitializerError e) {
-      assertTrue(e.getCause().toString(), e.getCause() instanceof IOException);
+    catch (ClassNotFoundException e) {
+      assertTrue(e.getMessage(), true);
     }
   }
 

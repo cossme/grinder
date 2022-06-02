@@ -69,6 +69,8 @@ import org.picocontainer.monitors.ConsoleComponentMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import clojure.lang.Compiler.InstanceOfExpr;
+
 
 /**
  * This is the entry point of The TCPProxy process.
@@ -529,9 +531,9 @@ public final class TCPProxy extends AbstractMainClass {
         }
 
         if (!TCPProxyFilter.class.isAssignableFrom(filterClass)) {
-          throw barfError("The class '" + filterClass.getName() +
-                          "' does not implement the interface: '" +
-                          TCPProxyFilter.class.getName() + "'.");
+           throw barfError("The class '" + filterClass.getName() +
+                           "' does not implement the interface: '" +
+                           TCPProxyFilter.class.getName() + "'.");
         }
 
         add((Class<? extends TCPProxyFilter>) filterClass);
